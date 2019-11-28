@@ -1,0 +1,38 @@
+#!/usr/bin/python
+
+import requests,os,urllib,posixpath,sys,base64,re
+from urlextract import URLExtract
+from github import Github
+
+base_url = 'https://libraries.io/'
+api='api'
+platform='pypi'
+name='django'
+version='latest'
+keyword = 'dependencies'
+ok_code = 200
+url_path = posixpath.join(api,platform,name,version,keyword)
+url = urllib.parse.urljoin(base_url,url_path)
+r = requests.get(url,params=libraries_io_api_key)
+if r.status_code is not ok_code:
+    print("Request not possible")
+    print(r.status_code)
+    print(r.text)
+    sys.exit()
+print(r.json().get('dependencies'))
+repository_url=r.json().get('repository_url')
+
+
+print(repository_url)
+#repository_url='https://github.com/Ly0n/awesome-robotic-development'
+print(repository_url)
+parsed_url=urllib.parse.urlparse(repository_url)
+g = Github()
+print(parsed_url)
+repo = g.get_repo(parsed_url.path[1:])
+
+contents = repo.get_contents("README.md")
+readme = base64.b64decode(contents.content).decode('utf-8')
+extracted_urls=re.findall(r'(https?://[^\s]+)', readme)
+for element in extracted_urls:
+    print(element)
