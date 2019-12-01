@@ -14,13 +14,15 @@ status = subprocess.call('ruby scan.rb', shell=True)
 if status==0:
     with open('dependencies.json') as f:
         dependencies_json = json.load(f)
-for dep in dependencies_json:
-    print(dep)
-exit()
+dependency_list = []
+for platform in dependencies_json:
+    platform_name = platform["platform"]
+    for deps in platform["dependencies"]:
+        name = deps["name"]
+        dependency_list.append({"platform": platform_name, "name":name})
 
-print(dependencies_json)
 base_url = 'https://libraries.io/'
-owner=''
+owner='dp'
 name='tensorflow'
 version='latest'
 libraries_io_api_key = {'api_key':libraries_api_key}
