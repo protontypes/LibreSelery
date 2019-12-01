@@ -10,11 +10,15 @@ with open('tokens.json') as f:
 libraries_api_key = tokens_data["libraries_io_api_key"]
 github_token = tokens_data["github_token"]
 
-bibliothecary_scan = subprocess.check_output('ruby scan.rb', shell=True)
-print(type(bibliothecary_scan))
-print(bibliothecary_scan)
+status = subprocess.call('ruby scan.rb', shell=True)
+if status==0:
+    with open('dependencies.json') as f:
+        dependencies_json = json.load(f)
+for dep in dependencies_json:
+    print(dep)
 exit()
 
+print(dependencies_json)
 base_url = 'https://libraries.io/'
 owner=''
 name='tensorflow'
