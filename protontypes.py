@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import requests,os,urllib,posixpath,sys,base64,re
-from urlextract import URLExtract
 from github import Github
 import json
 
