@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import requests,os,urllib,posixpath,sys,base64,re,subprocess
+import requests,urllib,posixpath,subprocess
 from github import Github
 import json
 
@@ -10,23 +10,26 @@ with open('tokens.json') as f:
 libraries_api_key = tokens_data["libraries_io_api_key"]
 github_token = tokens_data["github_token"]
 
+bibliothecary_scan = subprocess.check_output('ruby scan.rb', shell=True)
+print(type(bibliothecary_scan))
+print(bibliothecary_scan)
+exit()
 
 base_url = 'https://libraries.io/'
-api='api'
-owner='tensorflow'
+owner=''
 name='tensorflow'
 version='latest'
 libraries_io_api_key = {'api_key':libraries_api_key}
 keyword = 'dependencies'
 ok_code = 200
-url_path = posixpath.join(api,'github',owner,name,keyword)
+url_path = posixpath.join('api','github',owner,name,keyword)
 url = urllib.parse.urljoin(base_url,url_path)
 r = requests.get(url,params=libraries_io_api_key)
 if r.status_code is not ok_code:
     print("Request not possible")
     print(r.status_code)
     print(r.text)
-    sys.exit()
+    exit()
 print(r.json().get('dependencies'))
 repository_url=r.json().get('repository_url')
 print(r.json().keys())
