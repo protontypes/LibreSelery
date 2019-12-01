@@ -6,12 +6,13 @@ from github import Github
 
 base_url = 'https://libraries.io/'
 api='api'
-platform='pypi'
-name='django'
+owner='tensorflow'
+name='tensorflow'
 version='latest'
+#libraries_io_api_key = {'api_key':''}
 keyword = 'dependencies'
 ok_code = 200
-url_path = posixpath.join(api,platform,name,version,keyword)
+url_path = posixpath.join(api,'github',owner,name,keyword)
 url = urllib.parse.urljoin(base_url,url_path)
 r = requests.get(url,params=libraries_io_api_key)
 if r.status_code is not ok_code:
@@ -21,18 +22,15 @@ if r.status_code is not ok_code:
     sys.exit()
 print(r.json().get('dependencies'))
 repository_url=r.json().get('repository_url')
+print(r.json().keys())
+
+for key in r.json().keys():
+    print()
+    print(key)
+    print(r.json().get(key))
 
 
-print(repository_url)
-#repository_url='https://github.com/Ly0n/awesome-robotic-development'
-print(repository_url)
-parsed_url=urllib.parse.urlparse(repository_url)
+# Not needed
 g = Github()
-print(parsed_url)
-repo = g.get_repo(parsed_url.path[1:])
+repo = g.get_repo(r.json().get("github_id"))
 
-contents = repo.get_contents("README.md")
-readme = base64.b64decode(contents.content).decode('utf-8')
-extracted_urls=re.findall(r'(https?://[^\s]+)', readme)
-for element in extracted_urls:
-    print(element)
