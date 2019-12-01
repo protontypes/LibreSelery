@@ -32,18 +32,8 @@ print(r.json().get('dependencies'))
 repository_url=r.json().get('repository_url')
 print(r.json().keys())
 
-#for key in r.json().keys():
-#    print()
-#    print(key)
-#    print(r.json().get(key))
-
-
-
-# Not needed
-g = Github()
+g = Github(github_token)
 github_id = int(r.json().get("github_id"))
-print(github_id)
-print(type(github_id))
 
 repo = g.get_repo(github_id)
 
