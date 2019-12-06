@@ -17,7 +17,7 @@ with open('tokens.json') as f:
 libraries_api_key = tokens_data["libraries_io_api_key"]
 github_token = tokens_data["github_token"]
 
-status = subprocess.call('ruby scan.rb', shell=True)
+status = subprocess.call('ruby scan.rb --project='+root_folder, shell=True)
 if status==0:
     with open('dependencies.json') as f:
         dependencies_json = json.load(f)
