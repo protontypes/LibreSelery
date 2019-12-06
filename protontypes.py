@@ -1,8 +1,15 @@
 #!/usr/bin/python
 
-import requests,urllib,posixpath,subprocess
+import requests,urllib,posixpath,subprocess,argparse
 from github import Github
 import json
+
+parser =  argparse.ArgumentParser(description='Protontypes - Random Donation')
+parser.add_argument("--project", required=True, type=str, help="Project root folder to scan")
+
+args = parser.parse_args()
+root_folder = args.project
+print(root_folder)
 
 ## Load parameters
 with open('tokens.json') as f:
@@ -22,7 +29,7 @@ for platform in dependencies_json:
         dependency_list.append({"platform": platform_name, "name":name})
 
 base_url = 'https://libraries.io/'
-owner='dp'
+owner='tensorflow'
 name='tensorflow'
 version='latest'
 libraries_io_api_key = {'api_key':libraries_api_key}
