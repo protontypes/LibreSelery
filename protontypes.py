@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import requests,urllib,posixpath,subprocess,argparse
+from urllib.parse import urlparse
 from github import Github
 import json
 
@@ -22,8 +23,8 @@ class GithubConnector:
     def __init__(self, github_token):
         self.github = Github(github_token)
 
-    def getContributorEmails(self, id):      
-        print(id)  
+    def getContributorEmails(self, id):
+        print(id)
         try:
             repo = self.github.get_repo(int(id))
         except:
@@ -52,10 +53,11 @@ class LibrariesIOConecter:
             print(r.text)
             return None
         else:
-            repository_url=r.json().get('repository_url')
-            owner = repository_url.split('/')[-2]
+            print(r.json().get('repository_url'))
+            repository_url=urlparse(r.json().get('repository_url'))
+            owner = repository_url.path.split('/')[-2]
             return owner
-    
+
     def getDependencyData(self, owner, name):
         url_path = posixpath.join('api','github',owner,name,'dependencies')
         url = urllib.parse.urljoin(self.base_url,url_path)
@@ -80,20 +82,17 @@ dependency_list = []
 for platform in dependencies_json:
     platform_name = platform["platform"]
     for deps in platform["dependencies"]:
-        name = deps["name"]        
+        name = deps["name"]
         dependency = {"platform": platform_name, "name":name}
         dependency["owner"] = librariesIO.getOwner(platform_name, name)
         depData = librariesIO.getDependencyData(dependency["owner"], name)
         dependency["dependencies"] = depData["dependencies"]
         dependency["github_id"] = depData["github_id"]
-        
+
         email_list = gitConnector.getContributorEmails(dependency["github_id"])
         dependency["email_list"] = email_list
         print("Emails for " + name)
         print(email_list)
         dependency_list.append(dependency)
-    
+
 print(dependency_list)
-
-
-
