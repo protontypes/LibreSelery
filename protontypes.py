@@ -21,7 +21,7 @@ github_token = tokens_data["github_token"]
 class GithubConnector:
     def __init__(self, github_token):
         self.github = Github(github_token)
-
+        print(self.github.get_rate_limit())
     def getContributorEmails(self, id):
         try:
             repo = self.github.get_repo(int(id))
@@ -49,7 +49,6 @@ class LibrariesIOConnecter:
             print(platform+" "+name)
             print("Request not possible")
             print(r.status_code)
-            print(r.text)
             return None
         else:
             print(r.json().get('repository_url'))
@@ -59,6 +58,7 @@ class LibrariesIOConnecter:
             return {"owner": owner, "project_name": project_name }
 
     def getDependencyData(self, owner, name):
+        name = name.replace(".git","")
         url_path = posixpath.join('api','github',owner,name,'dependencies')
         url = urllib.parse.urljoin(self.base_url,url_path)
         r = requests.get(url,params=self.apiKey)
@@ -66,7 +66,6 @@ class LibrariesIOConnecter:
             print(owner+" "+name)
             print("Request not possible")
             print(r.status_code)
-            print(r.text)
             return None
         else:
             return {"dependencies": r.json().get('dependencies'), "github_id": r.json().get('github_id')}
