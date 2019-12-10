@@ -54,7 +54,6 @@ class GithubConnector:
                     emails_list.append(contributor.email)
                 else:
                     print("wrong email " + contributor.email)
-                    exit()
         return emails_list
 
 
