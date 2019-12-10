@@ -4,6 +4,8 @@ import requests,urllib,posixpath,subprocess,argparse
 from urllib.parse import urlparse
 from github import Github
 import json
+import re
+import dns.resolver
 
 parser =  argparse.ArgumentParser(description='Protontypes - Random Donation')
 parser.add_argument("--project", required=True, type=str, help="Project root folder to scan")
@@ -17,12 +19,25 @@ with open('tokens.json') as f:
 libraries_api_key = tokens_data["libraries_io_api_key"]
 github_token = tokens_data["github_token"]
 
+class EmailChecker:
+    def __init__(self):
+        pass
+    @staticmethod
+    def checkMail( mail):
+        #regex = r'\b[\w.-]+?@\w+?\.\w+?\b'
+        #if re.fullmatch(regex, mail) is not None:
+        try:
+            dns.resolver.query(mail.split('@')[1],"MX")[0].exchange
+            return True
+        except:
+            return False
+        return False
 
 class GithubConnector:
     def __init__(self, github_token):
         self.github = Github(github_token)
 
-    def getContributorEmails(self, id):
+    def getContributorEmails(self, id):        
         print(id)
         try:
             repo = self.github.get_repo(int(id))
@@ -32,8 +47,11 @@ class GithubConnector:
         emails_list = []
         for contributor in contributors:
             if contributor.email:
-                emails_list.append(contributor.email)
-
+                if EmailChecker.checkMail(contributor.email):
+                    emails_list.append(contributor.email)
+                else:
+                    print("wrong email " + contributor.email)
+                    exit()
         return emails_list
 
 
