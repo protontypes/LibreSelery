@@ -36,9 +36,14 @@ class EmailChecker:
 class GithubConnector:
     def __init__(self, github_token):
         self.github = Github(github_token)
+<<<<<<< HEAD
 
     def getContributorEmails(self, id):        
         print(id)
+=======
+        print(self.github.get_rate_limit())
+    def getContributorEmails(self, id):
+>>>>>>> 238c6f9f862dedcaaade3b6762eebd00324c2ae7
         try:
             repo = self.github.get_repo(int(id))
         except:
@@ -65,29 +70,26 @@ class LibrariesIOConnecter:
         url = urllib.parse.urljoin(self.base_url,url_path)
         r = requests.get(url,params=self.apiKey)
         if r.status_code is not 200 or r.json().get('repository_url') is None:
+            print(platform+" "+name)
             print("Request not possible")
             print(r.status_code)
-            print(r.text)
             return None
         else:
             print(r.json().get('repository_url'))
             repository_url=urlparse(r.json().get('repository_url'))
             owner = repository_url.path.split('/')[1]
             project_name = repository_url.path.split('/')[2]
-            print("owner")
-            print(owner)
-            print(project_name)
             return {"owner": owner, "project_name": project_name }
 
     def getDependencyData(self, owner, name):
+        name = name.replace(".git","")
         url_path = posixpath.join('api','github',owner,name,'dependencies')
         url = urllib.parse.urljoin(self.base_url,url_path)
-        print(url)
         r = requests.get(url,params=self.apiKey)
         if r.status_code is not 200:
+            print(owner+" "+name)
             print("Request not possible")
             print(r.status_code)
-            print(r.text)
             return None
         else:
             return {"dependencies": r.json().get('dependencies'), "github_id": r.json().get('github_id')}
@@ -103,15 +105,17 @@ if status==0:
 dependency_list = []
 for platform in dependencies_json:
     platform_name = platform["platform"]
+    if not platform["dependencies"]:
+        continue
     for deps in platform["dependencies"]:
         name = deps["name"]
         dependency = {"platform": platform_name, "name":name}
         ownerandproject = librariesIO.getOwnerandProject(platform_name, name)
         if not ownerandproject:
-            break
+            continue
         depData = librariesIO.getDependencyData(ownerandproject["owner"],ownerandproject["project_name"])
         if not depData:
-            break
+            continue
         dependency["dependencies"] = depData["dependencies"]
         dependency["github_id"] = depData["github_id"]
 
