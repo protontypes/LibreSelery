@@ -36,14 +36,12 @@ class EmailChecker:
 class GithubConnector:
     def __init__(self, github_token):
         self.github = Github(github_token)
-<<<<<<< HEAD
+
 
     def getContributorEmails(self, id):        
         print(id)
-=======
         print(self.github.get_rate_limit())
-    def getContributorEmails(self, id):
->>>>>>> 238c6f9f862dedcaaade3b6762eebd00324c2ae7
+
         try:
             repo = self.github.get_repo(int(id))
         except:
