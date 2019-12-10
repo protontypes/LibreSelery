@@ -100,12 +100,30 @@ dependencies_json = None
 if status==0:
     with open('dependencies.json') as f:
         dependencies_json = json.load(f)
+
+
+def getUniqueDependencies(dependencies_json):
+    uniqueList = dict()
+    for platform in dependencies_json:
+        if not platform["dependencies"]:
+            continue
+        platform_name = platform["platform"]
+        if platform_name not in uniqueList.keys():
+                uniqueList[platform_name]=[]
+        for dep in platform["dependencies"]:
+            if dep not in uniqueList[platform_name]:
+                uniqueList[platform_name].append(dep)
+    return uniqueList
+
+dependencies_json = getUniqueDependencies(dependencies_json)
+
+
 dependency_list = []
-for platform in dependencies_json:
-    platform_name = platform["platform"]
-    if not platform["dependencies"]:
+for platform_name in dependencies_json.keys():
+
+    if not dependencies_json[platform_name]:
         continue
-    for deps in platform["dependencies"]:
+    for deps in dependencies_json[platform_name]:
         name = deps["name"]
         dependency = {"platform": platform_name, "name":name}
         ownerandproject = librariesIO.getOwnerandProject(platform_name, name)
