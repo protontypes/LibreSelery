@@ -1,9 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import requests,urllib,posixpath,subprocess,argparse
 from urllib.parse import urlparse
 from github import Github
 import json
+import re
+import dns.resolver
 
 parser =  argparse.ArgumentParser(description='Protontypes - Random Donation')
 parser.add_argument("--project", required=True, type=str, help="Project root folder to scan")
@@ -17,12 +19,29 @@ with open('tokens.json') as f:
 libraries_api_key = tokens_data["libraries_io_api_key"]
 github_token = tokens_data["github_token"]
 
+class EmailChecker:
+    def __init__(self):
+        pass
+    @staticmethod
+    def checkMail( mail):
+        #regex = r'\b[\w.-]+?@\w+?\.\w+?\b'
+        #if re.fullmatch(regex, mail) is not None:
+        try:
+            dns.resolver.query(mail.split('@')[1],"MX")[0].exchange
+            return True
+        except:
+            return False
+        return False
 
 class GithubConnector:
     def __init__(self, github_token):
         self.github = Github(github_token)
+
+
+    def getContributorEmails(self, id):        
+        print(id)
         print(self.github.get_rate_limit())
-    def getContributorEmails(self, id):
+
         try:
             repo = self.github.get_repo(int(id))
         except:
@@ -31,8 +50,10 @@ class GithubConnector:
         emails_list = []
         for contributor in contributors:
             if contributor.email:
-                emails_list.append(contributor.email)
-
+                if EmailChecker.checkMail(contributor.email):
+                    emails_list.append(contributor.email)
+                else:
+                    print("wrong email " + contributor.email)
         return emails_list
 
 
@@ -51,11 +72,15 @@ class LibrariesIOConnecter:
             print(r.status_code)
             return None
         else:
-            print(r.json().get('repository_url'))
-            repository_url=urlparse(r.json().get('repository_url'))
-            owner = repository_url.path.split('/')[1]
-            project_name = repository_url.path.split('/')[2]
-            return {"owner": owner, "project_name": project_name }
+            try:
+                repository_url=urlparse(r.json().get('repository_url'))
+                owner = repository_url.path.split('/')[1]
+                project_name = repository_url.path.split('/')[2]
+                return {"owner": owner, "project_name": project_name }
+            except:
+                print("Repository URL is not valid")
+                print(repository_url)
+                return None
 
     def getDependencyData(self, owner, name):
         name = name.replace(".git","")
@@ -78,12 +103,30 @@ dependencies_json = None
 if status==0:
     with open('dependencies.json') as f:
         dependencies_json = json.load(f)
+
+
+def getUniqueDependencies(dependencies_json):
+    uniqueList = dict()
+    for platform in dependencies_json:
+        if not platform["dependencies"]:
+            continue
+        platform_name = platform["platform"]
+        if platform_name not in uniqueList.keys():
+                uniqueList[platform_name]=[]
+        for dep in platform["dependencies"]:
+            if dep not in uniqueList[platform_name]:
+                uniqueList[platform_name].append(dep)
+    return uniqueList
+
+dependencies_json = getUniqueDependencies(dependencies_json)
+
+
 dependency_list = []
-for platform in dependencies_json:
-    platform_name = platform["platform"]
-    if not platform["dependencies"]:
+for platform_name in dependencies_json.keys():
+
+    if not dependencies_json[platform_name]:
         continue
-    for deps in platform["dependencies"]:
+    for deps in dependencies_json[platform_name]:
         name = deps["name"]
         dependency = {"platform": platform_name, "name":name}
         ownerandproject = librariesIO.getOwnerandProject(platform_name, name)
