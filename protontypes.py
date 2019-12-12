@@ -66,7 +66,6 @@ class LibrariesIOConnecter:
         url_path = posixpath.join('api',platform,name)
         url = urllib.parse.urljoin(self.base_url,url_path)
         r = requests.get(url,params=self.apiKey)
-        print(r.json().get('repository_url'))
         if r.status_code is not 200 or r.json().get('repository_url') is None:
             print(platform+" "+name)
             print("Request not possible")
