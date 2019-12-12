@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import requests,urllib,posixpath,subprocess,argparse
 from urllib.parse import urlparse
@@ -66,17 +66,22 @@ class LibrariesIOConnecter:
         url_path = posixpath.join('api',platform,name)
         url = urllib.parse.urljoin(self.base_url,url_path)
         r = requests.get(url,params=self.apiKey)
+        print(r.json().get('repository_url'))
         if r.status_code is not 200 or r.json().get('repository_url') is None:
             print(platform+" "+name)
             print("Request not possible")
             print(r.status_code)
             return None
         else:
-            print(r.json().get('repository_url'))
-            repository_url=urlparse(r.json().get('repository_url'))
-            owner = repository_url.path.split('/')[1]
-            project_name = repository_url.path.split('/')[2]
-            return {"owner": owner, "project_name": project_name }
+            try:
+                repository_url=urlparse(r.json().get('repository_url'))
+                owner = repository_url.path.split('/')[1]
+                project_name = repository_url.path.split('/')[2]
+                return {"owner": owner, "project_name": project_name }
+            except:
+                print("Repository URL is not valid")
+                print(repository_url)
+                return None
 
     def getDependencyData(self, owner, name):
         name = name.replace(".git","")
