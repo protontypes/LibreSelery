@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import requests,urllib,posixpath,subprocess,argparse
+import requests,urllib,posixpath,subprocess,argparse,os
 from urllib.parse import urlparse
 from github import Github
 import json
@@ -18,6 +18,11 @@ with open('tokens.json') as f:
     tokens_data = json.load(f)
 libraries_api_key = tokens_data["libraries_io_api_key"]
 github_token = tokens_data["github_token"]
+
+## Load parameters ny environment variables
+
+libraries_api_key = os.environ['LIBRARIES.IO_TOKEN']
+github_token = os.environ['GITHUB_TOKEN']
 
 class EmailChecker:
     def __init__(self):
