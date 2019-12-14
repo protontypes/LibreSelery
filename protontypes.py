@@ -1,6 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
-import requests,urllib,posixpath,subprocess,argparse
+import requests,urllib,posixpath,subprocess,argparse,os
 from urllib.parse import urlparse
 from github import Github
 import json
@@ -18,6 +18,11 @@ with open('tokens.json') as f:
     tokens_data = json.load(f)
 libraries_api_key = tokens_data["libraries_io_api_key"]
 github_token = tokens_data["github_token"]
+
+## Load parameters ny environment variables
+
+libraries_api_key = os.environ['LIBRARIES.IO_TOKEN']
+github_token = os.environ['GITHUB_TOKEN']
 
 class EmailChecker:
     def __init__(self):
@@ -72,11 +77,15 @@ class LibrariesIOConnecter:
             print(r.status_code)
             return None
         else:
-            print(r.json().get('repository_url'))
-            repository_url=urlparse(r.json().get('repository_url'))
-            owner = repository_url.path.split('/')[1]
-            project_name = repository_url.path.split('/')[2]
-            return {"owner": owner, "project_name": project_name }
+            try:
+                repository_url=urlparse(r.json().get('repository_url'))
+                owner = repository_url.path.split('/')[1]
+                project_name = repository_url.path.split('/')[2]
+                return {"owner": owner, "project_name": project_name }
+            except:
+                print("Repository URL is not valid")
+                print(repository_url)
+                return None
 
     def getDependencyData(self, owner, name):
         name = name.replace(".git","")

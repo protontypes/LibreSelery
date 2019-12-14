@@ -2,9 +2,9 @@ FROM python:3.7.5-slim-stretch
 
 WORKDIR /root
 
-### Install python dependencies
-COPY requirements.txt . 
+COPY ./* /root/
 
+### Install python dependencies
 RUN pip install -r requirements.txt
 
 ### RUBY
