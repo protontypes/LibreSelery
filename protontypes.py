@@ -19,9 +19,9 @@ with open('tokens.json') as f:
 libraries_api_key = tokens_data["libraries_io_api_key"]
 github_token = tokens_data["github_token"]
 
-## Load parameters ny environment variables
+## Load parameters from environment variables
 
-libraries_api_key = os.environ['LIBRARIES.IO_TOKEN']
+libraries_api_key = os.environ['LIBRARIES_IO_TOKEN']
 github_token = os.environ['GITHUB_TOKEN']
 
 class EmailChecker:
@@ -43,7 +43,7 @@ class GithubConnector:
         self.github = Github(github_token)
 
 
-    def getContributorEmails(self, id):        
+    def getContributorEmails(self, id):
         print(id)
         print(self.github.get_rate_limit())
 
