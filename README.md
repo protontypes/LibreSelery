@@ -2,7 +2,7 @@
 
 ## Usage
 
-Install with docker
+Install with docker:
 
 ```bash
 git clone https://github.com/protontypes/protontypes.git
@@ -10,7 +10,7 @@ cd protontypes
 bash ./build_docker.sh
 ```
 
-Create the tokens file
+Create the tokens file:
 
 ```bash
 mkdir ~/.protontypes/
@@ -20,7 +20,7 @@ touch tokens.env
 sudo chmod u=rw,g-rwx,o-rwx ~/.protontypes/token.env
 ```
 
-Add the tokens to token.env
+Add the tokens to token.env:
 
 ```bash
 COINBASE_TOKEN=XXXXXXXXXXXXXXXX
@@ -29,13 +29,13 @@ GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 LIBRARIES_IO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-Run protontypes on your project root folder
+Run protontypes on your target project root folder:
 
 ```bash
 bash protontypes_dockerized ~/gitclones/<target_project>
 ```
 
-For usage of protontypes without docker
+For usage of protontypes without docker you can load the tokens into your base environment:
 
 ```bash
 export $(cat ~/.protontypes/tokens.env)
