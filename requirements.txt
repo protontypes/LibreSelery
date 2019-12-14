@@ -1,2 +1,4 @@
 pygithub
 pyyaml
+coinbase
+dnspython
