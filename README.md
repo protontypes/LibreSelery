@@ -38,6 +38,6 @@ bash protontypes_dockerized ~/gitclones/<target_project>
 For usage of protontypes without docker you can load the tokens into your base environment:
 
 ```bash
-export $(cat ~/.protontypes/tokens.env)
+env $(cat ~/.protontypes/tokens.env | xargs) ~/protontypes/protontypes.py --project ~/gitclones/
 ```
 
