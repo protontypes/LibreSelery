@@ -20,7 +20,7 @@ touch tokens.env
 sudo chmod u=rw,g-rwx,o-rwx ~/.protontypes/token.env
 ```
 
-Add the tokens to token.env:
+Add the tokens to tokens.env file:
 
 ```bash
 COINBASE_TOKEN=XXXXXXXXXXXXXXXX
