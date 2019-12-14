@@ -8,7 +8,7 @@ options = {}
 OptionParser.new do |parser|
   parser.on("-p", "--project LIBRARY",
             "Project root folder to scan for manifesto files recursaivly") do |lib|
-    puts "Scan folder: #{lib}!"
+    puts "Scan folder: #{lib}"
     project_root = lib
   end
 end.parse!
