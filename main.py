@@ -14,12 +14,6 @@ parser.add_argument("--project", required=True, type=str,
 args = parser.parse_args()
 root_folder = args.project
 
-# Load parameters
-with open('tokens.json') as f:
-    tokens_data = json.load(f)
-libraries_api_key = tokens_data["libraries_io_api_key"]
-github_token = tokens_data["github_token"]
-
 # Load parameters from environment variables
 
 libraries_api_key = os.environ['LIBRARIES_IO_TOKEN']
