@@ -2,7 +2,7 @@ FROM python:3.7.5-slim-stretch
 
 WORKDIR /root
 
-COPY ./* /root/
+COPY requirements.txt . 
 
 ### Install python dependencies
 RUN pip install -r requirements.txt
@@ -13,5 +13,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 RUN gem install bibliothecary curl
+
+# Copy all
+COPY . .
 
 CMD ["bash"]
