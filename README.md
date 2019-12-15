@@ -17,7 +17,7 @@ mkdir ~/.protontypes/
 cd ~/.protontypes/
 touch tokens.env
 # Remove read permission for all other users
-sudo chmod u=rw,g-rwx,o-rwx ~/.protontypes/token.env
+sudo chmod u=rw,g-rwx,o-rwx ~/.protontypes/tokens.env
 ```
 
 Add the tokens to tokens.env file:
@@ -32,12 +32,11 @@ LIBRARIES_IO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 Run protontypes on your target project root folder:
 
 ```bash
-bash protontypes_dockerized ~/gitclones/<target_project>
+bash protontypes_docker ~/gitclones/<target_project>
 ```
 
 For usage of protontypes without docker you can load the tokens into your base environment:
 
 ```bash
-env $(cat ~/.protontypes/tokens.env | xargs) ~/protontypes/protontypes.py --project ~/gitclones/
+env $(cat ~/.protontypes/tokens.env | xargs) ~/protontypes/main.py --project=$PROJECT_DIR_TO_SCAN
 ```
-
