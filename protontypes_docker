@@ -1,4 +1,4 @@
 #!/bin/sh
-cmd="python /root/protontypes.py --project $@"
+cmd="python /root/main.py --project $@"
 echo $cmd
 docker run --rm -it --env-file ~/.protontypes/tokens.env -v $@:$@ protontypes bash -c "$cmd"
