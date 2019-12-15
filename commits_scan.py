@@ -11,7 +11,7 @@ root_folder = args.project
 
 #repo = Repo.clone_from('git@github.com:smappi/smappi.git', '/tmp/xxx')
 repo = Repo(root_folder)
-commits = list(repo.iter_commits('master', max_count=5))
+commits = list(repo.iter_commits('master'))
 for c in commits:
     commit = {'name': str(c.author), 'email': c.author.email, 'msg': c.message} 
     print(commit)
