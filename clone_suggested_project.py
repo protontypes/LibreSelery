@@ -25,5 +25,5 @@ gs = GitSuggest(username=github_user)
 # gs = GitSuggest(username=<username>, deep_dive=True)
 #
 # # To get an iterator over suggested repositories.
-gs.get_suggested_repositories()
+print(gs.get_suggested_repositories())
 
