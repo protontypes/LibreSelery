@@ -17,7 +17,7 @@ mkdir ~/.protontypes/
 cd ~/.protontypes/
 touch tokens.env
 # Remove read permission for all other users
-sudo chmod u=rw,g-rwx,o-rwx ~/.protontypes/tokens.env
+chmod u=rw,g-rwx,o-rwx ~/.protontypes/tokens.env
 ```
 
 Add the tokens to tokens.env file:
