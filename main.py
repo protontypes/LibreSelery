@@ -8,8 +8,8 @@ from protontypes.github_connector import GithubConnector
 from protontypes.librariesio_connector import LibrariesIOConnector
 
 parser = argparse.ArgumentParser(description='Protontypes - Random Donation')
-parser.add_argument("--project", required=True, type=str,
-                    help="Project root folder to scan")
+parser.add_argument("--folder", required=True, type=str,
+                    help="Root folder to scan")
 
 args = parser.parse_args()
 root_folder = args.project
