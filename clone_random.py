@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import argparse
 import os
+import random
 from git import Repo
 from github import Github
 parser = argparse.ArgumentParser()
@@ -16,7 +17,11 @@ github_token = os.environ['GITHUB_TOKEN']
 
 g = Github(github_token)
 # https://help.github.com/en/github/searching-for-information-on-github/understanding-the-search-syntax
-repositories = g.search_repositories(query='good-first-issues:>3')
+
+min_stars=100
+upper_bound=2000
+max_stars=random.randint(1, upper_bound)
+repositories = g.search_repositories(query='stars:'+str(min_stars)+'..'+str(max_stars))
 for repo in repositories:
    Repo.clone_from(repo.clone_url,clone_folder+"/"+repo.name)
    print(repo.clone_url)
