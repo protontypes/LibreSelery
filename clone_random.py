@@ -25,3 +25,5 @@ repositories = g.search_repositories(query='stars:'+str(min_stars)+'..'+str(max_
 for repo in repositories:
    Repo.clone_from(repo.clone_url,clone_folder+"/"+repo.name)
    print(repo.clone_url)
+   print(repo.get_languages)
+   
