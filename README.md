@@ -1,4 +1,4 @@
-# ProtonTypes
+# Protontypes
 
 ## Usage
 
