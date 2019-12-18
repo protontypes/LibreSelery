@@ -12,7 +12,7 @@ parser.add_argument("--folder", required=True, type=str,
                     help="Folder to scan")
 
 args = parser.parse_args()
-root_folder = args.project
+root_folder = args.folder
 
 # Load parameters from environment variables
 
