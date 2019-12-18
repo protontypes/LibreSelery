@@ -2,6 +2,8 @@ FROM python:3.7.5-slim-stretch
 
 WORKDIR /root
 
+COPY requirements.txt .
+
 ### RUBY
 RUN apt-get update && \
     apt-get install -y ruby ruby-dev ruby-bundler build-essential curl && \
@@ -13,6 +15,6 @@ RUN gem install bibliothecary curl
 COPY . .
 
 ### Install python dependencies
-RUN pip install . 
+RUN pip install -r requirements.txt
 
 CMD ["bash"]
