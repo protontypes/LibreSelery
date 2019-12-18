@@ -19,8 +19,8 @@ g = Github(github_token)
 # https://help.github.com/en/github/searching-for-information-on-github/understanding-the-search-syntax
 
 min_stars=100
-upper_bound=2000
-max_stars=random.randint(1, upper_bound)
+upper_bound_stars=2000
+max_stars=random.randint(min_stars, upper_bound_stars)
 repositories = g.search_repositories(query='stars:'+str(min_stars)+'..'+str(max_stars))
 for repo in repositories:
    Repo.clone_from(repo.clone_url,clone_folder+"/"+repo.name)
