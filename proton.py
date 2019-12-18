@@ -23,7 +23,8 @@ github_token = os.environ['GITHUB_TOKEN']
 librariesIO = LibrariesIOConnector(libraries_api_key)
 gitConnector = GithubConnector(github_token)
 
-status = subprocess.call('ruby scan.rb --project='+root_folder, shell=True)
+run_path = os.path.dirname(os.path.realpath(__file__))
+status = subprocess.call('ruby '+run_path+'/scripts/scan.rb --project='+root_folder, shell=True)
 dependencies_json = None
 if status == 0:
     with open('dependencies.json') as f:
