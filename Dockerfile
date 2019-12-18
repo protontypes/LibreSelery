@@ -2,10 +2,8 @@ FROM python:3.7.5-slim-stretch
 
 WORKDIR /root
 
-COPY requirements.txt . 
-
 ### Install python dependencies
-RUN pip install -r requirements.txt
+RUN pip install . 
 
 ### RUBY
 RUN apt-get update && \
