@@ -108,6 +108,5 @@ dmypy.json
 .pyre/
 
 # End of https://www.gitignore.io/api/python
-__pycache__
 dependencies.json
-db
+db*
