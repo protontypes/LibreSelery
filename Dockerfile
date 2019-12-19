@@ -11,10 +11,10 @@ RUN apt-get update && \
 
 RUN gem install bibliothecary curl
 
-# Copy all
-COPY . .
-
 ### Install python dependencies
 RUN pip install -r requirements.txt
+
+# Copy all
+COPY . .
 
 CMD ["bash"]

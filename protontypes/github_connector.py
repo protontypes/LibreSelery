@@ -2,7 +2,8 @@ from github import Github
 from .email_checker import EmailChecker
 import sqlite3
 from datetime import datetime
-
+import sys
+import time
 
 class GithubConnector:
     def __init__(self, github_token):
@@ -24,8 +25,15 @@ class GithubConnector:
 
     def getContributorEmails(self, id):
         print(id)
-        print(self.github.get_rate_limit())
-
+        requests_remaining=self.github.rate_limiting
+        print(requests_remaining)
+        if requests_remaining[0] < 100:
+            wait_time=self.github.rate_limiting_resettime - int(time.time())
+            print("No Github requests remaining")
+            for i in range(wait_time,0,-1):
+                sys.stdout.write(str(i)+' ')
+                sys.stdout.flush()
+                time.sleep(1)
         try:
             repo = self.github.get_repo(int(id))
         except:
