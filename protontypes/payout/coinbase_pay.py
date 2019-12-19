@@ -1,10 +1,13 @@
 #!/usr/bin/python3
 from coinbase.wallet.client import Client
-import os,json
 
-coinbase_token = os.environ['COINBASE_TOKEN']
-coinbase_secret = os.environ['COINBASE_SECRET']
-client = Client(coinbase_token,coinbase_secret)
-user = client.get_current_user()
-user_as_json_string = json.dumps(user)
-print(user_as_json_string)
+api_key = os.environ['COINBASE_TOKEN']
+api_secret = os.environ['COINBASE_SECRET']
+
+from coinbase.wallet.client import Client
+
+client = Client(api_key, api_secret)
+account = client.get_primary_account()
+tx = account.send_money(to='lyr10@protonmail.com', amount='0.00001', currency='BTC')
+print(tx)
+
