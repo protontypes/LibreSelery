@@ -24,16 +24,6 @@ class GithubConnector:
         self.db_cursor.close()
 
     def getContributorInfo(self, id):
-        print(id)
-        requests_remaining=self.github.rate_limiting
-        print(requests_remaining)
-        if requests_remaining[0] < 100:
-            wait_time=self.github.rate_limiting_resettime - int(time.time())
-            print("No Github requests remaining")
-            for i in range(wait_time,0,-1):
-                sys.stdout.write(str(i)+' ')
-                sys.stdout.flush()
-                time.sleep(1)
         try:
             repo = self.github.get_repo(int(id))
         except:
@@ -41,6 +31,14 @@ class GithubConnector:
         contributors = repo.get_contributors()
         emails_list = []
         for contributor in contributors:
+	    requests_remaining=self.github.rate_limiting
+            if requests_remaining[0] < 100:
+            	wait_time=self.github.rate_limiting_resettime - int(time.time())
+            	print("No Github requests remaining")
+            	for i in range(wait_time,0,-1):
+                    sys.stdout.write(str(i)+' ')
+                    sys.stdout.flush()
+                    time.sleep(1)
             self.db_cursor = self.db_conn.cursor()
             contr_id = contributor.id
             location = contributor.location
