@@ -61,6 +61,9 @@ max_stars=random.randint(min_stars, upper_bound_stars)
 repositories = g.search_repositories(query='stars:'+str(min_stars)+'..'+str(max_stars))
 
 for repo in repositories:
+   if repo.size>100000:
+       print("Skipped "+repo.clone_url)
+       continue
    print("Clone repo "+repo.clone_url)
    Repo.clone_from(repo.clone_url,clone_folder+"/"+repo.name)
    print("scan with bibliothecary..")
