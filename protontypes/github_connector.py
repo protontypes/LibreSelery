@@ -15,15 +15,15 @@ class GithubConnector:
             self.db_conn = sqlite3.connect("db.sqlite3")
         self.db_cursor = self.db_conn.cursor()
         # create table
-        sqlite_create_table = "CREATE TABLE IF NOT EXISTS github_responses(contributor_id TEXT, email TEXT, request_date DATETIME)"
+        sqlite_create_table = "CREATE TABLE IF NOT EXISTS github_responses(contributor_id TEXT, email TEXT, location TEXT, request_date DATETIME)"
         self.sqlite_insert_with_param = """INSERT INTO 'github_responses'
-                          ('contributor_id', 'email', 'request_date') 
-                          VALUES (?, ?, ?);"""
+                          ('contributor_id', 'email', 'location','request_date') 
+                          VALUES (?, ?, ?, ?);"""
         self.db_cursor.execute(sqlite_create_table)
         self.db_conn.commit()
         self.db_cursor.close()
 
-    def getContributorEmails(self, id):
+    def getContributorInfo(self, id):
         print(id)
         requests_remaining=self.github.rate_limiting
         print(requests_remaining)
@@ -43,6 +43,7 @@ class GithubConnector:
         for contributor in contributors:
             self.db_cursor = self.db_conn.cursor()
             contr_id = contributor.id
+            location = contributor.location
             sqlite_select_query = """SELECT email from github_responses WHERE contributor_id = ?"""
             self.db_cursor.execute(sqlite_select_query, (contr_id,))
             email = self.db_cursor.fetchall()
@@ -50,7 +51,7 @@ class GithubConnector:
                 try:
                     email = contributor.email
                     time_ = datetime.now().strftime("%B %d, %Y %I:%M%p")
-                    data_tuple = (contr_id, email, time_)
+                    data_tuple = (contr_id, email, location, time_)
                     self.db_cursor.execute(
                         self.sqlite_insert_with_param, data_tuple)
                     self.db_conn.commit()
