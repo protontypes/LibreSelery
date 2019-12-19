@@ -12,7 +12,7 @@ class LibrariesIOConnector:
         self.apiKey = {'api_key': key}
         self.base_url = 'https://libraries.io/'
         try:
-            self.db_conn = sqlite3.connect("/root/db/db.sqlite3")
+            self.db_conn = sqlite3.connect("/home/proton/db/db.sqlite3")
         except Exception as e:
             print(e)
             self.db_conn = sqlite3.connect("db.sqlite3")
