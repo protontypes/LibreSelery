@@ -66,7 +66,7 @@ for platform_name in dependencies_json.keys():
         dependency["dependencies"] = depData["dependencies"]
         dependency["github_id"] = depData["github_id"]
 
-        email_list = gitConnector.getContributorEmails(dependency["github_id"])
+        email_list = gitConnector.getContributorInfo(dependency["github_id"])
         dependency["email_list"] = email_list
         print("Emails for " + name)
         print(email_list)
