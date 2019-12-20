@@ -31,11 +31,11 @@ class GithubConnector:
         contributors = repo.get_contributors()
         emails_list = []
         for contributor in contributors:
-        requests_remaining=self.github.rate_limiting
+            requests_remaining=self.github.rate_limiting
             if requests_remaining[0] < 100:
-            wait_time=self.github.rate_limiting_resettime - int(time.time())
-            print("No Github requests remaining")
-            for i in range(wait_time,0,-1):
+                wait_time=self.github.rate_limiting_resettime - int(time.time())
+                print("No Github requests remaining")
+                for i in range(wait_time,0,-1):
                     sys.stdout.write(str(i)+' ')
                     sys.stdout.flush()
                     time.sleep(1)
