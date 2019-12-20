@@ -1,6 +1,6 @@
 #!/bin/bash
 database_location=~/.protontypes/db
-token_location=~/.protontypes/tokens2.env
+token_location=~/.protontypes/tokens.env
 
 if [ ! -d $database_location ]
 then
