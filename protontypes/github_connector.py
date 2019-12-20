@@ -1,5 +1,6 @@
 from github import Github
 from .email_checker import EmailChecker
+from .countdown import countdown
 import sqlite3
 from datetime import datetime
 import sys
@@ -35,10 +36,7 @@ class GithubConnector:
             if requests_remaining[0] < 100:
                 wait_time=self.github.rate_limiting_resettime - int(time.time())
                 print("No Github requests remaining")
-                for i in range(wait_time,0,-1):
-                    sys.stdout.write(str(i)+' ')
-                    sys.stdout.flush()
-                    time.sleep(1)
+                countdown(wait_time)
             self.db_cursor = self.db_conn.cursor()
             contr_id = contributor.id
             location = contributor.location

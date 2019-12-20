@@ -15,6 +15,7 @@ then
   COINBASE_SECRET=
   GITHUB_TOKEN=
   LIBRARIES_IO_TOKEN=
+  DATABASE_LOCATION=$database_location
 EOF
   chmod 700 $token_location
 fi
