@@ -32,7 +32,7 @@ LIBRARIES_IO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 Run protontypes on your target project root folder:
 
 ```bash
-bash protontypes_docker ~/gitclones/<target_project>
+bash protontypes_docker ~/gitclones/<target_projects>
 ```
 
 For usage of protontypes without docker you can load the tokens into your base environment:
