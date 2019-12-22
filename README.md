@@ -10,16 +10,6 @@ cd protontypes
 bash ./build_docker.sh
 ```
 
-Create the tokens file:
-
-```bash
-mkdir ~/.protontypes/
-cd ~/.protontypes/
-touch tokens.env
-# Remove read permission for all other users
-chmod u=rw,g-rwx,o-rwx ~/.protontypes/tokens.env
-```
-
 Add the tokens to tokens.env file:
 
 ```bash
