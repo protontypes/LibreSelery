@@ -22,6 +22,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Protontypes
+      env: # Or as an environment variable
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        LIBRARIES_IO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         python ./proton.py --folder ./ 
 
