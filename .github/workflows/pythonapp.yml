@@ -5,7 +5,7 @@ on: [push]
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: python:3.7.5-slim-stretch
 
     steps:
     - uses: actions/checkout@v1
@@ -15,6 +15,10 @@ jobs:
         python-version: 3.7
     - name: Install dependencies
       run: |
+        apt update && \
+        apt install -y git ruby ruby-dev ruby-bundler build-essential curl && \
+        rm -rf /var/lib/apt/lists/*
+        gem install bibliothecary curl
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Lint with flake8
