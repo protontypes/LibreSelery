@@ -15,10 +15,10 @@ jobs:
         python-version: 3.7
     - name: Install dependencies
       run: |
-        apt update && \
-        apt install -y git ruby ruby-dev ruby-bundler build-essential curl && \
-        rm -rf /var/lib/apt/lists/*
-        gem install bibliothecary curl
+        sudo apt update && \
+        sudo apt install -y git ruby ruby-dev ruby-bundler build-essential curl && \
+        sudo rm -rf /var/lib/apt/lists/*
+        sudo gem install bibliothecary curl
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Lint with flake8
