@@ -23,5 +23,5 @@ jobs:
         pip install -r requirements.txt
     - name: Run Protontypes
       run: |
-        python ./proton.py --folder ./
+        python ./proton.py --folder ./ 
 
