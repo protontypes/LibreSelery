@@ -27,4 +27,5 @@ WORKDIR /home/proton
 # Copy all
 COPY . .
 
-CMD ["bash"]
+ENTRYPOINT ["python","/home/proton/proton.py"]
+CMD []
