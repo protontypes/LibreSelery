@@ -29,7 +29,7 @@ Run protontypes on your target project root folder:
 bash protontypes_docker ~/gitclones/<target_projects>
 ```
 
-For usage of protontypes without docker you can load the tokens into your base environment:
+For usage of protontypes without docker you can load the tokens into your base environment (insecure):
 
 ```bash
 env $(cat ~/.protontypes/tokens.env | xargs) ~/protontypes/main.py --project=$PROJECT_DIR_TO_SCAN
