@@ -31,7 +31,7 @@ if status == 0:
         dependencies_json = json.load(f)
 else:
      print("Can not find dependencies.json file")
-     os.exit()
+     exit()
   
 
 
