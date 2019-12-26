@@ -11,7 +11,7 @@ Install with docker:
 ```bash
 git clone https://github.com/protontypes/protontypes.git
 cd protontypes
-bash ./build_docker.sh
+bash ./install_and_build.sh
 ```
 
 Add the tokens to tokens.env file:
