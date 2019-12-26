@@ -64,11 +64,7 @@ class LibrariesIOConnector:
         self.db_cursor.execute(sqlite_select_query, (url,))
         responses = self.db_cursor.fetchall()
         if(responses):
-<<<<<<< HEAD
             print("Load response from db")
-=======
-            print("load response from db")
->>>>>>> 84c046ec47ebd74aa60226e5cc5c47754907cd5d
             r = pickle.loads(responses[0][0])
             return r
         r = requests.get(url, params=self.apiKey)
@@ -79,11 +75,7 @@ class LibrariesIOConnector:
             self.db_cursor.execute(
                 self.sqlite_insert_with_param, data_tuple)
             self.db_conn.commit()
-<<<<<<< HEAD
-            print("Save response into db")
-=======
             print("save response into db")
->>>>>>> 84c046ec47ebd74aa60226e5cc5c47754907cd5d
         return r
 
 
