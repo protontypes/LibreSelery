@@ -10,10 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build Container
-        run:  docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t protontypes .
+        run:  ./install_and_build.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LIBRARIES_IO_TOKEN: ${{ secrets.LIBRARIES_IO_TOKEN }}
-      - name: Run Container
+      - name: Run Container on own sources as input
         run: ./protontypes_docker.sh ./
 
