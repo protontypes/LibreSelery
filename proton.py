@@ -69,7 +69,7 @@ for platform_name in dependencies_json.keys():
         email_list = gitConnector.getContributorInfo(dependency["github_id"])
         dependency["email_list"] = email_list
         print("Emails for " + name)
-        print(email_list)
+        print("Number vaild emails entries:")
+        print(len(email_list))
         dependency_list.append(dependency)
 
-print(dependency_list)
