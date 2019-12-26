@@ -9,10 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Decrypt large secret
+      - name: Build Container
         run:  docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t protontypes .
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LIBRARIES_IO_TOKEN: ${{ secrets.LIBRARIES_IO_TOKEN }}
-
+      - name: Run Container
+        run: ./protontypes_docker.sh ./
 
