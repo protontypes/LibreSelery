@@ -1,7 +1,9 @@
 # ./.github/workflows/docker_run.yml
 name: Docker Build and Run
-
-on: push
+# on: push
+on:
+   release:
+      types: [published]
 
 jobs:
   my-job:
