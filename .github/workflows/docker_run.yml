@@ -1,12 +1,8 @@
 
-# ./.github/workflows/dockerimage.yml
+# ./.github/workflows/docker_run.yml
+on: [push]
 
-name: Docker Image CI
-
-on:
-release:
-types: [published]
-
+name: Run Docker Image CI
 jobs:
 build:
 runs-on: ubuntu-latest
