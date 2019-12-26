@@ -12,7 +12,7 @@ jobs:
       - name: Build Container
         run:  docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t protontypes .
       - name: Run Container on own sources as input
-        run: ./protontypes_docker.sh ./
+        run: ./protontypes_docker.sh $(pwd)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LIBRARIES_IO_TOKEN: ${{ secrets.LIBRARIES_IO_TOKEN }}
