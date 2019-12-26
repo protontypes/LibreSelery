@@ -1,4 +1,3 @@
-# action.yml
 name: 'Docker Build'
 description: 'Run a Docker Container from a Dockerfile'
 inputs:
