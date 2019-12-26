@@ -13,3 +13,5 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ secret.GITHUB_TOKEN }}
+#    release:
+#        types: [published]
