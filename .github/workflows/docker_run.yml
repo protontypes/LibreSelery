@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build Container
-        run:  ./install_and_build.sh
+        run:  docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t protontypes .
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LIBRARIES_IO_TOKEN: ${{ secrets.LIBRARIES_IO_TOKEN }}
