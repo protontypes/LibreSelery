@@ -13,11 +13,9 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: 3.7
-    - name: Hello world action step
+    - name: Build Container
       id: hello
-      uses: .github/workflow/docker_build@v1
-      with:
-        who-to-greet: 'Mona the Octocat'
+      uses: .github/actions/docker_build@v1
     - name: Install dependencies
       run: |
         sudo apt update && \
@@ -31,5 +29,5 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         LIBRARIES_IO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        python ./proton.py --folder ./ 
+        ./protontypes_docker.sh --folder ./ 
 
