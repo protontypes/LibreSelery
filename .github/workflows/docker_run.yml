@@ -13,6 +13,6 @@ jobs:
         run:  docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t protontypes .
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LIBRARIES_IO_TOKEN: ${{ secrets.LIBRARIES_IO_TOKEN }}:  
+          LIBRARIES_IO_TOKEN: ${{ secrets.LIBRARIES_IO_TOKEN }}
 
 
