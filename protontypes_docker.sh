@@ -6,5 +6,5 @@ docker run --rm \
 -v $@:$@ \
 -v ~/.protontypes/db:/home/proton/db \
 protontypes \
-$cmd \
+bash -c $cmd \
 
