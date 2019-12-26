@@ -1,14 +1,18 @@
-
 # ./.github/workflows/docker_run.yml
-on: [push]
+name: Docker Build and Run
 
-name: Run Docker Image CI
+on: push
+
 jobs:
-build:
-runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v1
-            - name: Build from Docker File
-              run: ./install_and_build.sh
-            - name: Run on own sources
-              run: ./protontypes_docker.sh ./
+  my-job:
+    name: Build and Run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Decrypt large secret
+        run:  docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t protontypes .
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LIBRARIES_IO_TOKEN: ${{ secrets.LIBRARIES_IO_TOKEN }}:  
+
+
