@@ -1,33 +1,18 @@
-name: Python application
 
-on: [push]
+# ./.github/workflows/dockerimage.yml
+
+name: Docker Image CI
+
+on:
+release:
+types: [published]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.7
-    - name: Build Container
-      id: hello
-      uses: actions/docker_build@v1
-    - name: Install dependencies
-      run: |
-        sudo apt update && \
-        sudo apt install -y git ruby ruby-dev ruby-bundler build-essential curl && \
-        sudo rm -rf /var/lib/apt/lists/*
-        sudo gem install bibliothecary curl
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: Run Protontypes on itself
-      env: # Or as an environment variable
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        LIBRARIES_IO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        ./protontypes_docker.sh --folder ./ 
-
+build:
+runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v1
+            - name: Build from Docker File
+              run: ./install_and_build.sh
+            - name: Run on own sources
+              run: ./protontypes_docker.sh ./
