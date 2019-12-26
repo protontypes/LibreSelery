@@ -30,7 +30,7 @@ if status == 0:
     with open('dependencies.json') as f:
         dependencies_json = json.load(f)
 else:
-     print(Can not find dependencies.json file)
+     print("Can not find dependencies.json file")
      os.exit()
   
 
