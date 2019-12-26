@@ -1,0 +1,21 @@
+# ./.github/workflows/docker_run.yml
+name: Docker Build and Run
+# on: push
+on:
+   release:
+      types: [published]
+
+jobs:
+  my-job:
+    name: Build and Run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build Container
+        run:  docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t protontypes .
+      - name: Run Container on own sources as input
+        run: ./protontypes_docker.sh $(pwd)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LIBRARIES_IO_TOKEN: ${{ secrets.LIBRARIES_IO_TOKEN }}
+

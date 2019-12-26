@@ -72,4 +72,3 @@ for platform_name in dependencies_json.keys():
         print("Number vaild emails entries:")
         print(len(email_list))
         dependency_list.append(dependency)
-
