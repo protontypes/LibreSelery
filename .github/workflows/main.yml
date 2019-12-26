@@ -15,7 +15,7 @@ jobs:
         python-version: 3.7
     - name: Build Container
       id: hello
-      uses: .github/actions/docker_build@v1
+      uses: actions/docker_build@v1
     - name: Install dependencies
       run: |
         sudo apt update && \
