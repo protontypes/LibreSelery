@@ -1,4 +1,5 @@
-# Protontypes [![Actions Status](https://github.com/protontypes/protontypes/workflows/docker_build/badge.svg)](https://github.com/protontypes/protontypes/actions)
+# Protontypes 
+[![Actions Status](https://github.com/protontypes/protontypes/workflows/docker_build/badge.svg)](https://github.com/protontypes/protontypes/actions)
 
 [GitHub Terms of Service](https://help.github.com/en/github/site-policy/github-terms-of-service#h-api-terms): 
 > You may not use the API to download data or Content from GitHub for spamming purposes, including for the purposes of selling GitHub users' personal information, such as to recruiters, headhunters, and job boards.
