@@ -1,5 +1,5 @@
 # ./.github/workflows/docker_run.yml
-name: Docker Build and Run
+name: docker_run
 on: push
 #on:
 #   release:
