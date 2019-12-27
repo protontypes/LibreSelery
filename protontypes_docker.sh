@@ -2,11 +2,9 @@
 # Start command
 cmd="python proton.py --folder=$@"
 
-docker run --rm -it \
+docker run --rm \
 --env GITHUB_TOKEN=$GITHUB_TOKEN \
 --env LIBRARIES_IO_TOKEN=$LIBRARIES_IO_TOKEN \
 protontypes \
 bash -c "$cmd" \
 
-# -v $@:$@ \  -v $@:$@ \
-# -v ~/db:/home/proton/.protontypes/db protontypes
