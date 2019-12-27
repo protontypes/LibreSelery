@@ -1,5 +1,4 @@
 # ./.github/workflows/docker_run.yml
-name: docker_run
 on: push
 #on:
 #   release:
@@ -7,7 +6,7 @@ on: push
 
 jobs:
   my-job:
-    name: Build and Run
+    name: build_and_run
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
