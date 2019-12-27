@@ -20,11 +20,13 @@ COPY requirements.txt .
 ### Install python dependencies
 RUN pip install -r requirements.txt
 
+WORKDIR /home/proton/protontypes
+
 USER proton
-
-WORKDIR /home/proton
-
 # Copy all
 COPY . .
+
+# Create folder for dotfiles Dotfiles
+RUN mkdir /home/proton/.protontypes
 
 CMD /bin/bash

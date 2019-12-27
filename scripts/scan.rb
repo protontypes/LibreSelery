@@ -20,6 +20,6 @@ json_deps = deps.to_json
 #puts json_deps
 
 # Save dependencies into json file
-File.open("dependencies.json","w") do |f|
+File.open("/home/proton/.protontypes/dependencies.json","w") do |f|
     f.write(json_deps)
 end

@@ -27,7 +27,7 @@ run_path = os.path.dirname(os.path.realpath(__file__))
 status = subprocess.call('ruby '+run_path+'/scripts/scan.rb --project='+root_folder, shell=True)
 dependencies_json = None
 if status == 0:
-    with open('dependencies.json') as f:
+    with open('/home/proton/.protontypes/dependencies.json') as f:
         dependencies_json = json.load(f)
 else:
      print("Can not find dependencies.json file")
