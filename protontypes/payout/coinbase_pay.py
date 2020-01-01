@@ -8,6 +8,6 @@ from coinbase.wallet.client import Client
 
 client = Client(api_key, api_secret)
 account = client.get_primary_account()
-tx = account.send_money(to='lyr10@protonmail.com', amount='0.00001', currency='BTC')
+tx = account.send_money(to='@protonmail.com', amount='0.00001', currency='BTC')
 print(tx)
 
