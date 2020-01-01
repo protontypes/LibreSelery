@@ -42,7 +42,7 @@ class LibrariesIOConnector:
                 return {"owner": owner, "project_name": project_name}
             except:
                 print("Repository URL is not valid")
-                print(owner+":"+project_name)
+                print(r)
                 return None
 
     def getDependencyData(self, owner, name):
