@@ -1,18 +1,13 @@
 from git import Repo, Commit
 
-class CommitsScanner:
-    def __init__(self):
-        pass
+def ScanCommits(git_folder,branch='master'):
+    repo = Repo(git_folder)
+    commit_msgs = []
+    commits = list(repo.iter_commits('master'))
+    for c in commits:
+        commit_msg = {'name': str(c.author), 'email': c.author.email, 'msg': c.message} 
+        commit_msgs.append(commit_msg)
+    return commit_msgs
 
-    @staticmethod
-    def ScanLocal(git_folder,branch='master'):
-        repo = Repo(git_folder)
-        commit_msgs = []
-        commits = list(repo.iter_commits('master'))
-        for c in commits:
-            commit_msg = {'name': str(c.author), 'email': c.author.email, 'msg': c.message} 
-            commits_msgs.append(commit_msg)
-        return commits_msgs
-
-if __name__ = "___main__":
+if __name__ == "__main__":
     pass
