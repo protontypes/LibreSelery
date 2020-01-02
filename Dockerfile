@@ -22,6 +22,8 @@ RUN pip install -r requirements.txt
 
 WORKDIR /home/proton/protontypes
 
+RUN chown -R proton:proton /home/proton/protontypes/
+
 USER proton
 # Copy all
 COPY . .

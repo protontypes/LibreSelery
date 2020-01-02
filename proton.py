@@ -40,7 +40,7 @@ for email in funding_emails:
     receipt = coinConnector.payout(email)
     print(receipt)
     f = open("receipt.txt", "a")
-    f.write(receipt)
+    f.write(str(receipt))
     f.close()
 
 # Scan for Dependencies
