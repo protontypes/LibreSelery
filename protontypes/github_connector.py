@@ -1,10 +1,11 @@
 from github import Github
 from .email_checker import EmailChecker
-from .countdown import countdown
+from .protonutils import countdown
 import sqlite3
 from datetime import datetime
 import sys
 import time
+from urllib.parse import urlparse
 
 class GithubConnector:
     def __init__(self, github_token):
@@ -64,6 +65,19 @@ class GithubConnector:
                     print("wrong email " + email)
             self.db_cursor.close()
         return emails_list
+
+    def GetProjectID(self, repo_url):
+        parser = urlparse(repo_url) 
+        print(parser)
+        owner = parser.path.split('/')[1]
+        project_name = parser.path.split('/')[2]
+        try:
+            project_name = project_name.split('.')[0]
+        except:
+            pass 
+        repo = self.github.get_repo(owner+'/'+project_name)
+        return repo.id
+
 
 if __name__ == "__main__":
     pass
