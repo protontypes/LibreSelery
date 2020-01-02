@@ -4,11 +4,11 @@ import argparse
 import os
 import json
 import re
+import random
 
 from protontypes.github_connector import GithubConnector
 from protontypes.librariesio_connector import LibrariesIOConnector
-
-from protontypes import gitremotes,protonutils
+from protontypes import gitremotes,protonutils,coinbase_pay
 
 parser = argparse.ArgumentParser(description='Protontypes - Automated Funding')
 parser.add_argument("--folder", required=True, type=str,
@@ -30,8 +30,15 @@ gitConnector = GithubConnector(github_token)
 target_remote=gitremotes.ScanRemotes(git_folder,'origin')
 project_id = gitConnector.GetProjectID(target_remote) 
 project_email_list = gitConnector.getContributorInfo(project_id)
-for user in project_email_list:
-    print(user)
+n_funding_emails=1
+amount='0.00001'
+funding_emails=random.choices(project_email_list, weights = [ 1 for i in range(len(project_email_list))], k=n_funding_emails)
+for email in funding_emails:
+    receipt = coinbase_pay.payout(email,amount)
+    print(receipt)
+    f = open("receipt.txt", "a")
+    f.write(receipt)
+    f.close()
 
 # Scan for Dependencies
 run_path = os.path.dirname(os.path.realpath(__file__))
