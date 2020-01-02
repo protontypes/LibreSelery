@@ -6,7 +6,6 @@ class CoinbaseConnector:
         self.client = Client(token,secret)
 
     def payout(self,target_email,target_amount='0.00001'):
-        print(dir(self))
         account = self.client.get_primary_account()
         tx = account.send_money(to=target_email, amount=target_amount, currency='BTC', skip_notifications='true')
         return tx
