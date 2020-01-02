@@ -1,6 +1,6 @@
 from git import Repo, Commit
 
-class CommitsScanner
+class CommitsScanner:
     def __init__(self):
         pass
 
