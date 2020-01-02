@@ -8,7 +8,8 @@ import random
 
 from protontypes.github_connector import GithubConnector
 from protontypes.librariesio_connector import LibrariesIOConnector
-from protontypes import gitremotes,protonutils,coinbase_pay
+from protontypes.coinbase_pay import CoinbaseConnector
+from protontypes import gitremotes,protonutils
 
 parser = argparse.ArgumentParser(description='Protontypes - Automated Funding')
 parser.add_argument("--folder", required=True, type=str,
@@ -21,10 +22,12 @@ git_folder = args.folder
 
 libraries_api_key = os.environ['LIBRARIES_IO_TOKEN']
 github_token = os.environ['GITHUB_TOKEN']
-
+coinbase_token = os.environ['COINBASE_TOKEN']
+coinbase_secret = os.environ['COINBASE_SECRET']
 
 librariesIO = LibrariesIOConnector(libraries_api_key)
 gitConnector = GithubConnector(github_token)
+coinConnector = CoinbaseConnector(coinbase_token,coinbase_secret)
 
 # Scan for Project Contributors
 target_remote=gitremotes.ScanRemotes(git_folder,'origin')
@@ -34,7 +37,7 @@ n_funding_emails=1
 amount='0.00001'
 funding_emails=random.choices(project_email_list, weights = [ 1 for i in range(len(project_email_list))], k=n_funding_emails)
 for email in funding_emails:
-    receipt = coinbase_pay.payout(email,amount)
+    receipt = coinConnector.payout(email)
     print(receipt)
     f = open("receipt.txt", "a")
     f.write(receipt)

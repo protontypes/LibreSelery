@@ -1,14 +1,16 @@
 #!/usr/bin/python3
 from coinbase.wallet.client import Client
-import os
 
-api_key = os.environ['COINBASE_TOKEN']
-api_secret = os.environ['COINBASE_SECRET']
+class CoinbaseConnector:
+    def __init__(self,token,secret):
+        self.client = Client(token,secret)
 
-from coinbase.wallet.client import Client
+    def payout(self,target_email,target_amount='0.00001'):
+        print(dir(self))
+        account = self.client.get_primary_account()
+        tx = account.send_money(to=target_email, amount=target_amount, currency='BTC', skip_notifications='true')
+        return tx
 
-client = Client(api_key, api_secret)
-account = client.get_primary_account()
-tx = account.send_money(to='@protonmail.com', amount='0.00001', currency='BTC', skip_notifications='true')
-print(tx)
 
+if __name__ == "__main__":
+    pass
