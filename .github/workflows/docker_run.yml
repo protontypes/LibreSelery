@@ -17,6 +17,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LIBRARIES_IO_TOKEN: ${{ secrets.LIBRARIES_IO_TOKEN }}
+          COINBASE_TOKEN: ${{ secrets.COINBASE_TOKEN }}
+          COINBASE_SECRET: ${{ secrets.COINBASE_SECRET }}
       
       - uses: actions/upload-artifact@v1
         with:
