@@ -18,9 +18,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LIBRARIES_IO_TOKEN: ${{ secrets.LIBRARIES_IO_TOKEN }}
       
-      - run: echo MoneyGoesTo > billing.txt
       - uses: actions/upload-artifact@v1
         with:
-          name: my-artifact
-          path: billing.txt
+          name: Billing
+          path: receipt.txt
 
