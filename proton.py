@@ -4,15 +4,18 @@ import argparse
 import os
 import json
 import re
+
 from protontypes.github_connector import GithubConnector
 from protontypes.librariesio_connector import LibrariesIOConnector
 
-parser = argparse.ArgumentParser(description='Protontypes - Random Donation')
+from protontypes import gitremotes,protonutils
+
+parser = argparse.ArgumentParser(description='Protontypes - Automated Funding')
 parser.add_argument("--folder", required=True, type=str,
-                    help="Folder to scan")
+                    help="Git folder to scan")
 
 args = parser.parse_args()
-root_folder = args.folder
+git_folder = args.folder
 
 # Load parameters from environment variables
 
@@ -23,35 +26,27 @@ github_token = os.environ['GITHUB_TOKEN']
 librariesIO = LibrariesIOConnector(libraries_api_key)
 gitConnector = GithubConnector(github_token)
 
+# Scan for Project Contributors
+target_remote=gitremotes.ScanRemotes(git_folder,'origin')
+project_id = gitConnector.GetProjectID(target_remote) 
+project_email_list = gitConnector.getContributorInfo(project_id)
+for user in project_email_list:
+    print(user)
+
+# Scan for Dependencies
 run_path = os.path.dirname(os.path.realpath(__file__))
-status = subprocess.call('ruby '+run_path+'/scripts/scan.rb --project='+root_folder, shell=True)
-dependencies_json = None
+status = subprocess.call('ruby '+run_path+'/scripts/scan.rb --project='+git_folder, shell=True)
+
+
 if status == 0:
     with open('/home/proton/.protontypes/dependencies.json') as f:
         dependencies_json = json.load(f)
 else:
      print("Can not find dependencies.json file")
      exit()
-  
 
 
-def getUniqueDependencies(dependencies_json):
-    uniqueList = dict()
-    for platform in dependencies_json:
-        if not platform["dependencies"]:
-            continue
-        platform_name = platform["platform"]
-        if platform_name not in uniqueList.keys():
-            uniqueList[platform_name] = []
-        for dep in platform["dependencies"]:
-            if dep not in uniqueList[platform_name]:
-                uniqueList[platform_name].append(dep)
-    return uniqueList
-
-
-dependencies_json = getUniqueDependencies(dependencies_json)
-
-
+dependencies_json = protonutils.getUniqueDependencies(dependencies_json)
 dependency_list = []
 for platform_name in dependencies_json.keys():
 

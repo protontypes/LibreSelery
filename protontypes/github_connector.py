@@ -68,7 +68,6 @@ class GithubConnector:
 
     def GetProjectID(self, repo_url):
         parser = urlparse(repo_url) 
-        print(parser)
         owner = parser.path.split('/')[1]
         project_name = parser.path.split('/')[2]
         try:
