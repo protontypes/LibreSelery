@@ -20,8 +20,8 @@ jobs:
           COINBASE_TOKEN: ${{ secrets.COINBASE_TOKEN }}
           COINBASE_SECRET: ${{ secrets.COINBASE_SECRET }}
       
-      - uses: actions/upload-artifact@v1
-        with:
-          name: Billing
-          path: receipt.txt
+#      - uses: actions/upload-artifact@v1
+#        with:
+#          name: Billing
+#          path: receipt.txt
 

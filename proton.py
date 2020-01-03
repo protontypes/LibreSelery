@@ -34,11 +34,11 @@ target_remote=gitremotes.ScanRemotes(git_folder,'origin')
 project_id = gitConnector.GetProjectID(target_remote) 
 project_email_list = gitConnector.getContributorInfo(project_id)
 n_funding_emails=1
-amount='0.00001'
+amount='0.000002'
 funding_emails=random.choices(project_email_list, weights = [ 1 for i in range(len(project_email_list))], k=n_funding_emails)
 for email in funding_emails:
     pass
-    #receipt = coinConnector.payout(email)
+    #receipt = coinConnector.payout(email,amount)
     #print(receipt)
     #f = open("receipt.txt", "a")
     #f.write(str(receipt))
