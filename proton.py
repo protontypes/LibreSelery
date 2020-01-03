@@ -37,17 +37,16 @@ n_funding_emails=1
 amount='0.00001'
 funding_emails=random.choices(project_email_list, weights = [ 1 for i in range(len(project_email_list))], k=n_funding_emails)
 for email in funding_emails:
-    receipt = coinConnector.payout(email)
-    print(receipt)
-    f = open("receipt.txt", "a")
-    f.write(str(receipt))
-    f.close()
+    pass
+    #receipt = coinConnector.payout(email)
+    #print(receipt)
+    #f = open("receipt.txt", "a")
+    #f.write(str(receipt))
+    #f.close()
 
 # Scan for Dependencies
 run_path = os.path.dirname(os.path.realpath(__file__))
 status = subprocess.call('ruby '+run_path+'/scripts/scan.rb --project='+git_folder, shell=True)
-
-
 if status == 0:
     with open('/home/proton/.protontypes/dependencies.json') as f:
         dependencies_json = json.load(f)
@@ -58,6 +57,8 @@ else:
 
 dependencies_json = protonutils.getUniqueDependencies(dependencies_json)
 dependency_list = []
+
+print(dependencies_json)
 for platform_name in dependencies_json.keys():
 
     if not dependencies_json[platform_name]:
