@@ -24,4 +24,7 @@ jobs:
 #        with:
 #          name: Billing
 #          path: receipt.txt
-
+      - uses: ammaraskar/sphinx-action@master
+        with:
+          docs-folder: "docs/"
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
