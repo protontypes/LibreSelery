@@ -28,3 +28,4 @@ jobs:
         with:
           docs-folder: "docs/"
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          build-command: "sphinx-build ./docs/sphinx ./docs"
