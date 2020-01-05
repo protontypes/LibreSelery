@@ -1,6 +1,6 @@
 # Protontypes [![Actions Status](https://github.com/protontypes/protontypes/workflows/docker_run/badge.svg)](https://github.com/protontypes/protontypes/actions)
 
-Software is made out of humans. Invest straight into it them.
+Software is made out of humans. Invest straight into them.
 
 ## Usage
 
