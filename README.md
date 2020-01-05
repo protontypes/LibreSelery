@@ -1,4 +1,4 @@
-# OpenCelery [![Actions Status](https://github.com/OpenCelery/OpenCelery/workflows/docker_run/badge.svg)](https://github.com/OpenCelery/OpenCelery/actions)
+# opencelery [![Actions Status](https://github.com/OpenCelery/OpenCelery/workflows/docker_run/badge.svg)](https://github.com/OpenCelery/OpenCelery/actions)
 
 Software is made out of humans. Invest straight into them.
 
