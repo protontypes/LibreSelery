@@ -28,7 +28,4 @@ USER proton
 # Copy all
 COPY . .
 
-# Create folder for dotfiles Dotfiles
-RUN mkdir /home/proton/.protontypes
-
 CMD /bin/bash

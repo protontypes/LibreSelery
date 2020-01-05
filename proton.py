@@ -43,19 +43,20 @@ project_email_list = gitConnector.getContributorInfo(project_id)
 ## Parse the json without local storage
 
 run_path = os.path.dirname(os.path.realpath(__file__))
-status = subprocess.call('ruby '+run_path+'/scripts/scan.rb --project='+git_folder, shell=True)
-if status == 0:
-    with open('/home/proton/.protontypes/dependencies.json') as f:
-        dependencies_json = json.load(f)
+
+process = subprocess.run(['ruby', run_path+'/scripts/scan.rb', '--project='+git_folder], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+process.stdout
+if process.returncode == 0:
+    dependencies_json = json.loads(process.stdout)
 else:
-     print("Can not find dependencies.json file")
-     exit()
-
-
+    print("Can not find project manifesto")
+    print(process.stderr)
+    exit()
+print('dependencies json:')
+print(dependencies_json)
 dependencies_json = protonutils.getUniqueDependencies(dependencies_json)
 dependency_list = []
 
-print(dependencies_json)
 for platform_name in dependencies_json.keys():
 
     if not dependencies_json[platform_name]:
