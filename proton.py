@@ -43,7 +43,6 @@ project_email_list = gitConnector.getContributorInfo(project_id)
 ## Parse the json without local storage
 
 run_path = os.path.dirname(os.path.realpath(__file__))
-
 process = subprocess.run(['ruby', run_path+'/scripts/scan.rb', '--project='+git_folder], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 process.stdout
 if process.returncode == 0:
