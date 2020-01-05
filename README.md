@@ -8,16 +8,16 @@
 
 ## Usage
 
-1. Install with [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/):
+> Install with [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/):
 
 ```bash
 git clone https://github.com/opencelery/opencelery.git
 cd opencelery
 bash ./install_and_build.sh
 ```
-2. Create a new celery wallet with limited amounts since OpenCelery is still not released.
-3. Transfer some money to this wallet for experimenting with OpenCelery.
-4. Add the tokens to tokens.env file:
+> Create a new celery wallet with limited amounts since OpenCelery is still not released.
+> Transfer some money to this wallet for experimenting with OpenCelery.
+> Add the tokens to tokens.env file:
 
 ```bash
 COINBASE_TOKEN=XXXXXXXXXXXXXXXX
@@ -26,13 +26,13 @@ GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 LIBRARIES_IO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-5. Run opencelery on your target project root folder. This will send cryptocurrency to a weighted random product contributor.
+> Run opencelery on your target project root folder. This will send cryptocurrency to a weighted random product contributor.
 
 ```bash
 bash opencelery_docker.sh ~/gitclones/<target_projects>
 ```
 
-For usage of opencelery without docker you can load the tokens into your base environment (insecure):
+> For usage of opencelery without docker you can load the tokens into your base environment (insecure):
 
 ```bash
 env $(cat ~/.opencelery/tokens.env | xargs) ~/opencelery/celery.py --project=$PROJECT_DIR_TO_SCAN
