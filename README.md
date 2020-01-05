@@ -1,4 +1,4 @@
-# OpenCelery [![Actions Status](https://github.com/OpenCelery/OpenCelery/workflows/docker_run/badge.svg)](https://github.com/OpenCelery/OpenCelery/actions)
+# opencelery [![Actions Status](https://github.com/opencelery/opencelery/workflows/docker_run/badge.svg)](https://github.com/opencelery/opencelery/actions)
 
 Software is made out of humans. Invest straight into them.
 
@@ -7,8 +7,8 @@ Software is made out of humans. Invest straight into them.
 Install with docker:
 
 ```bash
-git clone https://github.com/OpenCelery/OpenCelery.git
-cd OpenCelery
+git clone https://github.com/opencelery/opencelery.git
+cd opencelery
 bash ./install_and_build.sh
 ```
 
@@ -21,14 +21,14 @@ GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 LIBRARIES_IO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-Run OpenCelery on your target project root folder:
+Run opencelery on your target project root folder:
 
 ```bash
-bash OpenCelery_docker ~/gitclones/<target_projects>
+bash opencelery_docker ~/gitclones/<target_projects>
 ```
 
-For usage of OpenCelery without docker you can load the tokens into your base environment (insecure):
+For usage of opencelery without docker you can load the tokens into your base environment (insecure):
 
 ```bash
-env $(cat ~/.OpenCelery/tokens.env | xargs) ~/OpenCelery/main.py --project=$PROJECT_DIR_TO_SCAN
+env $(cat ~/.opencelery/tokens.env | xargs) ~/opencelery/main.py --project=$PROJECT_DIR_TO_SCAN
 ```

@@ -1,6 +1,6 @@
 #!/bin/bash
-database_location=~/.OpenCelery/db
-token_location=~/.OpenCelery/tokens.env
+database_location=~/.opencelery/db
+token_location=~/.opencelery/tokens.env
 
 if [ ! -d $database_location ]
 then
@@ -20,4 +20,4 @@ EOF
   chmod 700 $token_location
 fi
 
-docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t OpenCelery .
+docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t opencelery .

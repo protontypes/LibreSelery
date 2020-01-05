@@ -2,7 +2,7 @@ from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 
 def Location2Coordiantes(location):
-    geolocator = Nominatim(user_agent="OpenCelery")
+    geolocator = Nominatim(user_agent="opencelery")
     location = geolocator.geocode(location)
     return (location.latitude, location.longitude)
 

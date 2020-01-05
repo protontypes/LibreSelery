@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'OpenCelery'
+project = 'opencelery'
 copyright = '2020, Tobias Augspurger'
 author = 'Tobias Augspurger'
 
