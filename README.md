@@ -1,8 +1,7 @@
+<img src="./docs/celery_logo.svg" width="48">
 
 # OpenCelery [![Actions Status](https://github.com/opencelery/opencelery/workflows/docker_run/badge.svg)](https://github.com/opencelery/opencelery/actions)
-
-![Actions Status](./docs/celery_logo.svg)
-Software is made out of humans. Invest straight into them.
+> Software is made out of humans. Invest straight into them.
 
 ## Usage
 
