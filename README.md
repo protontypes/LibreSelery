@@ -26,7 +26,7 @@ LIBRARIES_IO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 Run opencelery on your target project root folder:
 
 ```bash
-bash opencelery_docker ~/gitclones/<target_projects>
+bash opencelery_docker.sh ~/gitclones/<target_projects>
 ```
 
 For usage of opencelery without docker you can load the tokens into your base environment (insecure):
