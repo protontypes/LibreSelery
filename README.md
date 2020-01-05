@@ -26,7 +26,7 @@ GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 LIBRARIES_IO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-> Run opencelery on your target project root folder. This will send cryptocurrency to a weighted random product contributor.
+> Run opencelery on your target project root folder. This will send cryptocurrency to a weighted random product contributor with an email address on the front page.
 
 ```bash
 bash opencelery_docker.sh ~/gitclones/<target_projects>
