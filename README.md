@@ -32,5 +32,5 @@ bash opencelery_docker ~/gitclones/<target_projects>
 For usage of opencelery without docker you can load the tokens into your base environment (insecure):
 
 ```bash
-env $(cat ~/.opencelery/tokens.env | xargs) ~/opencelery/main.py --project=$PROJECT_DIR_TO_SCAN
+env $(cat ~/.opencelery/tokens.env | xargs) ~/opencelery/celery.py --project=$PROJECT_DIR_TO_SCAN
 ```
