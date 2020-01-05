@@ -15,7 +15,7 @@ git clone https://github.com/opencelery/opencelery.git
 cd opencelery
 bash ./install_and_build.sh
 ```
-__Use only automated wallets with limited amounts since OpenCelery is still not released.__       
+Create a new celery wallet with limited amounts since OpenCelery is still not released.
 Add the tokens to tokens.env file:
 
 ```bash
