@@ -11,6 +11,8 @@ from protontypes.librariesio_connector import LibrariesIOConnector
 from protontypes.coinbase_pay import CoinbaseConnector
 from protontypes import gitremotes,protonutils
 
+# Arguement Parser
+
 parser = argparse.ArgumentParser(description='Protontypes - Automated Funding')
 parser.add_argument("--folder", required=True, type=str,
                     help="Git folder to scan")
@@ -20,6 +22,7 @@ git_folder = args.folder
 
 # Load parameters from environment variables
 
+# Never print this enviorment variables since the print will keep forever in the Github CI Logs
 libraries_api_key = os.environ['LIBRARIES_IO_TOKEN']
 github_token = os.environ['GITHUB_TOKEN']
 coinbase_token = os.environ['COINBASE_TOKEN']
@@ -29,22 +32,16 @@ librariesIO = LibrariesIOConnector(libraries_api_key)
 gitConnector = GithubConnector(github_token)
 coinConnector = CoinbaseConnector(coinbase_token,coinbase_secret)
 
-# Scan for Project Contributors
+# Find Official Repositories
+## Scan for Project Contributors
 target_remote=gitremotes.ScanRemotes(git_folder,'origin')
-project_id = gitConnector.GetProjectID(target_remote) 
+project_id = gitConnector.GetProjectID(target_remote)
 project_email_list = gitConnector.getContributorInfo(project_id)
-n_funding_emails=1
-amount='0.000002'
-funding_emails=random.choices(project_email_list, weights = [ 1 for i in range(len(project_email_list))], k=n_funding_emails)
-for email in funding_emails:
-    pass
-    #receipt = coinConnector.payout(email,amount)
-    #print(receipt)
-    #f = open("receipt.txt", "a")
-    #f.write(str(receipt))
-    #f.close()
 
-# Scan for Dependencies
+## Scan for Dependencies Repositories
+## ToDo
+## Parse the json without local storage
+
 run_path = os.path.dirname(os.path.realpath(__file__))
 status = subprocess.call('ruby '+run_path+'/scripts/scan.rb --project='+git_folder, shell=True)
 if status == 0:
@@ -76,9 +73,27 @@ for platform_name in dependencies_json.keys():
         dependency["dependencies"] = depData["dependencies"]
         dependency["github_id"] = depData["github_id"]
 
+        # Gather Project and User Information
         email_list = gitConnector.getContributorInfo(dependency["github_id"])
         dependency["email_list"] = email_list
         print("Emails for " + name)
         print("Number vaild emails entries:")
         print(len(email_list))
         dependency_list.append(dependency)
+
+# Calculate Probability Weights
+weights = [ 1 for i in range(len(project_email_list))]
+
+# Payout
+n_funding_emails=1
+amount='0.000002'
+funding_emails=random.choices(project_email_list, weights, k=n_funding_emails)
+for email in funding_emails:
+    pass
+    #receipt = coinConnector.payout(email,amount)
+    #print(receipt)
+    #f = open("receipt.txt", "a")
+    #f.write(str(receipt))
+    #f.close()
+
+
