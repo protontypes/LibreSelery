@@ -8,7 +8,7 @@
 
 ## Usage
 
-Install with docker:
+Install with [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/):
 
 ```bash
 git clone https://github.com/opencelery/opencelery.git
