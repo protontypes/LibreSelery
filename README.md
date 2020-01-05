@@ -1,7 +1,6 @@
  
 
-# OpenCelery (https://github.com/protontypes/opencelery/actions)  <img align="middle" src="./docs/celery_logo.svg" width="128"> [![Actions Status](https://github.com/protontypes/opencelery/workflows/docker_run/badge.svg)]    
-
+# OpenCelery <img align="middle" src="./docs/celery_logo.svg" width="128"> [![Actions Status](https://github.com/protontypes/opencelery/workflows/docker_run/badge.svg)](https://github.com/protontypes/opencelery/actions)    
 > Invest straight into your software.
 
 ## Usage
