@@ -48,8 +48,8 @@ if status == 0:
     with open('/home/proton/.protontypes/dependencies.json') as f:
         dependencies_json = json.load(f)
 else:
-     print("Can not find dependencies.json file")
-     exit()
+    print("Can not find dependencies.json file")
+    exit()
 
 
 dependencies_json = protonutils.getUniqueDependencies(dependencies_json)

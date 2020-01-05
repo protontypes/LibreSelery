@@ -5,7 +5,7 @@ def ScanSubmodules(git_folder,branch='master'):
     module_urls=[]
     for module in repo.iter_submodules():
         modules_urls.append(module.url)
-    return module 
+    return module
 
 def ScanRemotes(git_folder,remote_name='origin'):
     repo = Repo(git_folder)
@@ -14,6 +14,8 @@ def ScanRemotes(git_folder,remote_name='origin'):
         if remote.name == remote_name:
             target_url = remote.url
     return target_url
+
+# ToDO git subtree missing
 
 if __name__ == "__main__":
     pass
