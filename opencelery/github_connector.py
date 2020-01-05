@@ -1,6 +1,6 @@
 from github import Github
 from .email_checker import EmailChecker
-from .protonutils import countdown
+from .celeryutils import countdown
 import sqlite3
 from datetime import datetime
 import sys
@@ -11,7 +11,7 @@ class GithubConnector:
     def __init__(self, github_token):
         self.github = Github(github_token)
         try:
-            self.db_conn = sqlite3.connect("/home/proton/db.sqlite3")
+            self.db_conn = sqlite3.connect("/home/celery/db.sqlite3")
         except Exception as e:
             print(e)
             self.db_conn = sqlite3.connect("db.sqlite3")

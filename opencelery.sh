@@ -1,6 +1,6 @@
 #!/bin/bash
 # Start command
-cmd="python proton.py --folder=$@"
+cmd="python celery.py --folder=$@"
 
 docker run --rm \
 --env GITHUB_TOKEN=$GITHUB_TOKEN \

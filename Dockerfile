@@ -3,8 +3,8 @@ FROM python:3.7.5-slim-stretch
 ARG UID=1002
 ARG GID=1001
 
-RUN groupadd -g $GID proton && \
-    useradd -m -u $UID -g $GID --shell /bin/bash proton
+RUN groupadd -g $GID celery && \
+    useradd -m -u $UID -g $GID --shell /bin/bash celery
 
 ## RUBY
 RUN apt-get update && \
@@ -20,11 +20,11 @@ COPY requirements.txt .
 ### Install python dependencies
 RUN pip install -r requirements.txt
 
-WORKDIR /home/proton/opencelery
+WORKDIR /home/celery/opencelery
 
-RUN chown -R proton:proton /home/proton/opencelery/
+RUN chown -R celery:celery /home/celery/opencelery/
 
-USER proton
+USER celery
 # Copy all
 COPY . .
 

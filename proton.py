@@ -9,7 +9,7 @@ import random
 from opencelery.github_connector import GithubConnector
 from opencelery.librariesio_connector import LibrariesIOConnector
 from opencelery.coinbase_pay import CoinbaseConnector
-from opencelery import gitremotes,protonutils
+from opencelery import gitremotes,celeryutils
 
 # Arguement Parser
 
@@ -53,7 +53,7 @@ else:
     exit()
 print('dependencies json:')
 print(dependencies_json)
-dependencies_json = protonutils.getUniqueDependencies(dependencies_json)
+dependencies_json = celeryutils.getUniqueDependencies(dependencies_json)
 dependency_list = []
 
 for platform_name in dependencies_json.keys():
