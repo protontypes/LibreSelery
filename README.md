@@ -13,7 +13,7 @@ git clone https://github.com/opencelery/opencelery.git
 cd opencelery
 bash ./install_and_build.sh
 ```
-__Use only automated wallets with limited amounts since opencelery is still not released.__
+__Use only automated wallets with limited amounts since opencelery is still not released.__       
 Add the tokens to tokens.env file:
 
 ```bash
