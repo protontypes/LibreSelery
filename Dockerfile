@@ -20,9 +20,9 @@ COPY requirements.txt .
 ### Install python dependencies
 RUN pip install -r requirements.txt
 
-WORKDIR /home/proton/protontypes
+WORKDIR /home/proton/OpenCelery
 
-RUN chown -R proton:proton /home/proton/protontypes/
+RUN chown -R proton:proton /home/proton/OpenCelery/
 
 USER proton
 # Copy all

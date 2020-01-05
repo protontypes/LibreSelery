@@ -1,4 +1,4 @@
-# OpenSelery [![Actions Status](https://github.com/protontypes/protontypes/workflows/docker_run/badge.svg)](https://github.com/protontypes/protontypes/actions)
+# OpenCelery [![Actions Status](https://github.com/OpenCelery/OpenCelery/workflows/docker_run/badge.svg)](https://github.com/OpenCelery/OpenCelery/actions)
 
 Software is made out of humans. Invest straight into them.
 
@@ -7,8 +7,8 @@ Software is made out of humans. Invest straight into them.
 Install with docker:
 
 ```bash
-git clone https://github.com/protontypes/protontypes.git
-cd protontypes
+git clone https://github.com/OpenCelery/OpenCelery.git
+cd OpenCelery
 bash ./install_and_build.sh
 ```
 
@@ -21,14 +21,14 @@ GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 LIBRARIES_IO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-Run protontypes on your target project root folder:
+Run OpenCelery on your target project root folder:
 
 ```bash
-bash protontypes_docker ~/gitclones/<target_projects>
+bash OpenCelery_docker ~/gitclones/<target_projects>
 ```
 
-For usage of protontypes without docker you can load the tokens into your base environment (insecure):
+For usage of OpenCelery without docker you can load the tokens into your base environment (insecure):
 
 ```bash
-env $(cat ~/.protontypes/tokens.env | xargs) ~/protontypes/main.py --project=$PROJECT_DIR_TO_SCAN
+env $(cat ~/.OpenCelery/tokens.env | xargs) ~/OpenCelery/main.py --project=$PROJECT_DIR_TO_SCAN
 ```

@@ -6,14 +6,14 @@ import json
 import re
 import random
 
-from protontypes.github_connector import GithubConnector
-from protontypes.librariesio_connector import LibrariesIOConnector
-from protontypes.coinbase_pay import CoinbaseConnector
-from protontypes import gitremotes,protonutils
+from OpenCelery.github_connector import GithubConnector
+from OpenCelery.librariesio_connector import LibrariesIOConnector
+from OpenCelery.coinbase_pay import CoinbaseConnector
+from OpenCelery import gitremotes,protonutils
 
 # Arguement Parser
 
-parser = argparse.ArgumentParser(description='Protontypes - Automated Funding')
+parser = argparse.ArgumentParser(description='OpenCelery - Automated Funding')
 parser.add_argument("--folder", required=True, type=str,
                     help="Git folder to scan")
 

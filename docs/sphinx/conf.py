@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Protontypes'
+project = 'OpenCelery'
 copyright = '2020, Tobias Augspurger'
 author = 'Tobias Augspurger'
 
