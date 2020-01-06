@@ -12,9 +12,10 @@ git clone https://github.com/opencelery/opencelery.git
 cd opencelery
 bash ./install_and_build.sh
 ```
-2. Create a dedicated new wallet with limited amounts.            
-3. Transfer some money to this wallet for testing OpenCelery.  
-4. Add the tokens to tokens.env file:      
+2. Create a dedicated new coinbase account with limited amounts. 
+3. Never transfer or store large values with automated cryptocurrency wallets. Use recurring automated transaction from another account to recharge you wallet on a regular base. 
+4. Transfer some money to this wallet for testing OpenCelery.  
+5. Add the tokens to tokens.env file:      
 
 ```bash
 COINBASE_TOKEN=XXXXXXXXXXXXXXXX
@@ -23,14 +24,13 @@ GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 LIBRARIES_IO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-5. Run opencelery on your target project root folder.      
-**This will send cryptocurrency to a weighted random product contributor with an email address on the git platform or git commit.**    
+6. Run opencelery on your target project root folder. This will send cryptocurrency to a weighted random product contributor with an email address on the git platform or git commit:    
 
 ```bash
 bash opencelery_docker.sh ~/gitclones/<target_projects>
 ```
 
-6. For usage of opencelery without docker you can load the tokens into your base environment (insecure):
+7. For opencelery without docker you can load the tokens into your base environment (insecure):
 
 ```bash
 env $(cat ~/.opencelery/tokens.env | xargs) ~/opencelery/celery.py --project=$PROJECT_DIR_TO_SCAN
