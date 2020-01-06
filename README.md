@@ -4,7 +4,7 @@
 [![Actions Status](https://github.com/protontypes/opencelery/workflows/docker_run/badge.svg)](https://github.com/protontypes/opencelery/actions) 
 
 ## Contribution
-Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the github page are considered. We will never send a URL in the note.
+Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the github profile page are considered. We will never send a URL in the note.
 
 ## Usage
 OpenCelery is still not released and in experimental status.
