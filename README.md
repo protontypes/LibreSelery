@@ -12,8 +12,8 @@ git clone https://github.com/opencelery/opencelery.git
 cd opencelery
 bash ./install_and_build.sh
 ```
-2. Create a dedicated new wallet with limited amounts.       
-3. Transfer some money to this wallet for testing OpenCelery.      
+2. Create a dedicated new wallet with limited amounts.            
+3. Transfer some money to this wallet for testing OpenCelery.  
 4. Add the tokens to tokens.env file:      
 
 ```bash
@@ -24,7 +24,7 @@ LIBRARIES_IO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 5. Run opencelery on your target project root folder.      
-> This will send cryptocurrency to a weighted random product contributor with an email address on the git platform or git commit.    
+**This will send cryptocurrency to a weighted random product contributor with an email address on the git platform or git commit.**    
 
 ```bash
 bash opencelery_docker.sh ~/gitclones/<target_projects>
