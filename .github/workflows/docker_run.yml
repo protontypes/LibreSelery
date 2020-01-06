@@ -24,9 +24,9 @@ jobs:
 #        with:
 #          name: Billing
 #          path: receipt.txt
-      - uses: actions/checkout@v1
+      - name: Create Documentation
       - uses: ammaraskar/sphinx-action@master
         with:
-          docs-folder: "/home/runner/work/celery/opencelery/docs/sphinx/"
+          docs-folder: "./docs/sphinx/"
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           build-command: "sphinx-build ./sphinx/ ./"
