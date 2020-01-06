@@ -13,8 +13,8 @@ git clone https://github.com/opencelery/opencelery.git
 cd opencelery
 bash ./install_and_build.sh
 ```
-> Create a new wallet with limited amounts since OpenCelery is still not released and in experimental status.       
-> Transfer some money to this wallet for experimenting with OpenCelery.      
+> Create a dedicated new wallet with limited amounts since OpenCelery is still not released and in experimental status.       
+> Transfer some money to this wallet for testing OpenCelery.      
 > Add the tokens to tokens.env file:      
 
 ```bash
