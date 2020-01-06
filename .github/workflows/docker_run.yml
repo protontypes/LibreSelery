@@ -25,7 +25,6 @@ jobs:
 #          name: Billing
 #          path: receipt.txt
       - uses: ammaraskar/sphinx-action@master
-      - name: Create Documentation
         with:
           docs-folder: "./docs/"
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
