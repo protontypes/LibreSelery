@@ -1,12 +1,12 @@
 # OpenCelery <img align="middle" src="./docs/celery_logo.svg" width="128">  
-> Fund people in your git project.
+> Support people in your git project.
 
 [![Actions Status](https://github.com/protontypes/opencelery/workflows/docker_run/badge.svg)](https://github.com/protontypes/opencelery/actions) 
 
-Constributors on the master brach of OpenCelery will and get emails from coinbase. OpenCelery will never send a URL in the note. 
+## Contribution
+Constributors on the master branch will get emails with cryptocurrency. We will never send a URL in the note. 
 
 ## Usage
-
 OpenCelery is still not released and in experimental status.
 
 1. Install with [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/):
@@ -16,6 +16,7 @@ git clone https://github.com/opencelery/opencelery.git
 cd opencelery
 bash ./install_and_build.sh
 ```
+
 2. Create a dedicated new coinbase account with limited amounts. 
 3. Never transfer or store large values with automated cryptocurrency wallets. Use recurring automated transaction from another account to recharge you wallet on a regular base. 
 4. Transfer some money to this wallet for testing OpenCelery.  
