@@ -3,7 +3,7 @@
 
 [![Actions Status](https://github.com/protontypes/opencelery/workflows/docker_run/badge.svg)](https://github.com/protontypes/opencelery/actions) 
 
-Constributor to this project will get coinbase emails. OpenCelery will never send a URL in the note. 
+Constributor to this project will get emails from coinbase. OpenCelery will never send a URL in the note. 
 
 ## Usage
 
