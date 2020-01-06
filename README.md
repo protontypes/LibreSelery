@@ -1,4 +1,4 @@
-# OpenCelery <img src="./docs/celery_logo.svg" width="128">  
+# OpenCelery <img align="middle" src="./docs/celery_logo.svg" width="128">  
 > Fund people in your git project.
 
 [![Actions Status](https://github.com/protontypes/opencelery/workflows/docker_run/badge.svg)](https://github.com/protontypes/opencelery/actions)  
