@@ -3,6 +3,7 @@
 
 [![Actions Status](https://github.com/protontypes/opencelery/workflows/docker_run/badge.svg)](https://github.com/protontypes/opencelery/actions)  
 ## Usage
+
 OpenCelery is still not released and in experimental status.
 
 1. Install with [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/):
@@ -15,9 +16,10 @@ bash ./install_and_build.sh
 2. Create a dedicated new coinbase account with limited amounts. 
 3. Never transfer or store large values with automated cryptocurrency wallets. Use recurring automated transaction from another account to recharge you wallet on a regular base. 
 4. Transfer some money to this wallet for testing OpenCelery.  
-5. Add the tokens to tokens.env file:      
+5. Add your tokens:      
 
 ```bash
+nano ~/.opencelery/tokens.env
 COINBASE_TOKEN=XXXXXXXXXXXXXXXX
 COINBASE_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
