@@ -3,6 +3,7 @@ import subprocess
 import argparse
 import os
 import json
+import yaml
 import re
 import random
 
@@ -20,6 +21,8 @@ parser.add_argument("--folder", required=True, type=str,
 args = parser.parse_args()
 git_folder = args.folder
 
+my_FUNDING = yaml.load(open('FUNDING.yml'))
+wallet_address=my_FUNDING['bitcoin']
 # Load parameters from environment variables
 
 # Never print this enviorment variables since the print will keep forever in the Github CI Logs

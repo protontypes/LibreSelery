@@ -1,9 +1,15 @@
-#!/usr/bin/python3
 from coinbase.wallet.client import Client
 
 class CoinbaseConnector:
     def __init__(self,token,secret):
         self.client = Client(token,secret)
+
+    def checkaddresses(tocheck):
+        addresses = self.client.get_address(token,secret)
+        for address in addresses:
+            if address == tocheck:
+                return true
+        return false
 
     def payout(self,target_email,target_amount='0.00001'):
         account = self.client.get_primary_account()
