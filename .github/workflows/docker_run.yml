@@ -12,6 +12,16 @@ jobs:
     name: build_and_run
     runs-on: ubuntu-latest
     steps:
+      - uses: elgohr/Publish-Docker-Github-Action@master
+        name: Publish to Registry
+        env:
+          MY_FIRST: variableContent
+          MY_SECOND: variableContent
+        with:
+          name: myDocker/repository
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          buildoptions: "--compress --force-rm"  
       - uses: actions/checkout@v1
       - name: Build Container
         run:  docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t opencelery .
