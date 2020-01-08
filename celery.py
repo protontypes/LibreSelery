@@ -6,6 +6,7 @@ import json
 import yaml
 import re
 import random
+import sys
 
 from opencelery.github_connector import GithubConnector
 from opencelery.librariesio_connector import LibrariesIOConnector
@@ -21,10 +22,7 @@ parser.add_argument("--folder", required=True, type=str,
 args = parser.parse_args()
 git_folder = args.folder
 
-my_FUNDING = yaml.load(open('FUNDING.yml'))
-wallet_address=my_FUNDING['bitcoin']
 # Load parameters from environment variables
-
 # Never print this enviorment variables since the print will keep forever in the Github CI Logs
 libraries_api_key = os.environ['LIBRARIES_IO_TOKEN']
 github_token = os.environ['GITHUB_TOKEN']
@@ -35,6 +33,15 @@ librariesIO = LibrariesIOConnector(libraries_api_key)
 gitConnector = GithubConnector(github_token)
 coinConnector = CoinbaseConnector(coinbase_token,coinbase_secret)
 
+my_FUNDING = yaml.safe_load(open('FUNDING.yml'))
+wallet_address=my_FUNDING['bitcoin']
+if not coinConnector.checkaddress(wallet_address):
+    print("Wallet not found")
+    sys.exit()
+else:
+    print("FUNDING.yml Wallet matches coinbase wallet")
+
+#
 # Find Official Repositories
 ## Scan for Project Contributors
 target_remote=gitremotes.ScanRemotes(git_folder,'origin')
