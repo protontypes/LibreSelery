@@ -1,5 +1,5 @@
 # OpenCelery <img align="middle" src="./docs/celery_logo.svg" width="128">  
-> Self-sustaining your git repository
+> Self-sustain your git repository
 
 [![Actions Status](https://github.com/protontypes/opencelery/workflows/docker_run/badge.svg)](https://github.com/protontypes/opencelery/actions) 
 
