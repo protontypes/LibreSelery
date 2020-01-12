@@ -1,5 +1,5 @@
 # OpenCelery <img align="middle" src="./docs/celery_logo.svg" width="128">  
-> Fund people in your git project on a regular base.
+> Self-sustain your git repository
 
 [![Actions Status](https://github.com/protontypes/opencelery/workflows/docker_run/badge.svg)](https://github.com/protontypes/opencelery/actions) 
 
@@ -17,10 +17,10 @@ cd opencelery
 bash ./install_and_build.sh
 ```
 
-2. Create a dedicated new coinbase account with limited amounts. 
+2. Create a dedicated coinbase account with limited amounts. 
 3. Never transfer or store large values with automated cryptocurrency wallets. Use recurring automated transaction from another account to recharge you wallet on a regular base. 
 4. Transfer some money to this wallet for testing OpenCelery.  
-5. Add your tokens:      
+5. Add your tokens from the coinbase API:      
 
 ```bash
 nano ~/.opencelery/tokens.env
