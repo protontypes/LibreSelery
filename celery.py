@@ -22,6 +22,7 @@ parser.add_argument("--folder", required=True, type=str,
 args = parser.parse_args()
 git_folder = args.folder
 
+print("Working project path: \n{}".format(git_folder))
 # Load parameters from environment variables
 # Never print this enviorment variables since the print will keep forever in the Github CI Logs
 libraries_api_key = os.environ['LIBRARIES_IO_TOKEN']
