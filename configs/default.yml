@@ -1,0 +1,4 @@
+include_deps: True
+include_self: True
+min_contributions: 1
+dryrun: False
