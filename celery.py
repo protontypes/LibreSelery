@@ -34,7 +34,7 @@ gitConnector = GithubConnector(github_token)
 coinConnector = CoinbaseConnector(coinbase_token,coinbase_secret)
 
 my_FUNDING = yaml.safe_load(open('FUNDING.yml'))
-wallet_address=my_FUNDING['bitcoin']
+wallet_address=my_FUNDING['opencelery']
 if not coinConnector.isWalletAddress(wallet_address):
     print("Wallet not found")
     sys.exit()
