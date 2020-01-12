@@ -1,3 +1,18 @@
+def getEmailsAndWeights(dep_list):
+    contributor_emails = []
+    #TODO:
+    # get more information about each contributor
+    # number commits
+    # time spent on project (calculated from commits)
+    # issues closed
+    # successful pull requests
+    #  
+    for dep in dep_list:
+        contributor_emails.append(dep["email_list"])
+
+    weights = [1 for i in range(len(contributor_emails))]
+    return contributor_emails, weights
+
 def getUniqueDependencies(dependencies_json):
     uniqueList = dict()
     for platform in dependencies_json:
