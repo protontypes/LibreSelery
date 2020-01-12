@@ -28,6 +28,7 @@ try:
     min_contributions = default_config['min_contributions']
     dryrun = default_config['dryrun']
     check_equal_privat_and_public_wallet = default_config['check_equal_privat_and_public_wallet']
+    include_tooling_and_runtime = default_config['include_tooling_and_runtime'] 
 
 except:
     include_dependencies = True
@@ -53,6 +54,10 @@ coinConnector = CoinbaseConnector(coinbase_token, coinbase_secret)
 my_FUNDING = yaml.safe_load(open('FUNDING.yml'))
 wallet_address = my_FUNDING['opencelery-bitcoin']
 
+funding_emails = []
+dependency_list = []
+contributor_emails = []
+
 if check_equal_privat_and_public_wallet:
     if not coinConnector.isWalletAddress(wallet_address):
         print("Wallet not found")
@@ -60,8 +65,6 @@ if check_equal_privat_and_public_wallet:
     else:
         print("FUNDING.yml Wallet matches coinbase wallet")
 
-dependency_list = []
-contributor_emails = []
 if include_self:
     # Find Official Repositories
     # Scan for Project Contributors
@@ -122,31 +125,36 @@ if include_dependencies:
             print(len(email_list))
             dependency_list.append(dependency)
 
+if include_tooling_and_runtime:
+    pass
+
 # Calculate Probability Weights
 funding_emails, weights = celeryutils.getEmailsAndWeights(dependency_list) 
 # Payout
-n_funding_emails = 100 #number of possible funding emails
-funding_emails = []
+n_funding_emails = 1 #number of possible funding emails
 amount = '0.000002'
 for i in range(n_funding_emails):
-    if i >= len(contributor_emails):
+    if i >= len(funding_emails):
         break
 
     #pick a random contributor
-    email = random.choices(
-        contributor_emails, weights, k=1)
+    email = random.choices(funding_emails, weights, k=1)
     funding_emails.append(email[0])
 
     #remove contributor to avoid double funding for the same e-mail address
-    weights.pop(contributor_emails.index(email[0]))
-    contributor_emails.remove(email[0])
+    weights.pop(funding_emails.index(email[0]))
+    funding_emails.remove(email[0])
 
-for email in funding_emails:
-    if not dryrun:
-        receipt = coinConnector.payout(email,amount)
-        print(receipt)
-        f = open("receipt.txt", "a")
-        f.write(str(receipt))
-        f.close()
-    else:
-        break
+print(funding_emails)
+print(weights)
+
+for source in funding_emails:
+    for entry in funding_emails[0]:
+        if not dryrun:
+            receipt = coinConnector.payout(entry['email'],amount)
+            print(receipt)
+            f = open("receipt.txt", "a")
+            f.write(str(receipt))
+            f.close()
+        else:
+            break
