@@ -1,7 +1,7 @@
 # ./.github/workflows/docker_run.yml
-on:
+on: 
     push:
-      branches: 
+      branches:    
         - master
 #on:
 #   release:
@@ -11,6 +11,7 @@ jobs:
   my-job:
     name: build_and_run
     runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v1
       - name: Build Container
         run:  docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t opencelery .
