@@ -27,6 +27,8 @@ try:
     include_self = default_config['include_self']
     min_contributions = default_config['min_contributions']
     dryrun = default_config['dryrun']
+    check_equal_privat_and_public_wallet = default_config['check_equal_privat_and_public_wallet']
+
 except:
     include_dependencies = True
     include_self = True
@@ -50,11 +52,13 @@ coinConnector = CoinbaseConnector(coinbase_token, coinbase_secret)
 
 my_FUNDING = yaml.safe_load(open('FUNDING.yml'))
 wallet_address = my_FUNDING['opencelery-bitcoin']
-if not coinConnector.isWalletAddress(wallet_address):
-    print("Wallet not found")
-    sys.exit()
-else:
-    print("FUNDING.yml Wallet matches coinbase wallet")
+
+if check_equal_privat_and_public_wallet:
+    if not coinConnector.isWalletAddress(wallet_address):
+        print("Wallet not found")
+        sys.exit()
+    else:
+        print("FUNDING.yml Wallet matches coinbase wallet")
 
 dependency_list = []
 contributor_emails = []
@@ -135,7 +139,7 @@ for i in range(n_funding_emails):
 
     #remove contributor to avoid double funding for the same e-mail address
     weights.pop(contributor_emails.index(email[0]))
-    contributor_emails.remove(email[0])    
+    contributor_emails.remove(email[0])
 
 for email in funding_emails:
     if not dryrun:
