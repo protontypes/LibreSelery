@@ -13,7 +13,7 @@ from opencelery.librariesio_connector import LibrariesIOConnector
 from opencelery.coinbase_pay import CoinbaseConnector
 from opencelery import gitremotes,celeryutils
 
-# Arguement Parser
+# ArgumentParser
 
 parser = argparse.ArgumentParser(description='opencelery - Automated Funding')
 parser.add_argument("--folder", required=True, type=str,
@@ -42,11 +42,10 @@ if not coinConnector.isWalletAddress(wallet_address):
 else:
     print("FUNDING.yml Wallet matches coinbase wallet")
 
-#
 # Find Official Repositories
 ## Scan for Project Contributors
-target_remote=gitremotes.ScanRemotes(git_folder,'origin')
-project_id = gitConnector.GetProjectID(target_remote)
+target_remote=gitremotes.scanRemotes(git_folder,'origin')
+project_id = gitConnector.getProjectID(target_remote)
 project_email_list = gitConnector.getContributorInfo(project_id)
 
 ## Scan for Dependencies Repositories
