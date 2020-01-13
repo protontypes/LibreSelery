@@ -21,14 +21,17 @@ parser.add_argument("--folder", required=True, type=str,
                     help="Git folder to scan")
 
 # Load default configs
+# TODO: hacky solution - needs to be fixed
+# If one variable is not found in the yml, all variables get defaults
 try:
-    default_config = yaml.safe_load(open('configs/default.yml'))
+    default_config = yaml.safe_load(open('opencelery.yml'))
     include_dependencies = default_config['include_deps']
     include_self = default_config['include_self']
+    # Is a relativ/median min contributions better as limit?
     min_contributions = default_config['min_contributions']
     dryrun = default_config['dryrun']
     check_equal_privat_and_public_wallet = default_config['check_equal_privat_and_public_wallet']
-    include_tooling_and_runtime = default_config['include_tooling_and_runtime'] 
+    include_tooling_and_runtime = default_config['include_tooling_and_runtime']
 
 except:
     include_dependencies = True
@@ -72,12 +75,15 @@ if include_self:
     project_id = gitConnector.getProjectID(target_remote)
     contributor_emails = gitConnector.getContributorInfo(project_id)
 
+# Level 0 is the project itself.
+# TODO: create data class for list items
     dependency_list.append({
             "platform": "", 
-            "name": project_id,
+            "url": "",
+            "project_id": project_id,
             "level": 0,
             "dependencies":[],
-            "email_list": contributor_emails
+            "email_list": contributor_emails,
             })
 
 if include_dependencies:
@@ -149,9 +155,9 @@ print(funding_emails)
 print(weights)
 
 for source in funding_emails:
-    for entry in funding_emails[0]:
+    for user in funding_emails[0]:
         if not dryrun:
-            receipt = coinConnector.payout(entry['email'],amount)
+            receipt = coinConnector.payout(user['email'],amount)
             print(receipt)
             f = open("receipt.txt", "a")
             f.write(str(receipt))

@@ -1,4 +1,10 @@
+# dep_list: list of dependencies, each dependency has a contributors list
+# returns: list of dependencies, each dependency has a contributors list with accociated weights
 def getEmailsAndWeights(dep_list):
+    # print("dep_list:\n"+dep_list)
+
+    # [ {dep['project_id']: {'contributors': [{'email': email, 'weight': 1} for email in dep['email_list']]}}  for dep in dep_list]
+
     contributor_emails = []
     #TODO:
     # get more information about each contributor
