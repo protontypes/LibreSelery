@@ -13,8 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Build Container
-        run:  docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t opencelery .
+#      - name: Build Container
+#        run:  docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t opencelery .
+      - name: Pull Last Build from Docker Hub
+        run: docker pull opencelery/opencelery
       - name: Run Container on own sources as input
         run:  source ./opencelery_docker.sh ./
         env:
