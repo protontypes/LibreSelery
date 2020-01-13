@@ -8,17 +8,24 @@ on:
 #      types: [published]
 
 jobs:
-  my-job:
+  opencelery:
     name: build_and_run
     runs-on: ubuntu-latest
     steps:
+      # Check out the repo opencelery is working on
       - uses: actions/checkout@v1
 #      - name: Build Container
 #        run:  docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t opencelery .
       - name: Pull Last Build from Docker Hub
-        run: docker pull opencelery/opencelery
+        run: docker pull opencelery/opencelery      
       - name: Run Container on own sources as input
-        run:  source ./opencelery_docker.sh ./
+        run:  docker run --rm \
+                --env GITHUB_TOKEN=$GITHUB_TOKEN \
+                --env LIBRARIES_IO_TOKEN=$LIBRARIES_IO_TOKEN \
+                --env COINBASE_TOKEN=$COINBASE_TOKEN \
+                --env COINBASE_SECRET=$COINBASE_SECRET \
+                opencelery \
+                bash -c "python celery.py --folder=./"" \
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LIBRARIES_IO_TOKEN: ${{ secrets.LIBRARIES_IO_TOKEN }}
@@ -29,8 +36,8 @@ jobs:
 #        with:
 #          name: Billing
 #          path: receipt.txt
-      - uses: ammaraskar/sphinx-action@master
-        with:
-          docs-folder: "./docs/"
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          build-command: "sphinx-build ./sphinx/ ./"
+#      - uses: ammaraskar/sphinx-action@master
+#        with:
+#          docs-folder: "./docs/"
+#          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+#          build-command: "sphinx-build ./sphinx/ ./"
