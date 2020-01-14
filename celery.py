@@ -40,7 +40,7 @@ except:
     dryrun = False
 
 args = parser.parse_args()
-git_folder = args.folder
+git_folder = os.path.abspath(args.folder)
 
 print("Working project path: \n{}".format(git_folder))
 # Load parameters from environment variables
