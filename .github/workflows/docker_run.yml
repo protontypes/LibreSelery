@@ -19,12 +19,12 @@ jobs:
       - name: Pull Last Build from Docker Hub
         run: docker pull opencelery/opencelery      
       - name: Run Container on own sources as input
-        run:  docker run --rm \
-                --env GITHUB_TOKEN=$GITHUB_TOKEN \
-                --env LIBRARIES_IO_TOKEN=$LIBRARIES_IO_TOKEN \
-                --env COINBASE_TOKEN=$COINBASE_TOKEN \
-                --env COINBASE_SECRET=$COINBASE_SECRET \
-                opencelery \
+        run:  > 
+                docker run --rm \--env GITHUB_TOKEN=$GITHUB_TOKEN 
+                --env LIBRARIES_IO_TOKEN=$LIBRARIES_IO_TOKEN 
+                --env COINBASE_TOKEN=$COINBASE_TOKEN 
+                --env COINBASE_SECRET=$COINBASE_SECRET 
+                opencelery 
                 bash -c 'export PAY=1;python3 celery.py --folder=./' 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
