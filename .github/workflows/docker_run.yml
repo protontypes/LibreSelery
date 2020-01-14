@@ -24,7 +24,7 @@ jobs:
                 --env LIBRARIES_IO_TOKEN=$LIBRARIES_IO_TOKEN 
                 --env COINBASE_TOKEN=$COINBASE_TOKEN 
                 --env COINBASE_SECRET=$COINBASE_SECRET 
-                opencelery 
+                opencelery/opencelery 
                 bash -c 'python3 celery.py --folder=./' 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
