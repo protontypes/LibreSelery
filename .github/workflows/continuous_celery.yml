@@ -1,4 +1,4 @@
-# ./.github/workflows/opencelery.yml
+# ./.github/workflows/continuous_celery.yml
 # Use OpenCelery as a simple Github action on your project workflow.
 # For configuration create an .opencelery.yml file in your project repo.
 
