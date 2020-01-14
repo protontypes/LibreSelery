@@ -16,26 +16,27 @@ jobs:
       - uses: actions/checkout@v1
 #      - name: Build Container
 #        run:  docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t opencelery .
-      - name: Pull Last Build from Docker Hub
+      - name: Pull Last Build from DockerHub
         run: docker pull opencelery/opencelery      
-      - name: Run Container on own sources as input
+      - name: Run OpenCelery on Sources
         run:  > 
                 docker run --rm \--env GITHUB_TOKEN=$GITHUB_TOKEN 
                 --env LIBRARIES_IO_TOKEN=$LIBRARIES_IO_TOKEN 
                 --env COINBASE_TOKEN=$COINBASE_TOKEN 
-                --env COINBASE_SECRET=$COINBASE_SECRET 
+                --env COINBASE_SECRET=$COINBASE_SECRET
+                -v $(pwd):/home/celery/runningrepo/ 
                 opencelery/opencelery 
-                bash -c 'python3 celery.py --folder=./' 
+                bash -c 'python3 celery.py --folder=/home/celery/runningrepo/' 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LIBRARIES_IO_TOKEN: ${{ secrets.LIBRARIES_IO_TOKEN }}
           COINBASE_TOKEN: ${{ secrets.COINBASE_TOKEN }}
           COINBASE_SECRET: ${{ secrets.COINBASE_SECRET }}
       
-#      - uses: actions/upload-artifact@v1
-#        with:
-#          name: Billing
-#          path: receipt.txt
+      - uses: actions/upload-artifact@v1
+        with:
+          name: Billing
+          path: receipt.txt
 #      - uses: ammaraskar/sphinx-action@master
 #        with:
 #          docs-folder: "./docs/"

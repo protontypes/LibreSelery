@@ -2,5 +2,5 @@ include_deps: False
 include_self: True
 include_tooling_and_runtime: False
 min_contributions: 1
-dryrun: True
+dryrun: False
 check_equal_privat_and_public_wallet: False
