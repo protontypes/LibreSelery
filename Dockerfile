@@ -20,9 +20,9 @@ COPY requirements.txt .
 ### Install python dependencies
 RUN pip install -r requirements.txt
 
-WORKDIR /home/celery/opencelery
+WORKDIR /home/celery/runningrepo
 
-RUN chown -R celery:celery /home/celery/opencelery/
+RUN chown -R celery:celery /home/celery/runningrepo
 
 USER celery
 # Copy all
