@@ -1,7 +1,7 @@
 # OpenCelery <img align="middle" src="./docs/celery_logo.svg" width="128">  
 > Self-sustain your git repository
 
-[![Actions Status](https://github.com/protontypes/opencelery/workflows/continuouscelery/badge.svg)](https://github.com/protontypes/opencelery/actions)
+[![Actions Status](https://github.com/protontypes/opencelery/workflows/opencelery/badge.svg)](https://github.com/protontypes/opencelery/actions)
 
 Please consider OpenCelery can payout all your cryptocurrency money if you configure it in this way.
 
