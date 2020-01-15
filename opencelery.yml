@@ -2,6 +2,6 @@ include_deps: False
 include_self: True
 include_tooling_and_runtime: False
 min_contributions: 1
-dryrun: False
+dryrun: True
 check_equal_privat_and_public_wallet: False
 skip_email: True
