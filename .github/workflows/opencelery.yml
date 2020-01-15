@@ -1,21 +1,22 @@
 # ./.github/workflows/continuouscelery.yml
 # Use OpenCelery as a simple Github action on your project workflow.
 # For configuration create an .opencelery.yml file in your project repo.
-name: ContinuousCelery
+name: opencelery
 on: 
     push:
-      branches:    
+      branches:
         - master
 
 jobs:
   opencelery:
-    name: continuouscelery
+    name: opencelery
     runs-on: ubuntu-latest
     steps:
-      # Check out the repo opencelery is working on
+      # Check out the repo opencelery is working on.
       - uses: actions/checkout@v1
-      - name: Pull opencelery from DockerHub
-        run: docker pull opencelery/opencelery      
+      - name: pull opencelery from dockerhub
+        run: docker pull opencelery/opencelery
+      # Run OpenCelery on the current folder.
       - name: Run OpenCelery on Sources
         run:  > 
                 docker run --rm \--env GITHUB_TOKEN=$GITHUB_TOKEN 
@@ -31,7 +32,8 @@ jobs:
           LIBRARIES_IO_TOKEN: ${{ secrets.LIBRARIES_IO_TOKEN }}
           COINBASE_TOKEN: ${{ secrets.COINBASE_TOKEN }}
           COINBASE_SECRET: ${{ secrets.COINBASE_SECRET }}
+        # Upload the receipt file to github artifact.
       - uses: actions/upload-artifact@v1
         with:
-          name: Billing
+          name: billing
           path: receipt.txt
