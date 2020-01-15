@@ -1,4 +1,4 @@
-# ./.github/workflows/continuous_celery.yml
+# ./.github/workflows/continuouscelery.yml
 # Use OpenCelery as a simple Github action on your project workflow.
 # For configuration create an .opencelery.yml file in your project repo.
 
@@ -32,6 +32,7 @@ jobs:
           COINBASE_TOKEN: ${{ secrets.COINBASE_TOKEN }}
           COINBASE_SECRET: ${{ secrets.COINBASE_SECRET }}
       - uses: actions/upload-artifact@v1
+        continue-on-error: true
         with:
           name: Billing
           path: receipt.txt
