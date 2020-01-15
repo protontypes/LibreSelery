@@ -25,19 +25,24 @@ parser.add_argument("--folder", required=True, type=str,
 # If one variable is not found in the yml, all variables get defaults
 try:
     default_config = yaml.safe_load(open('opencelery.yml'))
+    dryrun = default_config['dryrun']
     include_dependencies = default_config['include_deps']
     include_self = default_config['include_self']
+    include_tooling_and_runtime = default_config['include_tooling_and_runtime']
     # Is a relativ/median min contributions better as limit?
     min_contributions = default_config['min_contributions']
-    dryrun = default_config['dryrun']
     check_equal_privat_and_public_wallet = default_config['check_equal_privat_and_public_wallet']
-    include_tooling_and_runtime = default_config['include_tooling_and_runtime']
+    skip_email = default_config['skip_email']
 
 except:
-    include_dependencies = True
-    include_self = True
-    min_contributions = 1
     dryrun = False
+    include_dependencies = False
+    include_self = True
+    include_tooling_and_runtime = False
+    min_contributions = 1
+    check_equal_privat_and_public_wallet = True
+    skip_email = True
+
 
 args = parser.parse_args()
 git_folder = os.path.abspath(args.folder)
@@ -62,6 +67,7 @@ dependency_list = []
 contributor_emails = []
 
 if check_equal_privat_and_public_wallet:
+    """ Check if the public wallet is hold by the secret tokens account """
     if not coinConnector.isWalletAddress(wallet_address):
         print("Wallet not found")
         sys.exit()
@@ -157,7 +163,7 @@ print(weights)
 for source in funding_emails:
     for user in funding_emails[0]:
         if not dryrun:
-            receipt = coinConnector.payout(user['email'],amount)
+            receipt = coinConnector.payout(user['email'],amount,skip_email)
             print(receipt)
             f = open("receipt.txt", "a")
             f.write(str(receipt))
