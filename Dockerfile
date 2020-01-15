@@ -1,7 +1,7 @@
 FROM python:3.7.5-slim-stretch
 
-ARG UID=1002
-ARG GID=1001
+ARG UID=1001
+ARG GID=1002
 
 RUN groupadd -g $GID celery && \
     useradd -m -u $UID -g $GID --shell /bin/bash celery
