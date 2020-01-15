@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="192px" height="192px" viewBox="0 0 192 192" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>android-icon-192x192</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 0.503734426 85.9506933 0.503734426 85.9506933 85.0431443 0 85.0431443"></polygon>
+    </defs>
+    <g id="android-icon-192x192" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-6" transform="translate(16.000000, 7.000000)">
+            <g id="Group-3">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Clip-2"></g>
+                <path d="M36.8117267,85.0431443 L-0.000573333333,85.0431443 C-0.000573333333,38.4283246 38.5575267,0.503734426 85.9506933,0.503734426 L85.9506933,36.7111443 C58.85496,36.7111443 36.8117267,58.3930131 36.8117267,85.0431443" id="Fill-1" fill="#3B52FF" mask="url(#mask-2)"></path>
+            </g>
+            <path d="M160,178 C112.579171,178 74,139.870841 74,93 L110.832352,93 C110.832352,119.79488 132.889886,141.595931 160,141.595931 L160,178 Z" id="Fill-4" fill="#00E6A7"></path>
+        </g>
+    </g>
+</svg>

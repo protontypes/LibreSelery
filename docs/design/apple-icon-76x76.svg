@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="76px" height="76px" viewBox="0 0 76 76" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>apple-icon-76x76</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 0.19915082 33.9805067 0.19915082 33.9805067 33.6217082 0 33.6217082"></polygon>
+    </defs>
+    <g id="apple-icon-76x76" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-6" transform="translate(7.000000, 3.000000)">
+            <g id="Group-3">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Clip-2"></g>
+                <path d="M14.5534733,33.6217082 L-0.000226666667,33.6217082 C-0.000226666667,15.1925934 15.2436733,0.19915082 33.9805067,0.19915082 L33.9805067,14.5137082 C23.26824,14.5137082 14.5534733,23.0856098 14.5534733,33.6217082" id="Fill-1" fill="#3B52FF" mask="url(#mask-2)"></path>
+            </g>
+            <path d="M63,70 C44.2522305,70 29,54.7483365 29,36 L43.5616276,36 C43.5616276,46.7179521 52.2820479,55.4383724 63,55.4383724 L63,70 Z" id="Fill-4" fill="#00E6A7"></path>
+        </g>
+    </g>
+</svg>
