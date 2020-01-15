@@ -32,7 +32,6 @@ jobs:
           COINBASE_TOKEN: ${{ secrets.COINBASE_TOKEN }}
           COINBASE_SECRET: ${{ secrets.COINBASE_SECRET }}
       - uses: actions/upload-artifact@v1
-        continue-on-error: true
         with:
           name: Billing
           path: receipt.txt
