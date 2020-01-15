@@ -9,7 +9,7 @@ on:
 
 jobs:
   opencelery:
-    name: build_and_run
+    name: continuouscelery
     runs-on: ubuntu-latest
     steps:
       # Check out the repo opencelery is working on
