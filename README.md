@@ -1,4 +1,4 @@
-<img align="middle" src="./docs/design/opencelery-05.svg" width="128">  
+<img align="middle" src="./docs/design/opencelery-05.svg">  
 > Self-sustain your git repository
 
 [![Actions Status](https://github.com/protontypes/opencelery/workflows/opencelery/badge.svg)](https://github.com/protontypes/opencelery/actions)
