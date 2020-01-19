@@ -32,7 +32,7 @@ load default configs
 if one variable is not found in the yml, all variables get defaults.
 '''
 try:
-    config = yaml.safe_load(open(git_folder+'openselery.yml'))
+    config = yaml.safe_load(open('openselery.yml'))
     dryrun = config['dryrun']
     include_dependencies = config['include_deps']
     include_self = config['include_self']
@@ -41,8 +41,8 @@ try:
     min_contributions = config['min_contributions']
     check_equal_privat_and_public_wallet = config['check_equal_privat_and_public_wallet']
     skip_email = config['skip_email']
-    btc_per_transaction = config['btc_per_funding']
-    number_of_payouts_per_run = config['number_of_payouts_per_run']
+    btc_per_transaction = config['btc_per_transactions']
+    payouts_per_run = config['payouts_per_run']
     totalpayout_per_run = config['total_payout_per_run']
     print("Reading openselery.yml completed")
     print(config)
@@ -56,8 +56,8 @@ except:
     check_equal_privat_and_public_wallet = True
     skip_email = True
     btc_per_transaction = '0.000002'
-    payouts_per_run = '3'
-    totalpayout_per_run = '0.000006'
+    payouts_per_run = '1'
+    totalpayout_per_run = '0.000002'
     print("Could not read openselery.yml. \nUse default config")
 
 if not float(totalpayout_per_run)/float(payouts_per_run) == float(btc_per_transaction):
