@@ -1,5 +1,4 @@
 #!/bin/bash
-database_location=~/.openselery/db
 token_location=~/.openselery/tokens.env
 
 if [ ! -d $database_location ]
