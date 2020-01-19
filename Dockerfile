@@ -3,8 +3,8 @@ FROM python:3.7.5-slim-stretch
 ARG UID=1001
 ARG GID=1002
 
-RUN groupadd -g $GID celery && \
-    useradd -m -u $UID -g $GID --shell /bin/bash celery
+RUN groupadd -g $GID selery && \
+    useradd -m -u $UID -g $GID --shell /bin/bash selery
 
 ## RUBY
 RUN apt-get update && \
@@ -20,11 +20,11 @@ COPY requirements.txt .
 ### Install python dependencies
 RUN pip install -r requirements.txt
 
-WORKDIR /home/celery/runningrepo
+WORKDIR /home/selery/runningrepo
 
-RUN chown -R celery:celery /home/celery/runningrepo
+RUN chown -R selery:selery /home/selery/runningrepo
 
-USER celery
+USER selery
 # Copy all
 COPY . .
 

@@ -1,31 +1,31 @@
-# ./.github/workflows/continuouscelery.yml
-# Use OpenCelery as a simple Github action on your project workflow.
-# For configuration create an .opencelery.yml file in your project repo.
-name: opencelery
+# ./.github/workflows/continuousselery.yml
+# Use Openselery as a simple Github action on your project workflow.
+# For configuration create an .openselery.yml file in your project repo.
+name: openselery
 on: 
     push:
       branches:
         - master
 
 jobs:
-  opencelery:
-    name: opencelery
+  openselery:
+    name: openselery
     runs-on: ubuntu-latest
     steps:
-      # Check out the repo opencelery is working on.
+      # Check out the repo openselery is working on.
       - uses: actions/checkout@v1
-      - name: pull opencelery from dockerhub
-        run: docker pull opencelery/opencelery
-      # Run OpenCelery on the current folder.
-      - name: Run OpenCelery on Sources
+      - name: pull openselery from dockerhub
+        run: docker pull openselery/openselery
+      # Run Openselery on the current folder.
+      - name: Run Openselery on Sources
         run:  > 
                 docker run --rm \--env GITHUB_TOKEN=$GITHUB_TOKEN 
                 --env LIBRARIES_IO_TOKEN=$LIBRARIES_IO_TOKEN 
                 --env COINBASE_TOKEN=$COINBASE_TOKEN 
                 --env COINBASE_SECRET=$COINBASE_SECRET
-                -v $(pwd):/home/celery/runningrepo/ 
-                opencelery/opencelery 
-                bash -c 'python3 celery.py --folder=/home/celery/runningrepo/' 
+                -v $(pwd):/home/selery/runningrepo/ 
+                openselery/openselery 
+                bash -c 'python3 selery.py --folder=/home/selery/runningrepo/' 
         # Never print
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

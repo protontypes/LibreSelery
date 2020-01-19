@@ -79,8 +79,8 @@ target/
 #   install all needed dependencies.
 #Pipfile.lock
 
-# celery beat schedule file
-celerybeat-schedule
+# selery beat schedule file
+selerybeat-schedule
 
 # SageMath parsed files
 *.sage.py
