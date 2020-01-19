@@ -48,7 +48,7 @@ try:
     print(config)
 
 except:
-    dryrun = False
+    dryrun = True
     include_dependencies = False
     include_self = True
     include_tooling_and_runtime = False
@@ -60,8 +60,7 @@ except:
     totalpayout_per_run = '0.000006'
     print("Could not read openselery.yml. \nUse default config")
 
-if not Float.parseFloat(totalpayout_per_run)/Float.parseFloat(payouts_per_run)=btc_per_transaction
-parseFloat(btc_per_transaction)
+if not float(totalpayout_per_run)/float(payouts_per_run) == float(btc_per_transaction):
     print("Payout values do not match")
     sys.exit()
 
@@ -84,6 +83,7 @@ wallet_address = my_FUNDING['openselery-bitcoin']
 funding_emails = []
 dependency_list = []
 contributor_emails = []
+selery_emails = []
 
 if check_equal_privat_and_public_wallet:
     """ Check if the public wallet is hold by the secret tokens account """
@@ -161,26 +161,20 @@ if include_tooling_and_runtime:
     pass
 
 # Calculate Probability Weights
-funding_emails, weights = getweights.getEmailsAndWeights(dependency_list)
+funding_emails, weights = calcweights.getEmailsAndWeights(dependency_list)
 # Payout
-n_funding_emails = 1 #number of possible funding emails
-for i in range(n_funding_emails):
-    if i >= len(funding_emails):
+for i in range(int(payouts_per_run)):
+    if i >= len(funding_emails[0]):
         break
 
-    #pick a random contributor
-    email = random.choices(funding_emails, weights, k=1)
-    funding_emails.append(email[0])
+    email = random.choices(funding_emails[0], weights, k=1)
+    selery_emails.append(email[0])
 
-    #remove contributor to avoid double funding for the same e-mail address
-    weights.pop(funding_emails.index(email[0]))
-    funding_emails.remove(email[0])
 
-print(funding_emails)
-print(weights)
+print(selery_emails)
 
-for source in funding_emails:
-    for user in funding_emails[0]:
+for source in selery_emails:
+    for user in source:
         if not dryrun:
             receipt = coinConnector.payout(user['email'],btc_per_transaction,skip_email)
             print(receipt)
