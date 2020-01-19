@@ -17,5 +17,5 @@ def getEmailsAndWeights(dep_list):
     for dep in dep_list:
         contributor_emails.append(dep["email_list"])
 
-    weights = [1 for i in range(len(contributor_emails))]
+    weights = [ 1 for i in range(len(contributor_emails[0]))]
     return contributor_emails, weights
