@@ -1,6 +1,6 @@
 from github import Github
 from .email_checker import EmailChecker
-from .celeryutils import countdown
+from .seleryutils import countdown
 from urllib.parse import urlparse
 import time
 

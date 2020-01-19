@@ -8,15 +8,15 @@ import re
 import random
 import sys
 
-from opencelery.github_connector import GithubConnector
-from opencelery.librariesio_connector import LibrariesIOConnector
-from opencelery.coinbase_pay import CoinbaseConnector
-from opencelery import gitremotes, celeryutils
+from openselery.github_connector import GithubConnector
+from openselery.librariesio_connector import LibrariesIOConnector
+from openselery.coinbase_pay import CoinbaseConnector
+from openselery import gitremotes, seleryutils
 
 
 # ArgumentParser
 
-parser = argparse.ArgumentParser(description='opencelery - Automated Funding')
+parser = argparse.ArgumentParser(description='openselery - Automated Funding')
 parser.add_argument("--folder", required=True, type=str,
                     help="Git folder to scan")
 
@@ -24,7 +24,7 @@ parser.add_argument("--folder", required=True, type=str,
 # TODO: hacky solution - needs to be fixed
 # If one variable is not found in the yml, all variables get defaults
 try:
-    default_config = yaml.safe_load(open('opencelery.yml'))
+    default_config = yaml.safe_load(open('openselery.yml'))
     dryrun = default_config['dryrun']
     include_dependencies = default_config['include_deps']
     include_self = default_config['include_self']
@@ -60,7 +60,7 @@ gitConnector = GithubConnector(github_token)
 coinConnector = CoinbaseConnector(coinbase_token, coinbase_secret)
 
 my_FUNDING = yaml.safe_load(open('FUNDING.yml'))
-wallet_address = my_FUNDING['opencelery-bitcoin']
+wallet_address = my_FUNDING['openselery-bitcoin']
 
 funding_emails = []
 dependency_list = []
@@ -109,7 +109,7 @@ if include_dependencies:
         exit()
     print('dependencies json:')
     print(dependencies_json)
-    dependencies_json = celeryutils.getUniqueDependencies(dependencies_json)
+    dependencies_json = seleryutils.getUniqueDependencies(dependencies_json)
 
     for platform_name in dependencies_json.keys():
         if not dependencies_json[platform_name]:
@@ -141,7 +141,7 @@ if include_tooling_and_runtime:
     pass
 
 # Calculate Probability Weights
-funding_emails, weights = celeryutils.getEmailsAndWeights(dependency_list) 
+funding_emails, weights = seleryutils.getEmailsAndWeights(dependency_list) 
 # Payout
 n_funding_emails = 1 #number of possible funding emails
 amount = '0.000002'

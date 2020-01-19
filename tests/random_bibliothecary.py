@@ -25,7 +25,7 @@ run_path = os.path.dirname(os.path.realpath(__file__))
 github_token = os.environ['GITHUB_TOKEN']
 
 try:
-   db_conn = sqlite3.connect("/home/celery/db/gitclones.sqlite3")
+   db_conn = sqlite3.connect("/home/selery/db/gitclones.sqlite3")
 except:
    db_conn = sqlite3.connect("gitclones.sqlite3")
 db_cursor = db_conn.cursor()

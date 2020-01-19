@@ -10,8 +10,8 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
     
 setup(
-    name='opencelery',
-    packages=['opencelery',],
+    name='openselery',
+    packages=['openselery',],
     long_description=long_description,
     install_requires=requirements
 )
