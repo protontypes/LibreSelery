@@ -1,6 +1,6 @@
 <img align="middle" src="./docs/design/OpenSelery-04.svg" width="512">     
 
-> Software Defined Funding
+> Software defined funding distribution
 
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions)
 
@@ -45,3 +45,5 @@ bash openselery_docker.sh ~/gitclones/<target_projects>
 ```bash
 env $(cat ~/.openselery/tokens.env | xargs) ~/openselery/selery.py --project=$PROJECT_DIR_TO_SCAN
 ```
+
+__Artwork by Miram Winter and undraw__
