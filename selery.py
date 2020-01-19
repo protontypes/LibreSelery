@@ -14,25 +14,38 @@ from openselery.coinbase_pay import CoinbaseConnector
 from openselery import gitremotes, seleryutils, calcweights
 
 
-# ArgumentParser
+'''
+argument parser
+'''
+
 
 parser = argparse.ArgumentParser(description='openselery - Automated Funding')
 parser.add_argument("--folder", required=True, type=str,
                     help="Git folder to scan")
 
-# Load default configs
-# TODO: hacky solution - needs to be fixed
-# If one variable is not found in the yml, all variables get defaults
+args = parser.parse_args()
+git_folder = os.path.abspath(args.folder)
+
+
+'''
+load default configs
+if one variable is not found in the yml, all variables get defaults.
+'''
 try:
-    default_config = yaml.safe_load(open('openselery.yml'))
-    dryrun = default_config['dryrun']
-    include_dependencies = default_config['include_deps']
-    include_self = default_config['include_self']
-    include_tooling_and_runtime = default_config['include_tooling_and_runtime']
+    config = yaml.safe_load(open(git_folder+'openselery.yml'))
+    dryrun = config['dryrun']
+    include_dependencies = config['include_deps']
+    include_self = config['include_self']
+    include_tooling_and_runtime = selery_config['include_tooling_and_runtime']
     # Is a relativ/median min contributions better as limit?
-    min_contributions = default_config['min_contributions']
-    check_equal_privat_and_public_wallet = default_config['check_equal_privat_and_public_wallet']
-    skip_email = default_config['skip_email']
+    min_contributions = config['min_contributions']
+    check_equal_privat_and_public_wallet = config['check_equal_privat_and_public_wallet']
+    skip_email = config['skip_email']
+    btc_per_transaction = config['btc_per_funding']
+    number_of_payouts_per_run = config['number_of_payouts_per_run']
+    totalpayout_per_run = config['total_payout_per_run']
+    print("Reading openselery.yml completed")
+    print(config)
 
 except:
     dryrun = False
@@ -42,10 +55,16 @@ except:
     min_contributions = 1
     check_equal_privat_and_public_wallet = True
     skip_email = True
+    btc_per_transaction = '0.000002'
+    payouts_per_run = '3'
+    totalpayout_per_run = '0.000006'
+    print("Could not read openselery.yml. \nUse default config")
 
+if not Float.parseFloat(totalpayout_per_run)/Float.parseFloat(payouts_per_run)=btc_per_transaction
+parseFloat(btc_per_transaction)
+    print("Payout values do not match")
+    sys.exit()
 
-args = parser.parse_args()
-git_folder = os.path.abspath(args.folder)
 
 print("Working project path: \n{}".format(git_folder))
 # Load parameters from environment variables
@@ -73,6 +92,7 @@ if check_equal_privat_and_public_wallet:
         sys.exit()
     else:
         print("FUNDING.yml Wallet matches coinbase wallet")
+
 
 if include_self:
     # Find Official Repositories
@@ -144,7 +164,6 @@ if include_tooling_and_runtime:
 funding_emails, weights = getweights.getEmailsAndWeights(dependency_list)
 # Payout
 n_funding_emails = 1 #number of possible funding emails
-amount = '0.000002'
 for i in range(n_funding_emails):
     if i >= len(funding_emails):
         break
@@ -163,7 +182,7 @@ print(weights)
 for source in funding_emails:
     for user in funding_emails[0]:
         if not dryrun:
-            receipt = coinConnector.payout(user['email'],amount,skip_email)
+            receipt = coinConnector.payout(user['email'],btc_per_transaction,skip_email)
             print(receipt)
             f = open("receipt.txt", "a")
             f.write(str(receipt))
