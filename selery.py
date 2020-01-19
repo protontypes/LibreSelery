@@ -36,14 +36,14 @@ try:
     dryrun = config['dryrun']
     include_dependencies = config['include_deps']
     include_self = config['include_self']
-    include_tooling_and_runtime = selery_config['include_tooling_and_runtime']
+    include_tooling_and_runtime = config['include_tooling_and_runtime']
     # Is a relativ/median min contributions better as limit?
     min_contributions = config['min_contributions']
     check_equal_privat_and_public_wallet = config['check_equal_privat_and_public_wallet']
     skip_email = config['skip_email']
-    btc_per_transaction = config['btc_per_transactions']
-    payouts_per_run = config['payouts_per_run']
-    totalpayout_per_run = config['total_payout_per_run']
+    btc_per_transaction = config['btc_per_transaction']
+    selected_contributor = config['selected_contributor']
+    total_payout_per_run = config['total_payout_per_run']
     print("Reading openselery.yml completed")
     print(config)
 
@@ -57,10 +57,10 @@ except:
     skip_email = True
     btc_per_transaction = '0.000002'
     payouts_per_run = '1'
-    totalpayout_per_run = '0.000002'
+    total_payout_per_run = '0.000002'
     print("Could not read openselery.yml. \nUse default config")
 
-if not float(totalpayout_per_run)/float(payouts_per_run) == float(btc_per_transaction):
+if not float(total_payout_per_run)/float(selected_contributor) == float(btc_per_transaction):
     print("Payout values do not match")
     sys.exit()
 
@@ -163,7 +163,7 @@ if include_tooling_and_runtime:
 # Calculate Probability Weights
 funding_emails, weights = calcweights.getEmailsAndWeights(dependency_list)
 # Payout
-for i in range(int(payouts_per_run)):
+for i in range(int(selected_contributor)):
     if i >= len(funding_emails[0]):
         break
 
@@ -173,13 +173,12 @@ for i in range(int(payouts_per_run)):
 
 print(selery_emails)
 
-for source in selery_emails:
-    for user in source:
-        if not dryrun:
-            receipt = coinConnector.payout(user['email'],btc_per_transaction,skip_email)
-            print(receipt)
-            f = open("receipt.txt", "a")
-            f.write(str(receipt))
-            f.close()
-        else:
-            break
+for user in selery_emails:
+    if not dryrun:
+         receipt = coinConnector.payout(user['email'],btc_per_transaction,skip_email)
+         print(receipt)
+         f = open("receipt.txt", "a")
+         f.write(str(receipt))
+         f.close()
+    else:
+         break
