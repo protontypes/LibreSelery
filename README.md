@@ -16,6 +16,7 @@ Openselery is still not released and in experimental status.
 1. Install with [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/):
 
 ```bash
+cd ~
 git clone https://github.com/openselery/openselery.git
 cd openselery
 docker build -t openselery .
@@ -23,7 +24,7 @@ docker build -t openselery .
 
 2. Create a dedicated coinbase account with limited amounts. 
 3. Never transfer or store large values with automated cryptocurrency wallets. Use recurring automated transaction from another account to recharge you wallet on a regular base. 
-4. Transfer some money to this wallet for testing Openselery.  
+4. Transfer some money to this wallet for testing.  
 5. Add your tokens from the coinbase API:      
 
 ```bash
@@ -35,10 +36,10 @@ GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 LIBRARIES_IO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-6. Run openselery on your target project root folder. This will send cryptocurrency to a weighted random product contributor with an email address on the git platform or git commit:    
+6. Run on your target project folder. This will send cryptocurrency to a weighted random product contributor with an email address on the git platform or git commit:    
 
 ```bash
-env $(cat ~/.openselery/tokens.env | xargs) ~/openselery/selery.py --project=$PROJECT_DIR_TO_SCAN
+env $(cat ~/.openselery/tokens.env | xargs) ~/openselery/selery_docker.sh <target_directory>
 ```
 
 *Artwork by Miram Winter and undraw*
