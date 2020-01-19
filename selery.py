@@ -11,7 +11,7 @@ import sys
 from openselery.github_connector import GithubConnector
 from openselery.librariesio_connector import LibrariesIOConnector
 from openselery.coinbase_pay import CoinbaseConnector
-from openselery import gitremotes, seleryutils
+from openselery import gitremotes, seleryutils, calcweights
 
 
 # ArgumentParser
@@ -84,7 +84,7 @@ if include_self:
 # Level 0 is the project itself.
 # TODO: create data class for list items
     dependency_list.append({
-            "platform": "", 
+            "platform": "",
             "url": "",
             "project_id": project_id,
             "level": 0,
@@ -96,7 +96,7 @@ if include_dependencies:
     # Scan for Dependencies Repositories
     # ToDo
     # Parse the json without local storage
-    
+
     run_path = os.path.dirname(os.path.realpath(__file__))
     process = subprocess.run(['ruby', run_path+'/scripts/scan.rb', '--project='+git_folder],
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
@@ -141,7 +141,7 @@ if include_tooling_and_runtime:
     pass
 
 # Calculate Probability Weights
-funding_emails, weights = seleryutils.getEmailsAndWeights(dependency_list) 
+funding_emails, weights = getweights.getEmailsAndWeights(dependency_list)
 # Payout
 n_funding_emails = 1 #number of possible funding emails
 amount = '0.000002'
