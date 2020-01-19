@@ -5,3 +5,6 @@ min_contributions: 1
 dryrun: True
 check_equal_privat_and_public_wallet: False
 skip_email: True
+btc_per_transaction: 0.000002
+payouts_per_run: 3
+totalpayout_per_run: 0.000006
