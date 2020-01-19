@@ -5,6 +5,6 @@ include_tooling_and_runtime: False
 min_contributions: 1
 check_equal_privat_and_public_wallet: False
 skip_email: True
-btc_per_transaction: 0.000002
-payouts_per_run: 1
-totalpayout_per_run: 0.000002
+btc_per_transaction: '0.000002'
+selected_contributor: 1
+total_payout_per_run: '0.000002'
