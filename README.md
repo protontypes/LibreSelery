@@ -1,6 +1,6 @@
 <img align="middle" src="./docs/design/OpenSelery-04.svg" width="512">     
 
-> Software defined continuous funding distribution. 
+> Software defined funding distribution. 
 
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions)
 
