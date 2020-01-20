@@ -34,6 +34,7 @@ COINBASE_TOKEN=XXXXXXXXXXXXXXXX
 COINBASE_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 LIBRARIES_IO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# NEVER PRINT THIS
 ```
 
 6. Run on your target project folder. This will send cryptocurrency to a weighted random product contributor with an email address on the git platform or git commit:    
