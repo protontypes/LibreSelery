@@ -16,7 +16,7 @@ class CoinbaseConnector:
 
     def payout(self, target_email, target_amount, skip_notifications='true'):
         tx = self.account.send_money(
-            to=target_email, amount=target_amount, currency='BTC', skip_notifications='false')
+            to=target_email, amount=float(target_amount), currency='BTC', skip_notification=['false','true'][skip_notifications])
         return tx
 
 

@@ -45,7 +45,7 @@ class GithubConnector:
 
         return emails_list
 
-    def getProjectID(self, repo_url):
+    def getGithubID(self, repo_url):
         parser = urlparse(repo_url)
         owner = parser.path.split('/')[1]
         project_name = parser.path.split('/')[2]
