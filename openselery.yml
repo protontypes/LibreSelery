@@ -1,10 +1,10 @@
-dryrun: '1111'
-include_deps: '22'
-include_self: Tru
+dryrun: True
+include_self: True
+include_deps: True 
 include_tooling_and_runtime: False
-min_contributions: dd 
+min_contributions: 1
 check_equal_privat_and_public_wallet: False
-skip_email: Falsei
+skip_email: False
 btc_per_transaction: 0.000002
-selected_contributor: 12.2
+selected_contributor: 1
 total_payout_per_run: 0.000002

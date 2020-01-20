@@ -14,7 +14,7 @@ class LibrariesIOConnector:
     def getOwnerandProject(self, platform, name):
         url_path = posixpath.join('api', platform, name)
         url = urllib.parse.urljoin(self.base_url, url_path)
-        r = self.get(url)
+        r = requests.get(url, params=self.apiKey)
         if r.status_code is not 200 or r.json().get('repository_url') is None:
             print(platform+" "+name)
             print("Request not possible")
@@ -35,7 +35,7 @@ class LibrariesIOConnector:
         name = name.replace(".git", "")
         url_path = posixpath.join('api', 'github', owner, name, 'dependencies')
         url = urllib.parse.urljoin(self.base_url, url_path)
-        r = self.get(url)
+        r = requests.get(url, params=self.apiKey)
         if r.status_code is not 200:
             print(owner+" "+name)
             print("Request not possible")

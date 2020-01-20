@@ -7,12 +7,11 @@ def getEmailsAndWeights(dep_list):
     # [ {dep['project_id']: {'contributors': [{'email': email, 'weight': 1} for email in dep['email_list']]}}  for dep in dep_list]
 
     contributor_emails = []
-    #TODO:
-    # get more information about each contributor
-    # number commits
-    # time spent on project (calculated from commits)
-    # issues closed
-    # successful pull requests
+    #TODO: get more information about each contributor
+    # * number commits
+    # * time spent on project (calculated from commits)
+    # * issues closed
+    # * successful pull requests
     #
     for dep in dep_list:
         contributor_emails.append(dep["email_list"])
