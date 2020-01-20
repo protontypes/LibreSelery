@@ -26,6 +26,14 @@ parser.add_argument("--folder", required=True, type=str,
 args = parser.parse_args()
 git_folder = os.path.abspath(args.folder)
 
+'''
+ensure types loaded 
+'''
+def ensureType(typ, config, field):
+    result = config[field]
+    if not(type(result) is typ):
+        raise ValueError("Wrong Type in " + field + " expected " + str(typ) + " got: " + str(type(result)))
+    return result
 
 '''
 load default configs
@@ -33,21 +41,21 @@ if one variable is not found in the yml, all variables get defaults.
 '''
 try:
     config = yaml.safe_load(open('openselery.yml'))
-    dryrun = config['dryrun']
-    include_dependencies = config['include_deps']
-    include_self = config['include_self']
-    include_tooling_and_runtime = config['include_tooling_and_runtime']
+    dryrun = ensureType(bool, config, 'dryrun')
+    include_dependencies = ensureType(bool, config, 'include_deps')
+    include_self = ensureType(bool, config, 'include_self')
+    include_tooling_and_runtime = ensureType(bool, config, 'include_tooling_and_runtime')
     # Is a relativ/median min contributions better as limit?
-    min_contributions = config['min_contributions']
-    check_equal_privat_and_public_wallet = config['check_equal_privat_and_public_wallet']
-    skip_email = config['skip_email']
-    btc_per_transaction = config['btc_per_transaction']
-    selected_contributor = config['selected_contributor']
-    total_payout_per_run = config['total_payout_per_run']
+    min_contributions = ensureType(int, config, 'min_contributions')
+    check_equal_privat_and_public_wallet = ensureType(bool, config, 'check_equal_privat_and_public_wallet')
+    skip_email = ensureType(bool, config, 'skip_email')
+    btc_per_transaction = ensureType(float, config, 'btc_per_transaction')
+    selected_contributor = ensureType(int, config, 'selected_contributor')
+    total_payout_per_run = ensureType(float, config, 'total_payout_per_run')
     print("Reading openselery.yml completed")
     print(config)
 
-except:
+except ValueError as err:
     dryrun = True
     include_dependencies = False
     include_self = True
@@ -55,12 +63,13 @@ except:
     min_contributions = 1
     check_equal_privat_and_public_wallet = True
     skip_email = True
-    btc_per_transaction = '0.000002'
-    payouts_per_run = '1'
-    total_payout_per_run = '0.000002'
+    btc_per_transaction = 0.000002
+    selected_contributor = 1
+    total_payout_per_run = 0.000002
+    print(err)
     print("Could not read openselery.yml. \nUse default config")
 
-if not float(total_payout_per_run)/float(selected_contributor) == float(btc_per_transaction):
+if not total_payout_per_run/selected_contributor == btc_per_transaction:
     print("Payout values do not match")
     sys.exit()
 
