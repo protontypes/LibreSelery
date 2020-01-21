@@ -61,7 +61,6 @@ except ValueError as err:
     print(err)
     print("Could not read openselery.yml. \nUse default config")
 
-
 # load parameters from environment variables
 # never print this
 # TODO: check if user input is sane
@@ -79,7 +78,7 @@ my_FUNDING = yaml.safe_load(open('FUNDING.yml'))
 wallet_address = ensureType(str,my_FUNDING,'openselery-bitcoin')
 
 if check_equal_privat_and_public_wallet:
-    #Check if the public wallet is hold by the secret tokens account 
+    #Check if the public wallet is hold by the secret tokens account
     if not coinConnector.isWalletAddress(wallet_address):
         print("Wallet not found")
         sys.exit()
@@ -150,14 +149,11 @@ if include_dependencies:
             print(len(email_list))
             project_list.append(dependency)
 
-print(project_list)
-
 if include_tooling_and_runtime:
     pass
 
 # calculate probability weights
 funding_emails, weights = calcweights.getEmailsAndWeights(project_list)
-print(funding_emails)
 # payout
 for i in range(int(selected_contributor)):
     if i >= len(funding_emails[0]):
