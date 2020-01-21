@@ -43,4 +43,4 @@ LIBRARIES_IO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 env $(cat ~/.openselery/tokens.env | xargs) ~/openselery/selery_docker.sh <target_directory>
 ```
 
-*Artwork by Miram Winter and undraw*
+*Artwork by Miriam Winter*
