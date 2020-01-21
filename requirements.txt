@@ -2,5 +2,4 @@ pygithub
 dnspython
 pyyaml
 coinbase
-dnspython
 gitpython
