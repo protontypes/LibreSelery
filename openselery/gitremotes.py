@@ -16,6 +16,3 @@ def scanRemotes(git_folder,remote_name='origin'):
     return target_url
 
 # ToDO git subtree missing
-
-if __name__ == "__main__":
-    pass

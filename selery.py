@@ -11,261 +11,226 @@ import sys
 from openselery.github_connector import GithubConnector
 from openselery.librariesio_connector import LibrariesIOConnector
 from openselery.coinbase_pay import CoinbaseConnector
-from openselery import gitremotes, seleryutils, calcweights
-
+from openselery import selery_utils, calcweights
 
 
 class OpenSeleryConfig(object):
-    __default_env_template__= {
-        "libraries_api_key" : 'LIBRARIES_IO_TOKEN',
-        "github_token" : 'GITHUB_TOKEN',
-        "coinbase_token" : 'COINBASE_TOKEN',
-        "coinbase_secret" : 'COINBASE_SECRET',
+    __default_env_template__ = {
+        "libraries_api_key": 'LIBRARIES_API_KEY',
+        "github_token": 'GITHUB_TOKEN',
+        "coinbase_token": 'COINBASE_TOKEN',
+        "coinbase_secret": 'COINBASE_SECRET',
     }
-    __default_config_template__= {
+    __default_config_template__ = {
         "openselery_bitcoin_wallet": "",
 
-        "dryrun" : True,
-        "include_deps" : False,
-        "include_self" : True,
-        "include_tooling_and_runtime" : False,
-        "min_contributions" : 1,
-        "check_equal_privat_and_public_wallet" : True,
-        "skip_email" : True,
-        "btc_per_transaction" : 0.000002,
-        "selected_contributor" : 1,
-        "total_payout_per_run" : 0.000002,
+        "dryrun": True,
+        "include_dependencies": False,
+        "include_self": True,
+        "include_tooling_and_runtime": False,
+        "min_contributions": 1,
+        "check_equal_privat_and_public_wallet": True,
+        "skip_email": True,
+        "btc_per_transaction": 0.000002,
+        "selected_contributor": 1,
+        "total_payout_per_run": 0.000002,
     }
+    __secure_config_entries__ = ["libraries_api_key", "github_token", "coinbase_token", "coinbase_secret",
+                                 "coinbase_secret"]
+
     def __init__(self, d={}):
-        self.update(self.__default_config_template__)
-        self.update(d)
-    def loadYaml(self, path):
+        super(OpenSeleryConfig, self).__init__()
+        self.apply(self.__default_config_template__)
+        self.apply(d)
+
+    def apply(self, d):
+        self.__dict__.update(d)
+
+    def applyYaml(self, path):
         yamlDict = yaml.safe_load(open(path))
         ### ensure type of loaded config
-        for k,v in yamlDict.items():
-            if type(v) != type(getattr(self, k)):
-                raise ValueError("Configuration parameter '%s' has failed type check!" % k)
+        for k, v in yamlDict.items():
+            t1, v1, t2, v2 = type(v), v, type(getattr(self, k)), getattr(self, k)
+            if t1 != t2:
+                raise ValueError("Configuration parameter '%s' has failed type check! 's'<'%s'> should be 's'<'%s'>" % (
+                    k, v1, t1, v2, t2))
         ### special evaluations 
         if not self.total_payout_per_run / self.selected_contributor == self.btc_per_transaction:
             raise ValueError("Payout values do not match")
-        self.update(yamlDict)
-    def loadEnv(self):
-        environmentDict = { k: os.environ[v] for k,v in self.__default_env_template__.items() }
-        self.update(environmentDict)
-    def update(self, d):
-        self.__dict__.update(d)
+        self.apply(yamlDict)
+
+    def applyEnv(self):
+        try:
+            environmentDict = {k: os.environ[v] for k, v in self.__default_env_template__.items()}
+            self.apply(environmentDict)
+        except KeyError as e:
+            raise KeyError("Please provide environment variable %s" % e)
+
     def __repr__(self):
-        return str(self.__dict__)
-
-
-
-
+        ### make config safe for printing
+        # secureEntries = {k: "X"*len(os.environ[v]) for k, v in self.__default_env_template__.items()}
+        secureEntries = {k: "X" * len(getattr(self, k)) for k in self.__secure_config_entries__}
+        secureDict = dict(self.__dict__)
+        secureDict.update(secureEntries)
+        return str(secureDict)
 
 
 class OpenSelery(object):
-    def __init__(self):
+    def __init__(self, silent=False):
         super(OpenSelery, self).__init__()
-        self.currentDir = os.path.dirname(os.path.abspath(__file__))
-        ### initialize config dict with default from template
-        self.config = OpenSeleryConfig()
+        self.seleryDir = os.path.dirname(os.path.abspath(__file__))
+        self.silent = silent
+        self.librariesIoConnector = None
+        self.githubConnector = None
         self.initialize()
-        print(self.config)
-        
+
     def initialize(self):
+        self.logNotify("Initializing OpenSelery")
+        ### initialize config dict with default from template
+        self.log("Preparing Configuration")
+        self.config = OpenSeleryConfig()
         ### parse args
-        self.args = self.parseArgs()
+        self.log("Parsing arguments")
+        args = self.parseArgs()
+        ### apply args dict to config
+        self.config.apply(vars(args).items())
         ### apply yaml config to our configuration if possible
-        if(self.args.configPath):
-            self.config.loadYaml(self.args.configPath)
+        self.log("Loading configuration [%s]" % self.config.config_path)
+        self.loadYaml(self.config.config_path)
         ### load our funding file
-        self.config.loadYaml("FUNDING.yml")
-        self.config.loadEnv()
+        fundingPath = self._getFile("FUNDING.yml")
+        self.log("Loading funding file [%s]" % fundingPath)
+        self.loadYaml(fundingPath)
+        ### load our environment
+        self.log("Loading environment variables")
+        self.loadEnv()
+        self.logNotify("Initialized")
+        print(self.getConfig())
 
     def parseArgs(self):
         parser = argparse.ArgumentParser(description='openselery - Automated Funding')
-        parser.add_argument("-c", "--config", required=False, default=self.currentDir, dest="configPath", type=str, help="Configuration file path")
+        parser.add_argument("-c", "--config", required=False, default=os.path.join(self.seleryDir, "openselery.yml"), dest="config_path", type=str,
+                            help="Configuration file path")
         parser.add_argument("-d", "--directory", required=True, type=str, help="Git directory to scan")
         args = parser.parse_args()
         return args
-        
+
+    def loadYaml(self, path):
+        self._execCritical(lambda x: self.config.applyYaml(x), [path])
+
+    def loadEnv(self):
+        self._execCritical(lambda: self.config.applyEnv(), [])
+
+    def _execCritical(self, lambdaStatement, args=[], canFail=False):
+        try:
+            r = lambdaStatement(*args)
+        except Exception as e:
+            self.logError(e)
+            raise e if not canFail else e
+        return r
+
     def connect(self):
-        ### establish connection to used restapi services
-        librariesIO = LibrariesIOConnector(self.config.libraries_api_key)
-        gitConnector = GithubConnector(self.config.github_token)
-        #coinConnector = CoinbaseConnector(self.config.coinbase_token, self.config.coinbase_secret)
+        ### establish connection to restapi services
+        self.log("Establishing LibrariesIO connection")
+        self.librariesIoConnector = self._execCritical(lambda x: LibrariesIOConnector(x), [self.config.libraries_api_key])
+        self.logNotify("LibrariesIO connection established")
+        self.log("Establishing Github connection")
+        self.githubConnector = self._execCritical(lambda x: GithubConnector(x), [self.config.github_token])
+        self.logNotify("Github connection established")
+        # coinConnector = CoinbaseConnector(self.config.coinbase_token, self.config.coinbase_secret)
 
+    def dependencies(self):
+        self.log("Searching for dependencies")
+        projects = []
 
+        if self.config.include_self:
+            self.logWarning("Including local project '%s' as dependency" % self.config.directory)
+            ### find official repositories
+            project = self.githubConnector.grabLocalProject(self.config.directory)
+            ### scan for project contributors
+            contributors = self.githubConnector.grabRemoteProjectContributors(project)
+            ### filter contributors
+            contributors = selery_utils.validateContributors(contributors, self.config.min_contributions)
 
+            print(" -- %s" % project)
+            print(" -- %s" % [c.author.email for c in contributors])
 
+        if self.config.include_dependencies:
+            self.logWarning("Searching for dependencies of project '%s' " % self.config.directory)
+            ### scan for dependencies repositories
+            rubyScanScriptPath = os.path.join(self.seleryDir, "scripts", "scan.rb")
+            process = subprocess.run(["ruby", rubyScanScriptPath, "--project=%s" % self.config.directory],
+                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            ### exec and evaluate stdout
+            if process.returncode == 0:
+                dependencies_json = json.loads(process.stdout)
+            else:
+                self.logError("Could not find project manifesto")
+                print(process.stderr)
+                raise Exception("Aborting")
 
-def old___():     
-    # argument parser for git project folder
-    parser = argparse.ArgumentParser(description='openselery - Automated Funding')
-    parser.add_argument("--folder", required=True, type=str,
-                        help="Git folder to scan")
-    args = parser.parse_args()
-    git_folder = os.path.abspath(args.folder)
-    print("Working project path: \n{}".format(git_folder))
+            print('dependencies json:')
+            print(dependencies_json)
+            dependencies_json = seleryutils.getUniqueDependencies(dependencies_json)
 
-    def ensureType(typ, config, field):
-        result = config[field]
-        if not(type(result) is typ):
-            raise ValueError("Wrong Type in " + field + " expected " + str(typ) + " got: " + str(type(result)))
-        return result
-
-    # load default configs
-    # if one variable is not found in the yml, all variables get defaults.
-    try:
-        config = yaml.safe_load(open('openselery.yml'))
-        dryrun = ensureType(bool, config, 'dryrun')
-        include_dependencies = ensureType(bool, config, 'include_deps')
-        include_self = ensureType(bool, config, 'include_self')
-        include_tooling_and_runtime = ensureType(bool, config, 'include_tooling_and_runtime')
-        # Is a relativ/median min contributions better as limit?
-        min_contributions = ensureType(int, config, 'min_contributions')
-        check_equal_privat_and_public_wallet = ensureType(bool, config, 'check_equal_privat_and_public_wallet')
-        skip_email = ensureType(bool, config, 'skip_email')
-        btc_per_transaction = ensureType(float, config, 'btc_per_transaction')
-        selected_contributor = ensureType(int, config, 'selected_contributor')
-        total_payout_per_run = ensureType(float, config, 'total_payout_per_run')
-        if not total_payout_per_run/selected_contributor == btc_per_transaction:
-            raise ValueError("Payout values do not match")
-        print("Reading openselery.yml completed")
-        print(config)
-
-    except ValueError as err:
-        dryrun = True
-        include_dependencies = False
-        include_self = True
-        include_tooling_and_runtime = False
-        min_contributions = 1
-        check_equal_privat_and_public_wallet = True
-        skip_email = True
-        btc_per_transaction = 0.000002
-        selected_contributor = 1
-        total_payout_per_run = 0.000002
-        print(err)
-        print("Could not read openselery.yml. \nUse default config")
-
-    # load parameters from environment variables
-    # never print this
-    # TODO: check if user input is sane
-    libraries_api_key = os.environ['LIBRARIES_IO_TOKEN']
-    github_token = os.environ['GITHUB_TOKEN']
-    coinbase_token = os.environ['COINBASE_TOKEN']
-    coinbase_secret = os.environ['COINBASE_SECRET']
-
-    # establish connection to used restapi services
-    librariesIO = LibrariesIOConnector(libraries_api_key)
-    gitConnector = GithubConnector(github_token)
-    #coinConnector = CoinbaseConnector(coinbase_token, coinbase_secret)
-
-    my_FUNDING = yaml.safe_load(open('FUNDING.yml'))
-    wallet_address = ensureType(str,my_FUNDING,'openselery-bitcoin')
-
-    #if check_equal_privat_and_public_wallet:
-    #    #Check if the public wallet is hold by the secret tokens account
-    #    if not coinConnector.isWalletAddress(wallet_address):
-    #        print("Wallet not found")
-    #        sys.exit()
-    #    else:
-    #        print("FUNDING.yml Wallet matches coinbase wallet")
-
-    funding_emails = []
-    project_list = []
-    contributor_emails = []
-    selery_emails = []
-
-    if include_self:
-        # find official repositories
-        # scan for project contributors
-        target_remote = gitremotes.scanRemotes(git_folder, 'origin')
-        project_id = gitConnector.getGithubID(target_remote)
-        contributor_emails = gitConnector.getContributorInfo(project_id)
-
-        # Level 0 is the project itself.
-        project_list.append({
-                "platform": "",
-                "url": "",
-                "project_id": project_id,
-                "level": 0,
-                "dependencies":[],
-                "email_list": contributor_emails,
-                })
-
-    if include_dependencies:
-        # scan for dependencies repositories
-        run_path = os.path.dirname(os.path.realpath(__file__))
-        process = subprocess.run(['ruby', run_path+'/scripts/scan.rb', '--project='+git_folder],
-                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-        process.stdout
-        if process.returncode == 0:
-            dependencies_json = json.loads(process.stdout)
-        else:
-            print("Can not find project manifesto")
-            print(process.stderr)
-            exit()
-        print('dependencies json:')
-        print(dependencies_json)
-        dependencies_json = seleryutils.getUniqueDependencies(dependencies_json)
-
-        for platform_name in dependencies_json.keys():
-            if not dependencies_json[platform_name]:
-                continue
-            for deps in dependencies_json[platform_name]:
-                name = deps["name"]
-                dependency = {"platform": platform_name, "name": name, "level": 1}
-                ownerandproject = librariesIO.getOwnerandProject(
-                    platform_name, name)
-                if not ownerandproject:
+            for platform_name in dependencies_json.keys():
+                if not dependencies_json[platform_name]:
                     continue
-                depData = librariesIO.getDependencyData(
-                    ownerandproject["owner"], ownerandproject["project_name"])
-                if not depData:
-                    continue
-                dependency["dependencies"] = depData["dependencies"]
-                dependency["github_id"] = depData["github_id"]
+                for deps in dependencies_json[platform_name]:
+                    name = deps["name"]
+                    dependency = {"platform": platform_name, "name": name, "level": 1}
+                    ownerandproject = librariesIO.getOwnerandProject(
+                        platform_name, name)
+                    if not ownerandproject:
+                        continue
+                    depData = librariesIO.getDependencyData(
+                        ownerandproject["owner"], ownerandproject["project_name"])
+                    if not depData:
+                        continue
+                    dependency["dependencies"] = depData["dependencies"]
+                    dependency["github_id"] = depData["github_id"]
 
-                # gather project and user information
-                email_list = gitConnector.getContributorInfo(
-                    dependency["github_id"])
-                dependency["email_list"] = email_list
-                print("Emails for " + name)
-                print("Number vaild emails entries:")
-                print(len(email_list))
-                project_list.append(dependency)
+                    # gather project and user information
+                    email_list = gitConnector.getContributorInfo(
+                        dependency["github_id"])
+                    dependency["email_list"] = email_list
+                    print("Emails for " + name)
+                    print("Number vaild emails entries:")
+                    print(len(email_list))
+                    project_list.append(dependency)
 
-    if include_tooling_and_runtime:
-        pass
+        if include_tooling_and_runtime:
+            pass
 
-    # calculate probability weights
-    funding_emails, weights = calcweights.getEmailsAndWeights(project_list)
-    # payout
-    for i in range(int(selected_contributor)):
-        if i >= len(funding_emails[0]):
-            break
+    def _getFile(self, file):
+        return os.path.join(self.seleryDir, file)
 
-        email = random.choices(funding_emails[0], weights, k=1)
-        selery_emails.append(email[0])
+    def getConfig(self):
+        return self.config
 
-    print(weights)
-    print(selery_emails)
+    def log(self, msg):
+        self._log(".", msg)
 
-    for contributor in selery_emails:
-        if not dryrun:
-             receipt = coinConnector.payout(contributor['email'], btc_per_transaction, skip_email)
-             print(receipt)
-             f = open("receipt.txt", "a")
-             f.write(str(receipt))
-             f.close()
-        else:
-             break
+    def logNotify(self, msg):
+        self._log("*", msg)
 
+    def logWarning(self, msg):
+        self._log("!", msg)
 
+    def logError(self, msg):
+        self._log("#", msg)
+
+    def _log(self, sym, msg):
+        if not self.silent:
+            print("[%s] %s" % (sym, msg))
 
 def main():
+    print("=============================")
     selery = OpenSelery()
     selery.connect()
-  
-if __name__== "__main__":
+    dependencies = selery.dependencies()
+    print("=============================")
+
+
+if __name__ == "__main__":
     main()

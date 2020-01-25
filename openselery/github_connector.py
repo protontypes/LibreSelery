@@ -1,61 +1,61 @@
-from github import Github
-from .email_checker import EmailChecker
-from .seleryutils import countdown
-from urllib.parse import urlparse
 import time
+from urllib.parse import urlparse
+
+from github import Github
+from git import Repo, Commit
+
+from openselery import selery_utils
 
 
 class GithubConnector:
-    def __init__(self, github_token):
-        self.github = Github(github_token)
-
-    def getContributorInfo(self, id, num_contrib=1):
+    def __init__(self, token):
+        self.github = Github(login_or_token=token)
         try:
-            repo = self.github.get_repo(int(id))
-        except:
-            return []
-        contributors = repo.get_stats_contributors()  # .get_contributors()
-        emails_list = []
-        for contributor in contributors:
-            requests_remaining = self.github.rate_limiting
-            if requests_remaining[0] < 100:
-                wait_time = self.github.rate_limiting_resettime - \
-                    int(time.time())
-                print("No Github requests remaining")
-                countdown(wait_time)
+            pId = self.github.get_user().id
+        except Exception as e:
+            raise ConnectionError("Could not connect to Github")
 
-            #contr_id = contributor.id
-            #location = contributor.location
+    def grabRemoteProject(self, projectId):
+        project = self.github.get_repo(int(projectId))
+        return project
 
-            # ignore contributos with less than num_contrib contributions
-            if contributor.total < num_contrib:
-                continue
-            try:
-                email = contributor.author.email
-            except Exception as e:
-                print(e)
-                email = ""
-
-            if EmailChecker.checkMail(email):
-                emails_list.append(
-                    {"email": email, "contributions": contributor.total})
-            else:
-                if(email):
-                    print("wrong email " + email)
-
-        return emails_list
-
-    def getGithubID(self, repo_url):
-        parser = urlparse(repo_url)
+    def parseRemoteProjectId(self, url):
+        repoId = None
+        parser = urlparse(url)
         owner = parser.path.split('/')[1]
         project_name = parser.path.split('/')[2]
         try:
             project_name = project_name.split('.')[0]
-        except:
+            repo = self.github.get_repo(owner + '/' + project_name)
+            repoId = repo.id
+        except Exception as e:
             pass
-        repo = self.github.get_repo(owner+'/'+project_name)
-        return repo.id
+        return repoId
 
+    def grabLocalProject(self, directory, remoteName='origin'):
+        project = None
+        projectUrl = None
+        repo = Repo(directory)
+        for remote in repo.remotes:
+            if remote.name == remoteName:
+                projectUrl = remote.url
+                break
+        if projectUrl:
+            projectId = self.parseRemoteProjectId(projectUrl)
+            if projectId:
+                project = self.grabRemoteProject(projectId)
+        return project
 
-if __name__ == "__main__":
-    pass
+    def grabRemoteProjectContributors(self, project):
+        contributors = project.get_stats_contributors()  # .get_contributors()
+        ### cash collect all contributors by iterating over them
+        for contributor in contributors:
+            requests_remaining = self.github.rate_limiting
+            if requests_remaining[0] < 100:
+                wait_time = self.github.rate_limiting_resettime - int(time.time())
+                print("No Github requests remaining")
+                selery_utils.countdown(wait_time)
+
+            # contr_id = contributor.id
+            # location = contributor.location
+        return contributors
