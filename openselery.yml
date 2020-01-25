@@ -1,6 +1,6 @@
 dryrun: True
 include_self: True
-include_deps: True 
+include_dependencies: True
 include_tooling_and_runtime: False
 min_contributions: 1
 check_equal_privat_and_public_wallet: False

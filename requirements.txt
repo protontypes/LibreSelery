@@ -3,3 +3,4 @@ dnspython
 pyyaml
 coinbase
 gitpython
+pybraries

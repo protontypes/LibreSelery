@@ -108,6 +108,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# pycharm
+.idea/
+
 # End of https://www.gitignore.io/api/python
 
 .bash_history
