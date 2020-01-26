@@ -1,9 +1,12 @@
-from coinbase.wallet.client import Client
 import json
 
+from coinbase.wallet.client import Client
 
-class CoinbaseConnector:
+from openselery import selery_utils
+
+class CoinbaseConnector(selery_utils.Connector):
     def __init__(self, token, secret):
+        super(CoinbaseConnector, self).__init__()
         self.client = Client(token, secret)
         self.account = self.client.get_primary_account()
         self.addresses = self.account.get_addresses()
@@ -18,7 +21,3 @@ class CoinbaseConnector:
         tx = self.account.send_money(
             to=target_email, amount=float(target_amount), currency='BTC', skip_notification=['false','true'][skip_notifications])
         return tx
-
-
-if __name__ == "__main__":
-    pass

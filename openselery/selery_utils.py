@@ -1,23 +1,28 @@
+import time
 import dns.resolver
+
+
+
+class Connector(object):
+    def __init__(self):
+        super(Connector, self).__init__()
+        
 
 
 # dep_list: list of dependencies, each dependency has a contributors list
 # returns: list of dependencies, each dependency has a contributors list with accociated weights
 def getUniqueDependencies(dependencies_json):
-    uniqueList = dict()
-    for platform in dependencies_json:
-        if not platform["dependencies"]:
+    unique = {}
+    for entry in dependencies_json:
+        if not entry["dependencies"]:
             continue
-        platform_name = platform["platform"]
-        if platform_name not in uniqueList.keys():
-            uniqueList[platform_name] = []
-        for dep in platform["dependencies"]:
-            if dep not in uniqueList[platform_name]:
-                uniqueList[platform_name].append(dep)
-    return uniqueList
-
-
-import time
+        platform = entry["platform"]
+        if platform not in unique.keys():
+            unique[platform] = []
+        for dep in entry["dependencies"]:
+            if dep not in unique[platform]:
+                unique[platform].append(dep)
+    return unique
 
 
 def countdown(t):
@@ -46,13 +51,13 @@ def validateContributor(contributor, minimum_contributions=0):
         return False
 
     ### ignore contributos with less than num_contrib contributions
-    if contributor.total < minimum_contributions:
+    if contributor.stats.total < minimum_contributions:
         return False
     ### ignore contributos with no or bad email
-    email = contributor.author.email
+    email = contributor.stats.author.email
     if email is None:
         return False
-    elif not checkMail(contributor.author.email):
+    elif not checkMail(contributor.stats.author.email):
         return False
 
     return True
@@ -64,3 +69,15 @@ def validateContributors(contributors, minimum_contributions):
         if validateContributor(c, minimum_contributions):
             valid.append(c)
     return valid
+
+
+# dep_list: list of dependencies, each dependency has a contributors list
+# returns: list of dependencies, each dependency has a contributors list with accociated weights
+def calculateContributorWeights(contributors):
+    #TODO: get more information about each contributor
+    # * number commits
+    # * time spent on project (calculated from commits)
+    # * issues closed
+    # * successful pull requests
+    weights = [ 1 for i in range(len(contributors))]
+    return weights
