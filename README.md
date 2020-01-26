@@ -19,7 +19,7 @@ Openselery is still not released and in experimental status.
 cd ~
 git clone https://github.com/openselery/openselery.git
 cd openselery
-docker build -t openselery .
+./build.sh
 ```
 
 2. Create a dedicated coinbase account with limited amounts. 
@@ -37,10 +37,10 @@ LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # NEVER PRINT THIS
 ```
 
-6. Run on your target project folder. This will send cryptocurrency to a weighted random product contributor with an email address on the git platform or git commit:    
+6. Run on your target project folder. This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit:    
 
 ```bash
-env $(cat ~/.openselery/tokens.env | xargs) ~/openselery/selery_docker.sh <target_directory>
+env $(cat ~/.openselery/tokens.env | xargs) ~/openselery/run.sh <target_directory>
 ```
 
 *Artwork by Miriam Winter*
