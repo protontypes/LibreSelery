@@ -117,6 +117,7 @@ class OpenSelery(object):
         parser.add_argument("-c", "--config", required=False, default=os.path.join(self.seleryDir, "config.yml"), dest="config_path", type=str,
                             help="Configuration file path")
         parser.add_argument("-d", "--directory", required=True, type=str, help="Git directory to scan")
+        parser.add_argument("-r", "--results_dir", required=True, type=str, help="Result directory", dest="result_dir")
         args = parser.parse_args()
         return args
 
@@ -142,7 +143,7 @@ class OpenSelery(object):
         self.log("Establishing Github connection")
         self.githubConnector = self._execCritical(lambda x: GithubConnector(x), [self.config.github_token])
         self.logNotify("Github connection established")
-        #self.coinConnector = CoinbaseConnector(self.config.coinbase_token, self.config.coinbase_secret)
+        self.coinConnector = CoinbaseConnector(self.config.coinbase_token, self.config.coinbase_secret)
 
     def gather(self):
         generalContributors = []
@@ -245,8 +246,8 @@ class OpenSelery(object):
         return recipients
        
     def payout(self, recipients):
-        transactionFilePath= "transactions.txt"
-        receiptFilePath = "receipt.txt"
+        transactionFilePath= os.path.join(self.config.result_dir,  "transactions.txt")
+        receiptFilePath = os.path.join(self.config.result_dir, "receipt.txt")
         
         #### Check what is done on the account.
         self.log("Checking transaction history of given account [%s]" % transactionFilePath)

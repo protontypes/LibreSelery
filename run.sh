@@ -10,5 +10,6 @@ docker run --rm -t \
 --env COINBASE_TOKEN=$COINBASE_TOKEN \
 --env COINBASE_SECRET=$COINBASE_SECRET \
 -v $@:$TARGET_DIR \
+-v ~/results:/home/selery/results/ \
 openselery \
-bash -c "python selery.py --config $TARGET_DIR/config.yml --directory $TARGET_DIR" 
+bash -c "python selery.py --config $TARGET_DIR/config.yml --directory $TARGET_DIR --result /home/selery/results" 
