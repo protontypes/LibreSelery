@@ -16,6 +16,10 @@ jobs:
       - uses: actions/checkout@v1
       - name: pull openselery from dockerhub
         run: docker pull openselery/openselery
+      - name: Result folder
+        run: mkdir ./results
+      - name: Give everyone permission to write to this folder
+        run: chmod a+rw ./results
       # Run Openselery on the current folder.
       - name: Run Openselery on Sources
         run:  > 
@@ -37,5 +41,5 @@ jobs:
         # Upload the receipt file to github artifact.
       - uses: actions/upload-artifact@v1
         with:
-          name: billing
-          path: receipt.txt
+          name: Logs_and_Billing
+          path: ./results/
