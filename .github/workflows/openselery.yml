@@ -30,7 +30,7 @@ jobs:
                 -v $PWD/:/home/selery/runningrepo/ 
                 -v $PWD/results:/home/selery/results/
                 openselery/openselery 
-                bash -c 'python3 selery.py --folder=/home/selery/runningrepo/' 
+                bash -c 'python3 selery.py --folder=/home/selery/runningrepo/ --config=/home/selery/runningrepo/  --result_dir=/home/selery/results/' 
         # Never print
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
