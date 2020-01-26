@@ -1,6 +1,6 @@
-dryrun: True
+dryrun: False
 include_self: True
-include_dependencies: True
+include_dependencies: False
 include_tooling_and_runtime: False
 min_contributions: 1
 check_equal_privat_and_public_wallet: False
@@ -8,4 +8,4 @@ skip_email: False
 btc_per_transaction: 0.000002
 contributor_payout_count: 1
 total_payout_per_run: 0.000002
-email_note: "Fresh OpenCelery Donation"
+email_note: "Fresh OpenCelery Funding"

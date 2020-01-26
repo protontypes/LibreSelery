@@ -249,11 +249,10 @@ class OpenSelery(object):
         receiptFilePath = "receipt.txt"
         
         #### Check what is done on the account.
-        if not self.config.dryrun:
-            self.log("Checking transaction history of given account [%s]" % transactionFilePath)
-            transactions = self.coinConnector.pastTransactions
-            with open(transactionFilePath, "a") as f: 
-                f.write(str(transactions)) 
+        self.log("Checking transaction history of given account [%s]" % transactionFilePath)
+        transactions = self.coinConnector.pastTransactions()
+        with open(transactionFilePath, "a") as f: 
+          f.write(str(transactions)) 
 
         self.log("Trying to pay out donations to recipients")
         if self.config.dryrun:

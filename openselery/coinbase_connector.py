@@ -1,7 +1,5 @@
 import json
-
 from coinbase.wallet.client import Client
-
 from openselery import selery_utils
 
 class CoinbaseConnector(selery_utils.Connector):
@@ -10,6 +8,9 @@ class CoinbaseConnector(selery_utils.Connector):
         self.client = Client(token, secret)
         self.account = self.client.get_primary_account()
         self.addresses = self.account.get_addresses()
+
+    def pastTransactions(self):
+        return self.client.get_transactions(self.account.id)
 
     def isWalletAddress(self, tocheck):
         for address in tocheck:
