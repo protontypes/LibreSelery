@@ -17,10 +17,6 @@ class GithubConnector(selery_utils.Connector):
     def __init__(self, token):
         super(GithubConnector, self).__init__()
         self.github = Github(login_or_token=token)
-        try:
-            pId = self.github.get_user().id
-        except Exception as e:
-            raise ConnectionError("Could not connect to Github")
 
     def grabRemoteProject(self, projectId):
         project = self.github.get_repo(int(projectId))
