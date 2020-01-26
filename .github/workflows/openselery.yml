@@ -20,7 +20,7 @@ jobs:
       - name: Run Openselery on Sources
         run:  > 
                 docker run --rm \--env GITHUB_TOKEN=$GITHUB_TOKEN 
-                --env LIBRARIES_IO_TOKEN=$LIBRARIES_IO_TOKEN 
+                --env LIBRARIES_API_KEY=$LIBRARIES_API_KEY 
                 --env COINBASE_TOKEN=$COINBASE_TOKEN 
                 --env COINBASE_SECRET=$COINBASE_SECRET
                 -v $PWD/:/home/selery/runningrepo/ 
