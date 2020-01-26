@@ -19,8 +19,8 @@ jobs:
       # Run Openselery on the current folder.
       - name: create results folder
         run: > 
-              mkdir $PWD/results
-              chmod a+w $PWD/results
+              mkdir $PWD/results 
+              chmod a+w $PWD/results 
       - name: Run Openselery on Sources
         run:  > 
                 docker run --rm \--env GITHUB_TOKEN=$GITHUB_TOKEN 
