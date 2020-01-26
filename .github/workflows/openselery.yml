@@ -30,7 +30,7 @@ jobs:
         # Never print
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LIBRARIES_IO_TOKEN: ${{ secrets.LIBRARIES_API_KEY }}
+          LIBRARIES_API_KEY: ${{ secrets.LIBRARIES_API_KEY }}
           COINBASE_TOKEN: ${{ secrets.COINBASE_TOKEN }}
           COINBASE_SECRET: ${{ secrets.COINBASE_SECRET }}
         # Upload the receipt file to github artifact.
