@@ -1,4 +1,4 @@
-dryrun: False
+dryrun: True
 include_self: True
 include_dependencies: False
 include_tooling_and_runtime: False

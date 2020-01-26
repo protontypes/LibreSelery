@@ -12,4 +12,4 @@ docker run --rm -t \
 -v $@:$TARGET_DIR \
 -v ~/results:/home/selery/results/ \
 openselery \
-bash -c "python selery.py --config $TARGET_DIR/config.yml --directory $TARGET_DIR --result /home/selery/results" 
+bash -c "python selery.py --config $TARGET_DIR/OPENSELERY.yml --directory $TARGET_DIR --result /home/selery/results" 
