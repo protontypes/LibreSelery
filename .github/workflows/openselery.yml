@@ -19,7 +19,8 @@ jobs:
       # Run Openselery on the current folder.
       - name: Run Openselery on Sources
         run:  > 
-                docker run --rm \--env GITHUB_TOKEN=$GITHUB_TOKEN 
+                docker run --rm 
+                --env GITHUB_TOKEN=$GITHUB_TOKEN 
                 --env LIBRARIES_API_KEY=$LIBRARIES_API_KEY 
                 --env COINBASE_TOKEN=$COINBASE_TOKEN 
                 --env COINBASE_SECRET=$COINBASE_SECRET
