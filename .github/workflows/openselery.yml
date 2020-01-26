@@ -17,10 +17,6 @@ jobs:
       - name: pull openselery from dockerhub
         run: docker pull openselery/openselery
       # Run Openselery on the current folder.
-      - name: create results folder
-        run: > 
-              mkdir $PWD/results 
-              chmod a+w $PWD/results 
       - name: Run Openselery on Sources
         run:  > 
                 docker run --rm \--env GITHUB_TOKEN=$GITHUB_TOKEN 
@@ -30,7 +26,7 @@ jobs:
                 -v $PWD/:/home/selery/runningrepo/ 
                 -v $PWD/results:/home/selery/results/
                 openselery/openselery 
-                bash -c 'python3 selery.py --folder=/home/selery/runningrepo/ --config=/home/selery/runningrepo/  --result_dir=/home/selery/results/' 
+                bash -c 'python3 selery.py --folder=/home/selery/runningrepo/ --config=/home/selery/runningrepo/  --results_dir=/home/selery/results/' 
         # Never print
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
