@@ -114,7 +114,7 @@ class OpenSelery(object):
 
     def parseArgs(self):
         parser = argparse.ArgumentParser(description='openselery - Automated Funding')
-        parser.add_argument("-c", "--config", required=False, default=os.path.join(self.seleryDir, "config.yml"), dest="config_path", type=str,
+        parser.add_argument("-c", "--config", required=False, default=os.path.join(self.seleryDir, "OPENSELERY.yml"), dest="config_path", type=str,
                             help="Configuration file path")
         parser.add_argument("-d", "--directory", required=True, type=str, help="Git directory to scan")
         parser.add_argument("-r", "--results_dir", required=True, type=str, help="Result directory", dest="result_dir")
