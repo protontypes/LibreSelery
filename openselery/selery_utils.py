@@ -2,11 +2,9 @@ import time
 import dns.resolver
 
 
-
 class Connector(object):
     def __init__(self):
         super(Connector, self).__init__()
-        
 
 
 # dep_list: list of dependencies, each dependency has a contributors list
@@ -50,10 +48,10 @@ def validateContributor(contributor, minimum_contributions=0):
     if not contributor:
         return False
 
-    ### ignore contributos with less than num_contrib contributions
+    # ignore contributos with less than num_contrib contributions
     if contributor.stats.total < minimum_contributions:
         return False
-    ### ignore contributos with no or bad email
+    # ignore contributos with no or bad email
     email = contributor.stats.author.email
     if email is None:
         return False
@@ -74,10 +72,10 @@ def validateContributors(contributors, minimum_contributions):
 # dep_list: list of dependencies, each dependency has a contributors list
 # returns: list of dependencies, each dependency has a contributors list with accociated weights
 def calculateContributorWeights(contributors):
-    #TODO: get more information about each contributor
+    # TODO: get more information about each contributor
     # * number commits
     # * time spent on project (calculated from commits)
     # * issues closed
     # * successful pull requests
-    weights = [ 1 for i in range(len(contributors))]
+    weights = [1 for i in range(len(contributors))]
     return weights
