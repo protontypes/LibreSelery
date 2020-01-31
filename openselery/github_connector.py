@@ -1,6 +1,5 @@
 import time
-from urllib.parse import urlparse
-
+import re
 from github import Github, StatsContributor
 from git import Repo, Commit
 
@@ -23,17 +22,14 @@ class GithubConnector(selery_utils.Connector):
         return project
 
     def parseRemoteProjectId(self, url):
-        repoId = None
-        parser = urlparse(url)
-        owner = parser.path.split('/')[1]
-        project_name = parser.path.split('/')[2]
-        try:
-            project_name = project_name.split('.')[0]
-            repo = self.github.get_repo(owner + '/' + project_name)
-            repoId = repo.id
-        except Exception as e:
-            pass
-        return repoId
+        matchObj = re.match("(?:git@|https://)[^/:]+[/:]([^/]+)/([^/]+).git", url)
+        if not matchObj:
+            raise ValueError("url cannot be parsed. (url: %s)" % (url))
+
+        owner = matchObj.group(1)
+        project_name = matchObj.group(2)
+        repo = self.github.get_repo(owner + '/' + project_name)
+        return repo.id
 
     def grabLocalProject(self, directory, remoteName='origin'):
         project = None
