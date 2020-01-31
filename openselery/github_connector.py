@@ -32,8 +32,7 @@ class GithubConnector(selery_utils.Connector):
         if not matchObj:
             raise ValueError("url cannot be parsed. (url: %s)" % (url))
 
-        owner = matchObj.group(1)
-        project_name = matchObj.group(2)
+        (owner,project_name) = matchObj.groups()
         repo = self.github.get_repo(owner + '/' + project_name)
         return repo.id
 
