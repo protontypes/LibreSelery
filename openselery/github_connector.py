@@ -22,7 +22,13 @@ class GithubConnector(selery_utils.Connector):
         return project
 
     def parseRemoteProjectId(self, url):
-        matchObj = re.match("(?:git@|https://)[^/:]+[/:]([^/]+)/([^/]+).git", url)
+
+        # These urls need to be parsable:
+        # https://github.com/protontypes/openselery
+        # https://github.com/protontypes/openselery.git
+        # git@github.com:protontypes/protontypes.git
+
+        matchObj = re.match("^(?:git@|https://)[^/:]+[/:]([^/]+)/([^/]+?)(?:\.git)?$", url)
         if not matchObj:
             raise ValueError("url cannot be parsed. (url: %s)" % (url))
 
