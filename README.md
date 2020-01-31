@@ -40,7 +40,7 @@ LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 6. Run on your target project folder. This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit:    
 
 ```bash
-env $(cat ~/.openselery/tokens.env | xargs) ~/openselery/run.sh <target_directory>
+env $(cat ~/.openselery/tokens.env) ~/openselery/run.sh <target_directory>
 ```
 
 *Artwork by Miriam Winter*
