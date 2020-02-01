@@ -2,6 +2,16 @@
 # Use Openselery as a simple Github action on your project workflow.
 # For configuration create an .openselery.yml file in your project repo.
 name: openselery
+
+
+on:
+  push:
+    # Sequence of patterns matched against refs/heads
+    branches:
+      - master         # Push events on master branch
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - *             # Push events to all tags
 on: 
     push:
       branches:
