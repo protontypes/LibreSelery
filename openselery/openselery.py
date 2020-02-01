@@ -284,7 +284,7 @@ class OpenSelery(object):
             "Checking transaction history of given account [%s]" % transactionFilePath)
             transactions = self.coinConnector.pastTransactions()
             with open(transactionFilePath, "a") as f:
-            f.write(str(transactions))
+                f.write(str(transactions))
 
             self.log("Trying to pay out donations to recipients")
 
@@ -296,8 +296,9 @@ class OpenSelery(object):
         if self.config.simulation:
             self.logWarning(
                     "Configuration 'simulation' is active, so NO transaction will be executed")
-            print(" -- would have been a payout of '%.10f' to '%s'" %
-                    (self.config.btc_per_transaction, contributor.stats.author.email))
+            for contributor in recipients:
+                print(" -- would have been a payout of '%.10f' to '%s'" %
+                        (self.config.btc_per_transaction, contributor.stats.author.email))
 
     def _getFile(self, file):
         return os.path.join(self.seleryDir, file)
