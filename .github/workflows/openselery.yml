@@ -8,7 +8,7 @@ on:
   push:
     # Sequence of patterns matched against refs/tags
     tags:
-      - - refs/tags/*  # Event to all tags
+      - refs/tags/*  # Event to all tags
 
 jobs:
   openselery:
