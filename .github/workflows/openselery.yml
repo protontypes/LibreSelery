@@ -49,7 +49,7 @@ jobs:
                 total_payout_per_run: 0.000002
                 # message send with every coinbase email. Never send an URL.
                 email_note: "Fresh OpenCelery Funding"
-              EOF
+                EOF
               fi
       # Run Openselery on the current folder.
       - name: Run Openselery on Sources
