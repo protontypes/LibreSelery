@@ -14,17 +14,17 @@ jobs:
     steps:
       # Check out the repo openselery is working on.
       - uses: actions/checkout@v1
-      - name: pull openselery from dockerhub
+      - name: Pull openselery from dockerhub
         run: docker pull openselery/openselery
-      - name: Result folder
+      - name: Create Result folder
         run: mkdir ./results
       - name: Give everyone permission to write to this folder
         run: chmod a+rw ./results
-      - name: create openselery configuation
+      - name: Create openselery configuation
         run: |
               if [ ! -f ./selery.yml ]
               then
-                echo "Create selery.yml"
+                echo "No local config found. Create selery.yml"
                 touch ./selery.yml
                 chmod 700 ./selery.yml
                 cat > ./selery.yml <<EOF
@@ -52,11 +52,11 @@ jobs:
                 email_note: "Fresh OpenCelery Funding"
               EOF
               else 
-                echo "Use existing selery.yml"
+                echo "Use existing local selery.yml"
               fi
               cat ./selery.yml
       # Run Openselery on the current folder.
-      - name: Run Openselery on Sources
+      - name: Run openselery on sources
         run:  > 
                 docker run --rm 
                 --env GITHUB_TOKEN=$GITHUB_TOKEN 
@@ -78,3 +78,10 @@ jobs:
         with:
           name: Logs_and_Billing
           path: ./results/
+
+      - name: Check for payout receipt.txt
+          run: | 
+                cat ./results/receipt.txt && echo "Payout receipt found"
+                
+
+                
