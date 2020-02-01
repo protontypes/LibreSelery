@@ -7,8 +7,10 @@ name: openselery
 on:
   push:
     # Sequence of patterns matched against refs/tags
-    tags:
-      - refs/tags/*  # Event to all tags
+    branches: 
+      - master
+      tags:
+        - '*'  # Event to all tags
 
 jobs:
   openselery:
