@@ -21,6 +21,37 @@ jobs:
       - name: Give everyone permission to write to this folder
         run: chmod a+rw ./results
       # Run Openselery on the current folder.
+      - name: create openselery configuation
+        run: if [ ! -f ./selery.yml ]
+              then
+                touch ./selery.yml
+                chmod 700 ./selery.yml
+                cat > ./selery.yml <<EOF
+                # simulation let you run without payout at the end
+                simulation: True
+                # include the target folders contributors
+                include_self: True
+                # include the dependencies of the target folder
+                include_dependencies: False
+                # include the tooling and runtime from the file
+                include_tooling_and_runtime: False
+                # minimum contributions made to be considered
+                min_contributions: 1
+                # check the public wallet from FUNDING.yml vs the secret coinbase wallet
+                check_equal_privat_and_public_wallet: False
+                # Skip email sended by coinbase
+                skip_email: False
+                # the amount of btc send per user
+                btc_per_transaction: 0.000002
+                # numbers of contributors payout per run
+                contributor_payout_count: 1
+                # the total amount of payout per run
+                total_payout_per_run: 0.000002
+                # message send with every coinbase email. Never send an URL.
+                email_note: "Fresh OpenCelery Funding"
+              EOF
+              fi
+
       - name: Run Openselery on Sources
         run:  > 
                 docker run --rm 
@@ -31,7 +62,7 @@ jobs:
                 -v $PWD/:/home/selery/runningrepo/ 
                 -v $PWD/results:/home/selery/results/
                 openselery/openselery 
-                bash -c 'python3 selery.py --directory=/home/selery/runningrepo/ --config=/home/selery/runningrepo/OPENSELERY.yml  --results_dir=/home/selery/results/' 
+                bash -c 'python3 selery.py --directory=/home/selery/runningrepo/ --config=/home/selery/runningrepo/selery.yml  --results_dir=/home/selery/results/' 
         # Never print
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
