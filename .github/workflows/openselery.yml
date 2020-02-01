@@ -26,8 +26,8 @@ jobs:
               then
                 touch ./selery.yml
                 chmod 700 ./selery.yml
-                cat > ./selery.yml <<EOF
-                # simulation let you run without payout at the end
+                cat -E > ./selery.yml <<EOF
+                # simulation let you run without payout at the end  
                 simulation: True
                 # include the target folders contributors
                 include_self: True
@@ -49,7 +49,7 @@ jobs:
                 total_payout_per_run: 0.000002
                 # message send with every coinbase email. Never send an URL.
                 email_note: "Fresh OpenCelery Funding"
-                EOF
+              EOF
               fi
       # Run Openselery on the current folder.
       - name: Run Openselery on Sources
