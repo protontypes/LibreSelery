@@ -91,7 +91,8 @@ jobs:
 
       - name: Check for payout receipt.txt
         run: | 
-              cat ./results/receipt.txt && echo "Payout receipt found"
+              cat ./results/receipt.txt 
+              echo "Payout receipt found"
                 
 
                 
