@@ -275,31 +275,29 @@ class OpenSelery(object):
         return recipients
 
     def payout(self, recipients):
-        transactionFilePath = os.path.join(
-            self.config.result_dir,  "transactions.txt")
-        receiptFilePath = os.path.join(self.config.result_dir, "receipt.txt")
+        if not self.config.simulation:
+            transactionFilePath = os.path.join(self.config.result_dir, "transactions.txt")
+            receiptFilePath = os.path.join(self.config.result_dir, "receipt.txt")
 
-        # Check what is done on the account.
-        self.log(
+            # Check what is done on the account.
+            self.log(
             "Checking transaction history of given account [%s]" % transactionFilePath)
-        transactions = self.coinConnector.pastTransactions()
-        with open(transactionFilePath, "a") as f:
+            transactions = self.coinConnector.pastTransactions()
+            with open(transactionFilePath, "a") as f:
             f.write(str(transactions))
 
-        self.log("Trying to pay out donations to recipients")
-        if self.config.simulation:
-            self.logWarning(
-                "Configuration 'simulation' is active, so NO transaction will be executed")
+            self.log("Trying to pay out donations to recipients")
 
-        for contributor in recipients:
-            if not self.config.simulation:
+            for contributor in recipients:
                 receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.btc_per_transaction,
                                                     self.config.skip_email, self.config.email_note)
                 with open(receiptFilePath, "a") as f:
                     f.write(str(receipt))
-            else:
-                print(" -- would have been a payout of '%.10f' to '%s'" %
-                      (self.config.btc_per_transaction, contributor.stats.author.email))
+        if self.config.simulation:
+            self.logWarning(
+                    "Configuration 'simulation' is active, so NO transaction will be executed")
+            print(" -- would have been a payout of '%.10f' to '%s'" %
+                    (self.config.btc_per_transaction, contributor.stats.author.email))
 
     def _getFile(self, file):
         return os.path.join(self.seleryDir, file)
