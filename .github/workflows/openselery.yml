@@ -20,9 +20,9 @@ jobs:
         run: mkdir ./results
       - name: Give everyone permission to write to this folder
         run: chmod a+rw ./results
-      # Run Openselery on the current folder.
       - name: create openselery configuation
-        run: if [ ! -f ./selery.yml ]
+        run: >
+              if [ ! -f ./selery.yml ]
               then
                 touch ./selery.yml
                 chmod 700 ./selery.yml
@@ -51,7 +51,7 @@ jobs:
                 email_note: "Fresh OpenCelery Funding"
               EOF
               fi
-
+      # Run Openselery on the current folder.
       - name: Run Openselery on Sources
         run:  > 
                 docker run --rm 
