@@ -9,8 +9,8 @@ on:
     # Sequence of patterns matched against refs/tags
     branches: 
       - master
-      tags:
-        - '*'  # Event to all tags
+        tags:
+          - '*'  # Event to all tags
 
 jobs:
   openselery:
