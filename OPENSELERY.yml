@@ -1,5 +1,5 @@
-# dryrun let you run without payout at the end
-dryrun: True
+# simulation let you run without payout at the end
+simulation: True
 # include the target folders contributors
 include_self: True
 # include the dependencies of the target folder

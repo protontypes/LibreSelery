@@ -22,7 +22,7 @@ class OpenSeleryConfig(object):
     __default_config_template__ = {
         "bitcoin_wallet": "",
 
-        "dryrun": True,
+        "simulation": True,
         "include_dependencies": False,
         "include_self": True,
         "include_tooling_and_runtime": False,
@@ -287,12 +287,12 @@ class OpenSelery(object):
             f.write(str(transactions))
 
         self.log("Trying to pay out donations to recipients")
-        if self.config.dryrun:
+        if self.config.simulation:
             self.logWarning(
-                "Configuration 'dryrun' is active, so NO transaction will be executed")
+                "Configuration 'simulation' is active, so NO transaction will be executed")
 
         for contributor in recipients:
-            if not self.config.dryrun:
+            if not self.config.simulation:
                 receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.btc_per_transaction,
                                                     self.config.skip_email, self.config.email_note)
                 with open(receiptFilePath, "a") as f:
