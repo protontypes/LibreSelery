@@ -24,6 +24,7 @@ jobs:
         run: |
               if [ ! -f ./selery.yml ]
               then
+                echo "Create selery.yml"
                 touch ./selery.yml
                 chmod 700 ./selery.yml
                 cat > ./selery.yml <<EOF
@@ -50,7 +51,10 @@ jobs:
                 # message send with every coinbase email. Never send an URL.
                 email_note: "Fresh OpenCelery Funding"
               EOF
+              else 
+                echo "Use existing selery.yml"
               fi
+              cat ./selery.yml
       # Run Openselery on the current folder.
       - name: Run Openselery on Sources
         run:  > 
