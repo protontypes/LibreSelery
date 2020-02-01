@@ -11,7 +11,7 @@ on:
       - master         # Push events on master branch
     # Sequence of patterns matched against refs/tags
     tags:
-      - **             # Push events to all tags
+      - - refs/tags/*  # Event to all tags
 on: 
     push:
       branches:
