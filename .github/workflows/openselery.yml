@@ -21,7 +21,7 @@ jobs:
       - name: Give everyone permission to write to this folder
         run: chmod a+rw ./results
       - name: create openselery configuation
-        run: >
+        run: |
               if [ ! -f ./selery.yml ]
               then
                 touch ./selery.yml
