@@ -1,4 +1,4 @@
-# ./.github/workflows/continuousselery.yml
+# ./.github/workflows/openselery
 # Use Openselery as a simple Github action on your project workflow.
 # For configuration create an .openselery.yml file in your project repo.
 name: openselery
@@ -26,7 +26,7 @@ jobs:
               then
                 touch ./selery.yml
                 chmod 700 ./selery.yml
-                cat -E > ./selery.yml <<EOF
+                cat > ./selery.yml <<EOF
                 # simulation let you run without payout at the end  
                 simulation: True
                 # include the target folders contributors
