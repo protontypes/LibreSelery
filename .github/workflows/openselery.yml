@@ -12,10 +12,6 @@ on:
     # Sequence of patterns matched against refs/tags
     tags:
       - - refs/tags/*  # Event to all tags
-on: 
-    push:
-      branches:
-        - master
 
 jobs:
   openselery:
