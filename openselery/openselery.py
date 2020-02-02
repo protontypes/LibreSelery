@@ -92,7 +92,11 @@ class OpenSelery(object):
     def __del__(self):
         self.logNotify(
             "Feel free to visit us @ https://github.com/protontypes/openselery")
-        self.logNotify("Done")
+        if hasattr(self, 'receiptStr') and self.receiptStr != "":
+            self.logNotify("Done")
+        else:
+            self.logNotify("receipt missing")
+            self.logNotify("Failed!")
 
     def initialize(self):
         self.logNotify("Initializing OpenSelery")
@@ -153,8 +157,9 @@ class OpenSelery(object):
         self.githubConnector = self._execCritical(
             lambda x: GithubConnector(x), [self.config.github_token])
         self.logNotify("Github connection established")
-        self.coinConnector = CoinbaseConnector(
-            self.config.coinbase_token, self.config.coinbase_secret)
+        if not self.config.simulation:
+            self.coinConnector = CoinbaseConnector(
+                self.config.coinbase_token, self.config.coinbase_secret)
 
     def gather(self):
         generalContributors = []
@@ -288,11 +293,15 @@ class OpenSelery(object):
 
             self.log("Trying to pay out donations to recipients")
 
+            self.receiptStr = ""
             for contributor in recipients:
                 receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.btc_per_transaction,
                                                     self.config.skip_email, self.config.email_note)
-                with open(receiptFilePath, "a") as f:
-                    f.write(str(receipt))
+                self.receiptStr = self.receiptStr + str(self.receipt)
+
+            with open(receiptFilePath, "w") as f:
+                f.write(self.receiptStr)
+
         if self.config.simulation:
             self.logWarning(
                     "Configuration 'simulation' is active, so NO transaction will be executed")
