@@ -8,12 +8,9 @@
 > Please keep in mind that OpenSelery is in an experimental state. The amount of funding should therefore be kept to a minimum.
 
 ## Contribution
-Constributors on the 
-master branch will probably get emails with cryptocurrency. Only git profiles with emails on the github profile page are considered. We will never send a URL in the note.
+Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the github profile page are considered. We will never send a URL in the note.
 
 ## Usage
-Openselery is still not released and in experimental status.
-
 1. Install with [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/):
 
 ```bash
