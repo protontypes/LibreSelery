@@ -5,6 +5,7 @@
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions)
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openselery/openselery)
 
+__[Project Slides](http://protontypes.eu:1313/)__
 > Please keep in mind that OpenSelery is in an experimental state. The amount of funding should therefore be kept to a minimum.
 
 ## Contribution
