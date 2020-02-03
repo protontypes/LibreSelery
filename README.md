@@ -5,7 +5,7 @@
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions)
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openselery/openselery)
 
-Please consider openselery can payout all your cryptocurrency money if you configure it in this way.
+> ## Please keep in mind that OpenSelery is in an experimental state. The amount of funding should therefore be kept to a minimum.
 
 ## Contribution
 Constributors on the 
