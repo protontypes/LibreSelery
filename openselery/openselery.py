@@ -285,8 +285,8 @@ class OpenSelery(object):
             if re.match("^[v](\d+\.)?(\d+\.)?(\*|\d+)$", str(check_tag)) is not None:
                 last_release_tag = check_tag
             k = k + 1
-        last_release_commits = repo.git.log("--oneline",last_release_tag+"..master")
-        print(last_release_commit)
+        last_release_commits = repo.git.log("--oneline",str(last_release_tag)+"..master")
+        print(last_release_commits)
 
         recipients = random.choices(
             contributors, weights, k=self.config.contributor_payout_count)
