@@ -259,7 +259,7 @@ class OpenSelery(object):
         # print(generalContributors)
         return generalProjects, generalDependencies, generalContributors
 
-    def choose(self, contributors):
+    def choose(self, contributors, repo):
         recipients = []
         # calculate probability weights
         self.log("Calculating payout chances (weights) for contributors")
@@ -271,6 +271,17 @@ class OpenSelery(object):
         #    luckyWeight = weights[contributors.index(luckyContributor[0])]
         #    recipients.append(luckyContributor)
         #    print(" -- %s [weight: %s]" % luckyContributor.author.email, luckyWeight)
+
+        # gather data on the last tag with semantic versioning vx.x.x
+        tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
+
+        k = 0
+        for tag in range(len(tags)):
+            if re.match("^[v](\d+\.)?(\d+\.)?(\*|\d+)$", tag[-k]) is not None:
+                last_release_tag
+        last_release_commits = repo.git.log("--oneline",last_release_tag+"..master")
+        print(last_release_commit)
+
         recipients = random.choices(
             contributors, weights, k=self.config.contributor_payout_count)
         for contributor in recipients:
