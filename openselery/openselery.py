@@ -248,18 +248,18 @@ class OpenSelery(object):
             # safe contributor information
             generalContributors.extend(depContributors)
         print("=======================================================")
+
+        self.logNotify("Gathered valid directory: %s" %
+                       self.config.directory)
         self.logNotify("Gathered '%s' valid repositories" %
                        len(generalProjects))
         self.logNotify("Gathered '%s' valid dependencies" %
                        len(generalDependencies))
         self.logNotify("Gathered '%s' valid contributors" %
                        len(generalContributors))
-        # print(generalProjects)
-        # print(generalDependencies)
-        # print(generalContributors)
-        return generalProjects, generalDependencies, generalContributors
+        return  self.config.directory, generalProjects, generalDependencies, generalContributors
 
-    def choose(self, contributors, repo):
+    def choose(self, contributors, repo_path):
         recipients = []
         # calculate probability weights
         self.log("Calculating payout chances (weights) for contributors")
@@ -273,12 +273,18 @@ class OpenSelery(object):
         #    print(" -- %s [weight: %s]" % luckyContributor.author.email, luckyWeight)
 
         # gather data on the last tag with semantic versioning vx.x.x
-        tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
+        import git
+        import re
+        repo = git.Repo(repo_path)
+        tags = sorted(repo.tags, reverse=True, key=lambda t: t.commit.committed_datetime)
 
         k = 0
-        for tag in range(len(tags)):
-            if re.match("^[v](\d+\.)?(\d+\.)?(\*|\d+)$", tag[-k]) is not None:
-                last_release_tag
+        print(tags[-1])
+        for check_tag in tags:
+            print(check_tag)
+            if re.match("^[v](\d+\.)?(\d+\.)?(\*|\d+)$", str(check_tag)) is not None:
+                last_release_tag = check_tag
+            k = k + 1
         last_release_commits = repo.git.log("--oneline",last_release_tag+"..master")
         print(last_release_commit)
 

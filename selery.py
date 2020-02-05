@@ -16,11 +16,12 @@ def main():
     # let openselery gather data
     # of all involved projects,
     ### dependencies and contributors
-    projects, deps, contributors = selery.gather()
+    local_repo, projects, deps, all_related_contributor = selery.gather()
     # let openselery roll the dice
     # and choose some lucky contributors
     # who should receive donations
-    recipients = selery.choose(contributors)
+    print(projects)
+    recipients = selery.choose(all_related_contributor, local_repo)
     # let openselery use the given
     # wallet containing virtual currency
     # to pay out the selected contributors
