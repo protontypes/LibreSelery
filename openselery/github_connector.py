@@ -1,7 +1,6 @@
 import time
 import re
 from github import Github, StatsContributor
-from git import Repo, Commit
 
 from openselery import selery_utils
 
@@ -28,14 +27,19 @@ class GithubConnector(selery_utils.Connector):
         # https://github.com/protontypes/openselery.git
         # git@github.com:protontypes/protontypes.git
 
-        matchObj = re.match("^(?:git@|https://)[^/:]+[/:]([^/]+)/([^/]+?)(?:\.git)?$", url)
+        matchObj = re.match(
+            "^(?:git@|https://)[^/:]+[/:]([^/]+)/([^/]+?)(?:\.git)?$", url)
         if not matchObj:
             raise ValueError("url cannot be parsed. (url: %s)" % (url))
 
-        (owner,project_name) = matchObj.groups()
+        (owner, project_name) = matchObj.groups()
         repo = self.github.get_repo(owner + '/' + project_name)
         return repo.id
 
+    def grabRemoteProjectByUrl(self, projectUrl):
+        projectId = self.parseRemoteProjectId(projectUrl)
+        localproject = self.grabRemoteProject(projectId)
+        return localproject
 
     def grabRemoteProjectContributors(self, project):
         cachedContributors = []

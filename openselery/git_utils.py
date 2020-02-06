@@ -2,7 +2,8 @@
 import git
 import re
 
-def find_release_contributor(repo_path,number_of_):
+
+def find_release_contributor(repo_path, number_of_):
     repo = git.Repo(repo_path)
     tags = repo.tags
 
@@ -27,16 +28,24 @@ def find_release_contributor(repo_path,number_of_):
         last_release_contributor.append(commit.author.email)
     print(last_release_contributor)
 
-def grabLocalProject(self, directory, remoteName='origin'):
+
+def grabLocalProject(repo_path, remoteName='origin'):
+    repo = git.Repo(repo_path)
     project = None
     projectUrl = None
-    repo = Repo(directory)
     for remote in repo.remotes:
         if remote.name == remoteName:
-            projectUrl = remote.url
-            break
-    if projectUrl:
-        projectId = self.parseRemoteProjectId(projectUrl)
-        if projectId:
-            project = self.grabRemoteProject(projectId)
-    return project
+            return remote.url
+        else:
+            print(process.stderr)
+            raise Exception("No Remote URL found")
+
+
+def ScanCommits(git_folder,branch='master'):
+    repo = Repo(git_folder)
+    commit_msgs = []
+    commits = list(repo.iter_commits('master'))
+    for c in commits:
+        commit_msg = {'name': str(c.author), 'email': c.author.email, 'msg': c.message}
+        commit_msgs.append(commit_msg)
+    return commit_msgs

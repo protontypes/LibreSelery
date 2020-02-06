@@ -172,9 +172,10 @@ class OpenSelery(object):
             self.logWarning("Including local project '%s'" %
                             self.config.directory)
             # find official repositories
-            localProject = selery_urtils.grabLocalProject(
+            projectUrl = git_utils.grabLocalProject(
                 self.config.directory)
 
+            localProject = self.githubConnector.grabRemoteProjectByUrl(projectUrl)
             print(" -- %s" % localProject)
             print(" -- %s" % localProject.html_url)
             #print(" -- %s" % [c.author.email for c in localContributors])
