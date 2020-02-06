@@ -266,27 +266,33 @@ class OpenSelery(object):
         weights = selery_utils.calculateContributorWeights(contributors)
         # chose contributors for payout
         self.log("Choosing recipients for payout")
-        # for i in range(len(contributors)):
-        #    luckyContributor = random.choices(contributors, weights, k=1)
-        #    luckyWeight = weights[contributors.index(luckyContributor[0])]
-        #    recipients.append(luckyContributor)
-        #    print(" -- %s [weight: %s]" % luckyContributor.author.email, luckyWeight)
 
         # gather data on the last tag with semantic versioning vx.x.x
         import git
         import re
         repo = git.Repo(repo_path)
-        tags = sorted(repo.tags, reverse=True, key=lambda t: t.commit.committed_datetime)
+        tags = repo.tags
 
         k = 0
+        commits = {}
+        last_release_contributor = []
         print(tags[-1])
         for check_tag in tags:
             print(check_tag)
             if re.match("^[v](\d+\.)?(\d+\.)?(\*|\d+)$", str(check_tag)) is not None:
                 last_release_tag = check_tag
             k = k + 1
-        last_release_commits = repo.git.log("--oneline",str(last_release_tag)+"..master")
-        print(last_release_commits)
+
+        last_release_commits_sha = repo.git.log("--oneline","--format=format:%H",str(last_release_tag)+"..master").splitlines()
+
+        for git_commit in repo.iter_commits():
+            commits[git_commit.hexsha] = git_commit
+
+
+        for sha in last_release_commits_sha:
+            commit = commits[sha]
+            last_release_contributor.append(commit.author.email)
+        print(last_release_contributor)
 
         recipients = random.choices(
             contributors, weights, k=self.config.contributor_payout_count)
