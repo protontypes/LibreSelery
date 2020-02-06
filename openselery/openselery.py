@@ -9,6 +9,7 @@ import sys
 from openselery.github_connector import GithubConnector
 from openselery.librariesio_connector import LibrariesIOConnector
 from openselery.coinbase_connector import CoinbaseConnector
+from openselery import git_utils  
 from openselery import selery_utils
 
 
@@ -171,7 +172,7 @@ class OpenSelery(object):
             self.logWarning("Including local project '%s'" %
                             self.config.directory)
             # find official repositories
-            localProject = self.githubConnector.grabLocalProject(
+            localProject = selery_urtils.grabLocalProject(
                 self.config.directory)
 
             print(" -- %s" % localProject)
@@ -266,33 +267,6 @@ class OpenSelery(object):
         weights = selery_utils.calculateContributorWeights(contributors)
         # chose contributors for payout
         self.log("Choosing recipients for payout")
-
-        # gather data on the last tag with semantic versioning vx.x.x
-        import git
-        import re
-        repo = git.Repo(repo_path)
-        tags = repo.tags
-
-        k = 0
-        commits = {}
-        last_release_contributor = []
-        print(tags[-1])
-        for check_tag in tags:
-            print(check_tag)
-            if re.match("^[v](\d+\.)?(\d+\.)?(\*|\d+)$", str(check_tag)) is not None:
-                last_release_tag = check_tag
-            k = k + 1
-
-        last_release_commits_sha = repo.git.log("--oneline","--format=format:%H",str(last_release_tag)+"..master").splitlines()
-
-        for git_commit in repo.iter_commits():
-            commits[git_commit.hexsha] = git_commit
-
-
-        for sha in last_release_commits_sha:
-            commit = commits[sha]
-            last_release_contributor.append(commit.author.email)
-        print(last_release_contributor)
 
         recipients = random.choices(
             contributors, weights, k=self.config.contributor_payout_count)

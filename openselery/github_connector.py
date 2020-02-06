@@ -36,19 +36,6 @@ class GithubConnector(selery_utils.Connector):
         repo = self.github.get_repo(owner + '/' + project_name)
         return repo.id
 
-    def grabLocalProject(self, directory, remoteName='origin'):
-        project = None
-        projectUrl = None
-        repo = Repo(directory)
-        for remote in repo.remotes:
-            if remote.name == remoteName:
-                projectUrl = remote.url
-                break
-        if projectUrl:
-            projectId = self.parseRemoteProjectId(projectUrl)
-            if projectId:
-                project = self.grabRemoteProject(projectId)
-        return project
 
     def grabRemoteProjectContributors(self, project):
         cachedContributors = []
