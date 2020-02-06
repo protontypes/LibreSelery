@@ -35,18 +35,18 @@ GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # NEVER PRINT THIS
 
-# You need to the COINBASE values when not running in simulation.
+# You will need the COINBASE TOKEN and SECRECT when setting simulation=False.
 ```
 
 6. Configure your distribution in your CI Script or a seler.yml on top of your project. simulation is set True by default. 
 
 
-7. Run on your target project folder. This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit:    
+7. Run OpenSelery on the project folder you want to fund. This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit:    
 
 ```bash
 env $(cat ~/.openselery/tokens.env) ~/openselery/run.sh <target_directory>
 ```
-8. You can integrate OpenSelery in your CI with the template yml file 
+8. You can integrate OpenSelery in your CI with the template yml file.
 ```
 cat .github/actions/openselery.yml 
 ```
