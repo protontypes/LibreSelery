@@ -54,6 +54,8 @@ jobs:
                 total_payout_per_run: 0.000002
                 # message send with every coinbase email. Never send an URL.
                 email_note: "Fresh OpenCelery Funding"
+                # weight set for all include contributors
+                uniform_weight: 1
               EOF
               else 
                 echo "Use existing local selery.yml"

@@ -34,6 +34,7 @@ class OpenSeleryConfig(object):
         "btc_per_transaction": 0.000002,
         "contributor_payout_count": 1,
         "total_payout_per_run": 0.000002,
+        "uniform_weight": 1
     }
     __secure_config_entries__ = ["libraries_api_key", "github_token", "coinbase_token", "coinbase_secret",
                                  "coinbase_secret"]
@@ -263,9 +264,13 @@ class OpenSelery(object):
 
     def choose(self, contributors, repo_path):
         recipients = []
-        # calculate probability weights
-        self.log("Calculating payout chances (weights) for contributors")
-        weights = selery_utils.calculateContributorWeights(contributors)
+        # create uniform probability 
+        self.log("Start with unifrom porbability weights for contributors")
+        weights = selery_utils.calculateContributorWeights(contributors,self.config.uniform_weight)
+
+        self.log("add additional weight to release contributors")
+
+        
         # chose contributors for payout
         self.log("Choosing recipients for payout")
 

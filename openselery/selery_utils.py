@@ -71,11 +71,11 @@ def validateContributors(contributors, minimum_contributions):
 
 # dep_list: list of dependencies, each dependency has a contributors list
 # returns: list of dependencies, each dependency has a contributors list with accociated weights
-def calculateContributorWeights(contributors):
+def calculateContributorWeights(contributors,uniform_weight):
     # TODO: get more information about each contributor
     # * number commits
     # * time spent on project (calculated from commits)
     # * issues closed
     # * successful pull requests
-    weights = [1 for i in range(len(contributors))]
+    weights = [uniform_weight for i in range(len(contributors))]
     return weights

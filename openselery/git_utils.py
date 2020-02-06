@@ -9,7 +9,7 @@ def find_release_contributor(repo_path, number_of_):
 
     k = 0
     commits = {}
-    last_release_contributor = []
+    last_release_contributor_email = []
     for check_tag in reversed(tags):
         print(check_tag)
         if re.match("^[v](\d+\.)?(\d+\.)?(\*|\d+)$", str(check_tag)) is not None:
@@ -25,8 +25,8 @@ def find_release_contributor(repo_path, number_of_):
 
     for sha in last_release_commits_sha:
         commit = commits[sha]
-        last_release_contributor.append(commit.author.email)
-    print(last_release_contributor)
+        last_release_contributor_email.append(commit.author.email)
+    return last_release_contributor_email
 
 
 def grabLocalProject(repo_path, remoteName='origin'):
