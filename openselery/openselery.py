@@ -269,17 +269,27 @@ class OpenSelery(object):
         self.log("Start with unifrom porbability weights for contributors")
         weights = selery_utils.calculateContributorWeights(
             contributor, self.config.uniform_weight)
-            
+
+        # add release weights    
         self.log("add additional weight to release contributors of last "+str(self.config.releases_included)+" releases")
         release_contributor = git_utils.find_release_contributor(
             local_repo, self.config.releases_included)
-        
+
+        release_contributor = set(release_contributor)
+
+        vaild_emails = []    
         for email in release_contributor:
             for checkmail in contributor:
-                print(dir(email))
-                for email in checkmail.stats.author.email:
-                    pass
-                    #print("match")
+                for checkmail in email:
+                    vaild_emails.append(email)
+                    print(vaild_emails)
+                    break
+                break
+
+        # read @user from commit
+
+
+        
         return weights
 
     def choose(self, contributors, repo_path, weights):
