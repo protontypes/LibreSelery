@@ -34,7 +34,8 @@ class OpenSeleryConfig(object):
         "btc_per_transaction": 0.000002,
         "contributor_payout_count": 1,
         "total_payout_per_run": 0.000002,
-        "uniform_weight": 1
+        "uniform_weight": 10,
+        "releases_included": 3
     }
     __secure_config_entries__ = ["libraries_api_key", "github_token", "coinbase_token", "coinbase_secret",
                                  "coinbase_secret"]
@@ -262,14 +263,27 @@ class OpenSelery(object):
                        len(generalContributors))
         return  self.config.directory, generalProjects, generalDependencies, generalContributors
 
-    def choose(self, contributors, repo_path):
-        recipients = []
-        # create uniform probability 
+    def weight(self, contributor, local_repo, projects, deps):
+
+        # create uniform probability
         self.log("Start with unifrom porbability weights for contributors")
-        weights = selery_utils.calculateContributorWeights(contributors,self.config.uniform_weight)
+        weights = selery_utils.calculateContributorWeights(
+            contributor, self.config.uniform_weight)
+            
+        self.log("add additional weight to release contributors of last "+str(self.config.releases_included)+" releases")
+        release_contributor = git_utils.find_release_contributor(
+            local_repo, self.config.releases_included)
+        
+        for email in release_contributor:
+            for checkmail in contributor:
+                print(dir(email))
+                for email in checkmail.stats.author.email:
+                    pass
+                    #print("match")
+        return weights
 
-        self.log("add additional weight to release contributors")
-
+    def choose(self, contributors, repo_path, weights):
+        recipients = []
         
         # chose contributors for payout
         self.log("Choosing recipients for payout")

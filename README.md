@@ -51,4 +51,5 @@ env $(cat ~/.openselery/tokens.env) ~/openselery/run.sh <target_directory>
 cat .github/actions/openselery.yml 
 ```
 
+9. Get into [selery.py](selery.py) 
 *Artwork by Miriam Winter*
