@@ -275,16 +275,18 @@ class OpenSelery(object):
         release_contributor = git_utils.find_release_contributor(
             local_repo, self.config.releases_included)
 
+        # considers all release contributor equal
         release_contributor = set(release_contributor)
 
+        # check your valid emails
         vaild_emails = []    
         for email in release_contributor:
-            for checkmail in contributor:
-                for checkmail in email:
-                    vaild_emails.append(email)
-                    print(vaild_emails)
+            for checkemail in contributor:
+                for checkemail in email:
+                    vaild_emails.append(email.lower())
                     break
                 break
+        print(set(vaild_emails))
 
         # read @user from commit
 
