@@ -21,7 +21,7 @@ total_payout_per_run: 0.000002
 # message send with every coinbase email. Never send an URL.
 email_note: "Fresh OpenCelery Funding"
 # base weight for all included contributors
-uniform_weight: 1
+uniform_weight: 10
 # last releases additionaly weighted.
 releases_included: 3
 

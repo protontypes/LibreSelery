@@ -31,6 +31,9 @@ def main():
     # wallet containing virtual currency
     # to pay out the selected contributors
     selery.payout(recipients)
+    # Dump collected data for analysing
+    selery.dump(local_repo, projects, deps,
+                all_related_contributors, weights, recipients)
     # Done.
     print("=============================")
 

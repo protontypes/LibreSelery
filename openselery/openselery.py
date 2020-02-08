@@ -337,6 +337,9 @@ class OpenSelery(object):
                 print(" -- would have been a payout of '%.10f' to '%s'" %
                         (self.config.btc_per_transaction, contributor.stats.author.email))
 
+    def dump(self, local_repo, projects, deps, all_related_contributors, weights, recipients):
+        pass
+
     def _getFile(self, file):
         return os.path.join(self.seleryDir, file)
 
