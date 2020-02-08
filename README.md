@@ -1,6 +1,6 @@
-<img align="middle" src="./docs/design/OpenSelery-04.svg" width="512">     
+<img align="middle" src="./docs/design/OpenSelery-04.svg" width="512"> 
 
-> Software-Defined Funding Distribution
+> Automated Open Source Funding 
 
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions)
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openselery/openselery)
@@ -23,8 +23,8 @@ cd openselery
 
 2. Create a dedicated coinbase account with limited amounts. 
 3. Never transfer or store large values with automated cryptocurrency wallets. Use recurring automated transaction from another account to recharge you wallet on a regular base. 
-4. Transfer some money to this wallet for testing.  
-5. Add your tokens from the coinbase API:      
+4. Transfer some money to this wallet for testing. 
+5. Add your tokens from the coinbase API: 
 
 ```bash
 nano ~/.openselery/tokens.env
@@ -39,7 +39,7 @@ LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 6. Configure your distribution in your CI Script or a selery.yml on top of your project. Simulation is set True by default. You will need the COINBASE TOKEN and SECRECT when setting Simulation to False in your selery.yml 
 
 
-7. Run OpenSelery on the project folder you want to fund. This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit:    
+7. Run OpenSelery on the project folder you want to fund. This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit: 
 
 ```bash
 env $(cat ~/.openselery/tokens.env) ~/openselery/run.sh <target_directory>
