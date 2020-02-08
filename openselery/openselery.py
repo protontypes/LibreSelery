@@ -278,7 +278,7 @@ class OpenSelery(object):
         # considers all release contributor equal
         release_contributor = set(release_contributor)
 
-        # check your valid emails
+        # check your valid emails. Ly0@protonmail.com == ly0@protonmail.com
         vaild_emails = []    
         for email in release_contributor:
             for checkemail in contributor:
@@ -286,7 +286,6 @@ class OpenSelery(object):
                     vaild_emails.append(email.lower())
                     break
                 break
-        print(set(vaild_emails))
 
         # read @user from commit
 
