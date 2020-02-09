@@ -3,13 +3,22 @@ import re
 from github import Github, StatsContributor
 
 from openselery import selery_utils
-
+from pprint import pprint, PrettyPrinter
 
 class Contributor(object):
     def __init__(self, fromProject, c):
         self.fromProject = fromProject
         self.stats = c
 
+    def __repr__(self):
+        result = "Contributor("
+        result += "fromProject: "
+        result += str(self.fromProject)
+        result += ", "
+        result += "stats: "
+        result += str(self.stats)
+        result += ")"
+        return result
 
 class GithubConnector(selery_utils.Connector):
     def __init__(self, token):

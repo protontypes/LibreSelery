@@ -5,13 +5,65 @@ import json
 import yaml
 import random
 import sys
+import pprint
+import pdb
+import github
 
 from openselery.github_connector import GithubConnector
 from openselery.librariesio_connector import LibrariesIOConnector
 from openselery.coinbase_connector import CoinbaseConnector
-from openselery import git_utils  
+from openselery import git_utils
 from openselery import selery_utils
 
+def StatusContributorRepr(self):
+    result = "StatusContributor(author: "
+    result += str(self.author)
+    result += ", total: "
+    result += str(self.total)
+    result += ", weeks: "
+    result += str(self.weeks)
+    result += ")"
+    return result
+
+github.StatsContributor.StatsContributor.__repr__ = StatusContributorRepr
+
+def WeekRepr(self):
+    result = "Week(w: "
+    result += str(self.w)
+    result += ", a: "
+    result += str(self.a)
+    result += ", d: "
+    result += str(self.d)
+    result += ", c: "
+    result += str(self.c)
+    result += ")"
+    return result
+
+github.StatsContributor.StatsContributor.Week.__repr__ = WeekRepr
+
+class MyPrettyPrinter(pprint.PrettyPrinter):
+    def pprint_StatsContributor(self, object, stream, indent, allowance, context, level):
+        pdb.set_trace()
+        stream.write('StatsContributor(')
+        self._format(object.author, stream, indent, allowance + 1, context, level)
+        self._format(object.total, stream, indent, allowance + 1, context, level)
+        self._format(object.weeks, stream, indent, allowance + 1, context, level)
+        stream.write(')')
+
+    def pprint_Week(self, object, stream, indent, allowance, context, level):
+        pdb.set_trace()
+        stream.write('Week(')
+        self._format(object.w, stream, indent, allowance + 1, context, level)
+        self._format(object.a, stream, indent, allowance + 1, context, level)
+        self._format(object.d, stream, indent, allowance + 1, context, level)
+        self._format(object.c, stream, indent, allowance + 1, context, level)
+        stream.write(')')
+
+    def __init__(self):
+        super(MyPrettyPrinter, self).__init__()
+        self._dispatch = pprint.PrettyPrinter._dispatch.copy()
+        self._dispatch[github.StatsContributor.StatsContributor.__repr__] = MyPrettyPrinter.pprint_StatsContributor
+        self._dispatch[github.StatsContributor.StatsContributor.Week.__repr__] = MyPrettyPrinter.pprint_Week
 
 class OpenSeleryConfig(object):
     __default_env_template__ = {
@@ -270,7 +322,7 @@ class OpenSelery(object):
         weights = selery_utils.calculateContributorWeights(
             contributor, self.config.uniform_weight)
 
-        # add release weights    
+        # add release weights
         self.log("add additional weight to release contributors of last "+str(self.config.releases_included)+" releases")
         release_contributor = git_utils.find_release_contributor(
             local_repo, self.config.releases_included)
@@ -279,7 +331,7 @@ class OpenSelery(object):
         release_contributor = set(release_contributor)
 
         # check your valid emails. Ly0@protonmail.com == ly0@protonmail.com
-        vaild_emails = []    
+        vaild_emails = []
         for email in release_contributor:
             for checkemail in contributor:
                 for checkemail in email:
@@ -290,12 +342,12 @@ class OpenSelery(object):
         # read @user from commit
 
 
-        
+
         return weights
 
     def choose(self, contributors, repo_path, weights):
         recipients = []
-        
+
         # chose contributors for payout
         self.log("Choosing recipients for payout")
 
@@ -338,7 +390,20 @@ class OpenSelery(object):
                         (self.config.btc_per_transaction, contributor.stats.author.email))
 
     def dump(self, local_repo, projects, deps, all_related_contributors, weights, recipients):
-        pass
+        pp = MyPrettyPrinter()
+        print("local_repo")
+        pp.pprint(local_repo)
+        print("projects")
+        pp.pprint(projects)
+        print("deps")
+        pp.pprint(deps)
+        print("all related contributors")
+        pp.pprint(all_related_contributors)
+        print("weights")
+        pp.pprint(weights)
+        print("recipients")
+        pp.pprint(recipients)
+        #pdb.set_trace()
 
     def _getFile(self, file):
         return os.path.join(self.seleryDir, file)
