@@ -115,7 +115,7 @@ class OpenSeleryConfig(object):
             raise ValueError("Payout values do not match")
         self.apply(yamlDict)
 
-        # block url in note to avoid misusage 
+        # block url in note
         extractor = URLExtract()
         if extractor.has_urls(self.email_note):
             raise ValueError("Using URLs in note not possible")
@@ -335,17 +335,20 @@ class OpenSelery(object):
         # considers all release contributor equal
         release_contributor = set(release_contributor)
 
-        # check your valid emails. Lyo@protonmail.com == lyo@protonmail.com
-        vaild_emails = []
-        print(release_contributor)
-        print(len(release_contributor))
-        for email in release_contributor:
-            for checkemail in contributor:
-                    if email == checkemail:
-                        vaild_emails.append(email.lower())
-                        break
-        
-
+        # check your valid emails and lower case Lyo@protonmail.com == lyo@protonmail.com
+        valid_emails = []
+        for git_commit_mail in release_contributor:
+            print(git_commit_mail)
+            for contributor_object in contributor:
+                print("A")
+                print(contributor_object.stats.author.email)
+                print("B")
+                print(git_commit_mail.lower())
+                if str(contributor_object.stats.author.email) == str(git_commit_mail.lower()):
+                    valid_emails.append(git_commit_mail)
+                    print("valid_emails:")
+                    print(valid_emails)
+    
         # read @user from commit
         return weights
 
