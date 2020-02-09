@@ -4,3 +4,4 @@ pyyaml
 coinbase
 gitpython
 pybraries
+urlextract

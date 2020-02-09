@@ -8,6 +8,7 @@ import sys
 import pprint
 import pdb
 import github
+from urlextract import URLExtract
 
 from openselery.github_connector import GithubConnector
 from openselery.librariesio_connector import LibrariesIOConnector
@@ -113,6 +114,11 @@ class OpenSeleryConfig(object):
         if not self.total_payout_per_run / self.contributor_payout_count == self.btc_per_transaction:
             raise ValueError("Payout values do not match")
         self.apply(yamlDict)
+
+        # block url in note to avoid misusage 
+        extractor = URLExtract()
+        if extractor.has_urls(self.email_note):
+            raise ValueError("Using URLs in note not possible")
 
     def applyEnv(self):
         try:
@@ -326,23 +332,21 @@ class OpenSelery(object):
         self.log("add additional weight to release contributors of last "+str(self.config.releases_included)+" releases")
         release_contributor = git_utils.find_release_contributor(
             local_repo, self.config.releases_included)
-
         # considers all release contributor equal
         release_contributor = set(release_contributor)
 
-        # check your valid emails. Ly0@protonmail.com == ly0@protonmail.com
+        # check your valid emails. Lyo@protonmail.com == lyo@protonmail.com
         vaild_emails = []
+        print(release_contributor)
+        print(len(release_contributor))
         for email in release_contributor:
             for checkemail in contributor:
-                for checkemail in email:
-                    vaild_emails.append(email.lower())
-                    break
-                break
+                    if email == checkemail:
+                        vaild_emails.append(email.lower())
+                        break
+        
 
         # read @user from commit
-
-
-
         return weights
 
     def choose(self, contributors, repo_path, weights):
