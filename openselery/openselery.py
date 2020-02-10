@@ -91,7 +91,8 @@ class OpenSeleryConfig(object):
         "contributor_payout_count": 1,
         "total_payout_per_run": 0.000002,
         "uniform_weight": 10,
-        "releases_included": 3
+        "releases_included": 3,
+        "release_weight": 10
     }
     __secure_config_entries__ = ["libraries_api_key", "github_token", "coinbase_token", "coinbase_secret",
                                  "coinbase_secret"]
@@ -125,7 +126,9 @@ class OpenSeleryConfig(object):
         
         # print all logs to stdout
         if self.inspection == True:
-            logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+            loggingFilePath = os.path.join(
+                self.config.result_dir, "pythonlogs.txt")
+            logging.basicConfig(level=logging.DEBUG, filename=loggingFilePath,filemode='a')
 
     def applyEnv(self):
         try:
@@ -337,7 +340,7 @@ class OpenSelery(object):
         self.log("Found release contributor: "+str(len(release_contributor)))    
 
         release_weights = selery_utils.calculateContributorWeights(
-            release_contributor, self.config.uniform_weight)
+            release_contributor, self.config.release_weight)
 
         # considers all release contributor equal
         release_contributor = set(release_contributor)
