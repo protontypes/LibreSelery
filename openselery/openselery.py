@@ -10,6 +10,7 @@ import pdb
 import github
 from urlextract import URLExtract
 
+
 from openselery.github_connector import GithubConnector
 from openselery.librariesio_connector import LibrariesIOConnector
 from openselery.coinbase_connector import CoinbaseConnector
@@ -41,6 +42,7 @@ def WeekRepr(self):
     return result
 
 github.StatsContributor.StatsContributor.Week.__repr__ = WeekRepr
+
 
 class MyPrettyPrinter(pprint.PrettyPrinter):
     def pprint_StatsContributor(self, object, stream, indent, allowance, context, level):
@@ -77,6 +79,7 @@ class OpenSeleryConfig(object):
         "bitcoin_wallet": "",
 
         "simulation": True,
+        "inspection": True,
         "include_dependencies": False,
         "include_self": True,
         "include_tooling_and_runtime": False,
@@ -119,6 +122,10 @@ class OpenSeleryConfig(object):
         extractor = URLExtract()
         if extractor.has_urls(self.email_note):
             raise ValueError("Using URLs in note not possible")
+        
+        # print all logs to stdout
+        if self.inspection == True:
+            logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
     def applyEnv(self):
         try:
@@ -322,35 +329,26 @@ class OpenSelery(object):
         return  self.config.directory, generalProjects, generalDependencies, generalContributors
 
     def weight(self, contributor, local_repo, projects, deps):
-
-        # create uniform probability
-        self.log("Start with unifrom porbability weights for contributors")
-        weights = selery_utils.calculateContributorWeights(
-            contributor, self.config.uniform_weight)
-
-        # add release weights
+        # calc release weights
         self.log("add additional weight to release contributors of last "+str(self.config.releases_included)+" releases")
         release_contributor = git_utils.find_release_contributor(
             local_repo, self.config.releases_included)
+
+        self.log("Found release contributor: "+str(len(release_contributor)))    
+
+        release_weights = selery_utils.calculateContributorWeights(
+            release_contributor, self.config.uniform_weight)
+
         # considers all release contributor equal
         release_contributor = set(release_contributor)
 
-        # check your valid emails and lower case Lyo@protonmail.com == lyo@protonmail.com
-        valid_emails = []
-        for git_commit_mail in release_contributor:
-            print(git_commit_mail)
-            for contributor_object in contributor:
-                print("A")
-                print(contributor_object.stats.author.email)
-                print("B")
-                print(git_commit_mail.lower())
-                if str(contributor_object.stats.author.email) == str(git_commit_mail.lower()):
-                    valid_emails.append(git_commit_mail)
-                    print("valid_emails:")
-                    print(valid_emails)
+        # create uniform probability
+        self.log("Start with unifrom porbability weights for contributors")
+        uniform_weights = selery_utils.calculateContributorWeights(
+            contributor, self.config.uniform_weight)
     
         # read @user from commit
-        return weights
+        return uniform_weights, release_weights
 
     def choose(self, contributors, repo_path, weights):
         recipients = []

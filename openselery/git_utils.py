@@ -8,11 +8,14 @@ def find_release_contributor(repo_path, releases):
     tags = repo.tags
 
     last_release_contributor_email = []
+    release_counter = releases
     for check_tag in reversed(tags):
         # TODO: re expressions should be in selery.yml
         # Matches for semantic versioning
-        if re.match("^v(\d+\.)?(\d+\.)?(\*|\d+)$", str(check_tag)):
-            break
+        if re.match("^v(\d+\.)?(\d+\.)?(\*|\d+)$", str(check_tag)) and bool(release_counter):
+            release_counter = release_counter - 1
+            continue
+        break
 
     last_release_commits_sha = repo.git.log(
         "--oneline", "--format=format:%H", str(check_tag)+"..master").splitlines()

@@ -17,23 +17,22 @@ def main():
     # of all involved projects,
     ### dependencies and contributors
     local_repo, projects, deps, all_related_contributors = selery.gather()
-    # create your personal
-    # weights calculation
     # please modify the weights
-    # calculation to your needs.
-    weights = selery.weight(all_related_contributors,
-                            local_repo, projects, deps)
+    # calculation to your need
+    uniform_weights, release_weights = selery.weight(all_related_contributors,
+                                                     local_repo, projects, deps)
     # let openselery roll the dice
     # and choose some lucky contributors
     # who should receive donations
-    recipients = selery.choose(all_related_contributors, local_repo, weights)
+    recipients = selery.choose(
+        all_related_contributors, local_repo, uniform_weights)
     # let openselery use the given
     # wallet containing virtual currency
     # to pay out the selected contributors
     selery.payout(recipients)
     # Dump collected data for analysing
     selery.dump(local_repo, projects, deps,
-                all_related_contributors, weights, recipients)
+                all_related_contributors, uniform_weights, recipients)
     # Done.
     print("=============================")
 
