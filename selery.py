@@ -7,7 +7,7 @@ def main():
     print("=============================")
     # instantiate openselery and
     # let it initialize configurations,
-    ### arguments and environments
+    # arguments and environments
     selery = openselery.OpenSelery()
     # let openselery connect to
     # various APIs and servers to
@@ -15,7 +15,7 @@ def main():
     selery.connect()
     # let openselery gather data
     # of all involved projects,
-    ### dependencies and contributors
+    # dependencies and contributors
     local_repo, projects, deps, all_related_contributors = selery.gather()
     # please modify the weights
     # calculation to your need
@@ -31,8 +31,8 @@ def main():
     # to pay out the selected contributors
     selery.payout(recipients)
     # Dump collected data for analysing
-    selery.dump(local_repo, projects, deps,
-                all_related_contributors, uniform_weights, recipients)
+    # selery.dump(local_repo, projects, deps,
+    # all_related_contributors, uniform_weights, recipients)
     # Done.
     print("=============================")
 

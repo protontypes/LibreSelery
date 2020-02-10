@@ -1,6 +1,7 @@
 import subprocess
 import argparse
 import os
+import re
 import json
 import yaml
 import random
@@ -8,6 +9,7 @@ import sys
 import pprint
 import pdb
 import github
+import logging
 from urlextract import URLExtract
 
 
@@ -105,6 +107,15 @@ class OpenSeleryConfig(object):
     def apply(self, d):
         self.__dict__.update(d)
 
+    def applyEnv(self):
+        try:
+            environmentDict = {
+                k: os.environ[v] for k, v in self.__default_env_template__.items()}
+            self.apply(environmentDict)
+        except KeyError as e:
+            raise KeyError("Please provide environment variable %s" % e)
+
+
     def applyYaml(self, path):
         yamlDict = yaml.safe_load(open(path))
         # ensure type of loaded config
@@ -127,16 +138,8 @@ class OpenSeleryConfig(object):
         # print all logs to stdout
         if self.inspection == True:
             loggingFilePath = os.path.join(
-                self.config.result_dir, "pythonlogs.txt")
+                self.result_dir, "pythonlogs.txt")
             logging.basicConfig(level=logging.DEBUG, filename=loggingFilePath,filemode='a')
-
-    def applyEnv(self):
-        try:
-            environmentDict = {
-                k: os.environ[v] for k, v in self.__default_env_template__.items()}
-            self.apply(environmentDict)
-        except KeyError as e:
-            raise KeyError("Please provide environment variable %s" % e)
 
     def __repr__(self):
         # make config safe for printing
@@ -204,11 +207,12 @@ class OpenSelery(object):
         args = parser.parse_args()
         return args
 
+    def loadEnv(self):
+        self._execCritical(lambda: self.config.applyEnv(), [])
+
     def loadYaml(self, path):
         self._execCritical(lambda x: self.config.applyYaml(x), [path])
 
-    def loadEnv(self):
-        self._execCritical(lambda: self.config.applyEnv(), [])
 
     def _execCritical(self, lambdaStatement, args=[], canFail=False):
         try:
@@ -246,8 +250,8 @@ class OpenSelery(object):
                 self.config.directory)
 
             localProject = self.githubConnector.grabRemoteProjectByUrl(projectUrl)
-            print(" -- %s" % localProject)
-            print(" -- %s" % localProject.html_url)
+            self.log(" -- %s" % localProject)
+            self.log(" -- %s" % localProject.html_url)
             #print(" -- %s" % [c.author.email for c in localContributors])
 
             # safe dependency information
@@ -344,7 +348,7 @@ class OpenSelery(object):
 
         # considers all release contributor equal
         release_contributor = set(release_contributor)
-
+        
         # create uniform probability
         self.log("Start with unifrom porbability weights for contributors")
         uniform_weights = selery_utils.calculateContributorWeights(
@@ -362,9 +366,9 @@ class OpenSelery(object):
         recipients = random.choices(
             contributors, weights, k=self.config.contributor_payout_count)
         for contributor in recipients:
-            print(" -- '%s': '%s' [w: %s]" % (contributor.stats.author.html_url,
+            self.log(" -- '%s': '%s' [w: %s]" % (contributor.stats.author.html_url,
                                               contributor.stats.author.email, weights[contributors.index(contributor)]))
-            print("  > via project '%s'" % contributor.fromProject)
+            self.log("  > via project '%s'" % contributor.fromProject)
         return recipients
 
     def payout(self, recipients):
@@ -394,8 +398,8 @@ class OpenSelery(object):
             self.logWarning(
                     "Configuration 'simulation' is active, so NO transaction will be executed")
             for contributor in recipients:
-                print(" -- would have been a payout of '%.10f' to '%s'" %
-                        (self.config.btc_per_transaction, contributor.stats.author.email))
+                self.log(" -- would have been a payout of '%.10f' to '%s' '%s'" %
+                         (self.config.btc_per_transaction, contributor.stats.author.email, contributor.stats.author.email))
 
     def dump(self, local_repo, projects, deps, all_related_contributors, weights, recipients):
         pp = MyPrettyPrinter()
@@ -433,4 +437,12 @@ class OpenSelery(object):
 
     def _log(self, sym, msg):
         if not self.silent:
-            print("[%s] %s" % (sym, msg))
+            match = re.search(r'[\w\.-]+@[\w\.-]+', msg)
+            try:
+                if len(match) > 1:
+                    print("Do not print privat email data")
+                else:
+                    print("[%s] %s" % (sym, msg))
+            except:
+                print("[%s] %s" % (sym, msg))
+                

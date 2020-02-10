@@ -3,6 +3,7 @@
 # Edit at https://www.gitignore.io/?templates=python
 receipt.txt
 transactions.txt
+pythonlogs.txt
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
