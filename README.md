@@ -12,6 +12,7 @@ __[Project Slides](http://protontypes.eu:1313/)__
 Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the github profile page are considered. We will never send a URL in the note.
 
 ## Usage
+
 1. Install with [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/):
 
 ```bash
@@ -21,10 +22,10 @@ cd openselery
 ./build.sh
 ```
 
-2. Create a dedicated coinbase account with limited amounts. 
+2. Create a dedicated coinbase account with limited amounts. OpenSelery is based on The Libraries.io, Github and Coinbase API. To provide service you need create to tokens in the corresponding accounts. Setting Simulation to False will require coinbase tokens.
 3. Never transfer or store large values with automated cryptocurrency wallets. Use recurring automated transaction from another account to recharge you wallet on a regular base. 
 4. Transfer some money to this wallet for testing. 
-5. Add your tokens from the coinbase API: 
+5. Add your tokens API: 
 
 ```bash
 nano ~/.openselery/tokens.env
@@ -49,5 +50,6 @@ env $(cat ~/.openselery/tokens.env) ~/openselery/run.sh <target_directory>
 cat .github/actions/openselery.yml 
 ```
 
-9. Get into [selery.py](selery.py)    
+9. Get into [selery.py](selery.py)   
+
 *Artwork by Miriam Winter*
