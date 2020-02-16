@@ -298,8 +298,6 @@ class OpenSelery(object):
                             gitproject = self.githubConnector.grabRemoteProject(
                                 libIoRepository.github_id)
 
-                            #print(" -- %s" % [c.author.email for c in depContributors])
-
                             # safe project / dependency information
                             generalProjects.append(gitproject)
                             generalDependencies.extend(libIoDependencies)
