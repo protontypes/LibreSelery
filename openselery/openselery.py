@@ -194,7 +194,9 @@ class OpenSelery(object):
             self.loadYaml(fundingPath)
         else:
             self.log("Using bitcoin wallet from configuration file [%s]" % self.config.bitcoin_wallet)
-        # load our environment
+        # load tooling url
+        print(args)
+        # load our environment variables 
         self.loadEnv()
         self.logNotify("Initialized")
         print(self.getConfig())
@@ -208,6 +210,8 @@ class OpenSelery(object):
                             type=str, help="Git directory to scan")
         parser.add_argument("-r", "--results_dir", required=True,
                             type=str, help="Result directory", dest="result_dir")
+        parser.add_argument("-t", "--tooling", required=False,
+                            type=str, help="Tooling file path", dest="tooling_dir")
         args = parser.parse_args()
         return args
 
@@ -216,7 +220,6 @@ class OpenSelery(object):
 
     def loadYaml(self, path):
         self._execCritical(lambda x: self.config.applyYaml(x), [path])
-
 
     def _execCritical(self, lambdaStatement, args=[], canFail=False):
         try:

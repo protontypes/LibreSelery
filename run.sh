@@ -13,5 +13,5 @@ docker run --rm -t \
 -v $(pwd):$(pwd)/results \
 -u $(id -u $USER):$(id -g $USER) \
 openselery \
-    bash -c "python selery.py --config $TARGET_DIR/selery.yml --directory $TARGET_DIR --result $(pwd)/results"
+bash -c "python selery.py --config $TARGET_DIR/selery.yml --directory $TARGET_DIR --result $(pwd)/results --tooling $(pwd)/environment.yml"
 
