@@ -23,7 +23,7 @@ releases_included: 3
 release_weight: 70
 
 # payout configurations
-bitcoin_wallet: ""
+bitcoin_wallet: "3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w"
 ## check the public wallet from FUNDING.yml vs the secret coinbase wallet
 check_equal_privat_and_public_wallet: False
 ## Skip email sended by coinbase

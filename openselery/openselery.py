@@ -78,13 +78,14 @@ class OpenSeleryConfig(object):
         "coinbase_secret": 'COINBASE_SECRET',
     }
     __default_config_template__ = {
-        "bitcoin_wallet": "",
-
         "simulation": True,
         "inspection": True,
+
         "include_dependencies": False,
         "include_self": True,
         "include_tooling_and_runtime": False,
+
+        "bitcoin_wallet": "",
         "min_contributions": 1,
         "check_equal_privat_and_public_wallet": True,
         "skip_email": True,
@@ -92,6 +93,7 @@ class OpenSeleryConfig(object):
         "btc_per_transaction": 0.000002,
         "contributor_payout_count": 1,
         "total_payout_per_run": 0.000002,
+
         "uniform_weight": 10,
         "releases_included": 3,
         "release_weight": 10
@@ -187,10 +189,12 @@ class OpenSelery(object):
         self.loadYaml(self.config.config_path)
         # load our funding file
         fundingPath = self._getFile("FUNDING.yml")
-        self.log("Loading funding file [%s]" % fundingPath)
-        self.loadYaml(fundingPath)
+        if fundingPath is not None:
+            self.log("Loading funding file [%s] for bitcoin wallet" % fundingPath)
+            self.loadYaml(fundingPath)
+        else:
+            self.log("Using bitcoin wallet from configuration file [%s]" % self.config.bitcoin_wallet)
         # load our environment
-        self.log("Loading environment variables")
         self.loadEnv()
         self.logNotify("Initialized")
         print(self.getConfig())
@@ -416,7 +420,12 @@ class OpenSelery(object):
         #pdb.set_trace()
 
     def _getFile(self, file):
-        return os.path.join(self.seleryDir, file)
+        file_path = os.path.join(self.seleryDir, file)
+        if os.path.exists(file_path):
+            self.log("FUNDING.yml not found")
+            return file_path
+        else:
+            return None
 
     def getConfig(self):
         return self.config
