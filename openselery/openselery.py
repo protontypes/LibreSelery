@@ -367,7 +367,7 @@ class OpenSelery(object):
             contributors, weights, k=self.config.contributor_payout_count)
         for contributor in recipients:
             self.log(" -- '%s': '%s' [w: %s]" % (contributor.stats.author.html_url,
-                                              contributor.stats.author.email, weights[contributors.index(contributor)]))
+                                              contributor.stats.author.name, weights[contributors.index(contributor)]))
             self.log("  > via project '%s'" % contributor.fromProject)
         return recipients
 
@@ -398,8 +398,8 @@ class OpenSelery(object):
             self.logWarning(
                     "Configuration 'simulation' is active, so NO transaction will be executed")
             for contributor in recipients:
-                self.log(" -- would have been a payout of '%.10f' to '%s' '%s'" %
-                         (self.config.btc_per_transaction, contributor.stats.author.email, contributor.stats.author.email))
+                self.log(" -- would have been a payout of '%.10f' to '%s'" %
+                         (self.config.btc_per_transaction, contributor.stats.author.name))
 
     def dump(self, local_repo, projects, deps, all_related_contributors, weights, recipients):
         pp = MyPrettyPrinter()
@@ -437,12 +437,10 @@ class OpenSelery(object):
 
     def _log(self, sym, msg):
         if not self.silent:
-            match = re.search(r'[\w\.-]+@[\w\.-]+', msg)
-            try:
-                if len(match) > 1:
-                    print("Do not print privat email data")
-                else:
-                    print("[%s] %s" % (sym, msg))
-            except:
+            match = re.search(
+                r'([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)', msg)
+            if match is not None:
+                print("Do not print privat email data")
+            else:
                 print("[%s] %s" % (sym, msg))
                 
