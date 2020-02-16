@@ -5,7 +5,9 @@
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions)
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openselery/openselery)
 
-__[Project Slides](http://protontypes.eu:1313/)__
+* __[Project Slides](http://protontypes.eu:1313/)__
+* __[Wiki](https://github.com/protontypes/openselery/wiki__)
+
 > Please keep in mind that OpenSelery is in an experimental state. The amount of funding should therefore be kept to a minimum.
 
 ## Contribution
@@ -22,7 +24,7 @@ cd openselery
 ./build.sh
 ```
 
-2. Create a dedicated coinbase account with limited amounts. OpenSelery is based on The Libraries.io, Github and Coinbase API. To provide service you need create to tokens in the corresponding accounts. Setting Simulation to False will require coinbase tokens.
+2. Create a dedicated coinbase account with limited amounts. OpenSelery is based on the APIs of The Libraries.io, Github and Coinbase. To provide service you need create to tokens in the corresponding accounts. Setting simulation to false will require your coinbase tokens.
 3. Never transfer or store large values with automated cryptocurrency wallets. Use recurring automated transaction from another account to recharge you wallet on a regular base. 
 4. Transfer some money to this wallet for testing. 
 5. Add your tokens API: 
