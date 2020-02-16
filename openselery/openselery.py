@@ -195,7 +195,7 @@ class OpenSelery(object):
         else:
             self.log("Using bitcoin wallet from configuration file [%s]" % self.config.bitcoin_wallet)
         # load tooling url
-        print(args)
+        toolingPath = args.tooling_path
         # load our environment variables 
         self.loadEnv()
         self.logNotify("Initialized")
@@ -211,7 +211,7 @@ class OpenSelery(object):
         parser.add_argument("-r", "--results_dir", required=True,
                             type=str, help="Result directory", dest="result_dir")
         parser.add_argument("-t", "--tooling", required=False,
-                            type=str, help="Tooling file path", dest="tooling_dir")
+                            type=str, help="Tooling file path", dest="tooling_path")
         args = parser.parse_args()
         return args
 

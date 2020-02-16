@@ -8,7 +8,7 @@ inspection: True
 ## include the target folders contributors
 include_self: True
 ## include the dependencies of the target folder
-include_dependencies: False
+include_dependencies: True 
 ## include the tooling and runtime from the file
 include_tooling_and_runtime: False
 ## minimum contributions made to be considered
