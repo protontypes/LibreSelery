@@ -1,12 +1,12 @@
-<img align="middle" src="./docs/design/OpenSelery-04.svg" width="512"> 
+<img align="middle" src="./docs/design/OpenSelery-04.svg" width="400"> 
 
 > Automated Open Source Funding 
 
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions)
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openselery/openselery)
 
-* __[Project Slides](http://protontypes.eu:1313/)__
-* __[Wiki](https://github.com/protontypes/openselery/wiki__)
+* [Project Slides](http://protontypes.eu:1313/)
+* [Wiki](https://github.com/protontypes/openselery/wiki)
 
 > Please keep in mind that OpenSelery is in an experimental state. The amount of funding should therefore be kept to a minimum.
 
