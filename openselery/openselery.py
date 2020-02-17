@@ -86,7 +86,6 @@ class OpenSeleryConfig(object):
         "include_tooling_and_runtime": False,
 
         "bitcoin_wallet": "",
-        "min_contributions": 1,
         "check_equal_privat_and_public_wallet": True,
         "skip_email": True,
         "email_note": "Fresh OpenCelery Donation",
@@ -94,8 +93,9 @@ class OpenSeleryConfig(object):
         "contributor_payout_count": 1,
         "total_payout_per_run": 0.000002,
 
-        "uniform_weight": 10,
+        "min_contributions": 1,
         "releases_included": 3,
+        "uniform_weight": 10,
         "release_weight": 10
     }
     __secure_config_entries__ = ["libraries_api_key", "github_token", "coinbase_token", "coinbase_secret",
@@ -136,7 +136,7 @@ class OpenSeleryConfig(object):
         extractor = URLExtract()
         if extractor.has_urls(self.email_note):
             raise ValueError("Using URLs in note not possible")
-        
+
         # print all logs to stdout
         if self.inspection == True:
             loggingFilePath = os.path.join(
@@ -196,7 +196,7 @@ class OpenSelery(object):
             self.log("Using bitcoin wallet from configuration file [%s]" % self.config.bitcoin_wallet)
         # load tooling url
         toolingPath = args.tooling_path
-        # load our environment variables 
+        # load our environment variables
         self.loadEnv()
         self.logNotify("Initialized")
         print(self.getConfig())
@@ -346,19 +346,19 @@ class OpenSelery(object):
         release_contributor = git_utils.find_release_contributor(
             local_repo, self.config.releases_included)
 
-        self.log("Found release contributor: "+str(len(release_contributor)))    
+        self.log("Found release contributor: "+str(len(release_contributor)))
 
         release_weights = selery_utils.calculateContributorWeights(
             release_contributor, self.config.release_weight)
 
         # considers all release contributor equal
         release_contributor = set(release_contributor)
-        
+
         # create uniform probability
         self.log("Start with unifrom porbability weights for contributors")
         uniform_weights = selery_utils.calculateContributorWeights(
             contributor, self.config.uniform_weight)
-    
+
         # read @user from commit
         return uniform_weights, release_weights
 
@@ -453,4 +453,4 @@ class OpenSelery(object):
                 print("Do not print privat email data")
             else:
                 print("[%s] %s" % (sym, msg))
-                
+
