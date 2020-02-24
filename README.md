@@ -35,7 +35,16 @@ Constributors on the master branch will probably get emails with cryptocurrency.
 
 5. Transfer some money to this wallet for testing. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transfering money to the coinbase account.
 
-6. Add your tokens API keys to your local file: 
+6. Create a read only token file for your user:
+
+  ```bash
+  mkdir ~/.openselery/
+  touch ~/.openselery/tokens.env
+  chmod 400 ~/.openselery/tokens.env
+  ```
+
+
+7. Add your tokens API keys to the local file: 
 
   ```bash
   nano ~/.openselery/tokens.env
@@ -46,14 +55,15 @@ Constributors on the master branch will probably get emails with cryptocurrency.
   LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   ```
 
-7. Configure your distribution in the `selery.yml` in root of your target project. `simulation` is set `True` by default. You will need `COINBASE_TOKEN` and `COINBASE_SECRET` when setting Simulation to False in your selery.yml 
+8. Configure your distribution in the `selery.yml` in root of your target project. `simulation` is set `True` by default. You will need `COINBASE_TOKEN` and `COINBASE_SECRET` when setting Simulation to False in your selery.yml 
 
 
-8. Run OpenSelery on the project folder you want to fund. This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit: 
+9. Run OpenSelery on the project folder you want to fund. This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit: 
 
   ```bash
   env $(cat ~/.openselery/tokens.env) ~/openselery/run.sh <target_directory>
   ```
+
 ### Continuous Integration  
 1. Add the token of libraries.io and coinbase to your [secrets](https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets).
 
