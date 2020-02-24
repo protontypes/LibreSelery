@@ -67,6 +67,8 @@ Constributors on the master branch will probably get emails with cryptocurrency.
 
 4. Depending on the `openselery.yml` OpenSelery will be triggered. The default setting runs OpenSelery with every new version of the destination project. 
 
+5. Protect your master branch in the Github Setting under 'Branches'. Activate the 'Restrict who can push to matching branches' option. 
+
 
 Get into [selery.py](selery.py)   
 
