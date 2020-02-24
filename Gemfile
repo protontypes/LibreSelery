@@ -1,2 +1,3 @@
 source 'http://rubygems.org'
-gem 'Bibliothecary'
+gem 'bibliothecary'
+gem 'curl'

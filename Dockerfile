@@ -11,9 +11,11 @@ RUN apt-get update && \
     apt-get install -y git ruby ruby-dev ruby-bundler build-essential curl && \
     rm -rf /var/lib/apt/lists/*
 
-RUN gem install bibliothecary curl
-
 WORKDIR /
+
+COPY Gemfile .
+
+RUN bundle install
 
 COPY requirements.txt .
 

@@ -13,7 +13,7 @@ class CoinbaseConnector(selery_utils.Connector):
     def pastTransactions(self):
         return self.client.get_transactions(self.account.id)
 
-    def isWalletAddress(self, tocheck):
+    def iswalletAddress(self, tocheck):
         for address in tocheck:
             if self.addresses['data'][0]['address'] == tocheck:
                 return True
@@ -21,5 +21,5 @@ class CoinbaseConnector(selery_utils.Connector):
 
     def payout(self, target_email, target_amount, skip_notifications, description):
         tx = self.account.send_money(
-            to=target_email, amount=float(target_amount), currency='BTC', skip_notification=['false', 'true'][skip_notifications], description=description)
+            to=target_email, amount=float(target_amount), currency='eth', skip_notification=['false', 'true'][skip_notifications], description=description)
         return tx

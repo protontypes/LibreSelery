@@ -27,7 +27,7 @@ def main():
     recipients = selery.choose(
         all_related_contributors, local_repo, uniform_weights)
     # let openselery use the given
-    # wallet containing virtual currency
+    # address containing virtual currency
     # to pay out the selected contributors
     selery.payout(recipients)
     # Dump collected data for analysing

@@ -85,11 +85,11 @@ class OpenSeleryConfig(object):
         "include_self": True,
         "include_tooling_and_runtime": False,
 
-        "bitcoin_wallet": "",
-        "check_equal_privat_and_public_wallet": True,
+        "ethereum_address": "",
+        "check_equal_privat_and_public_address": True,
         "skip_email": True,
         "email_note": "Fresh OpenCelery Donation",
-        "btc_per_transaction": 0.000002,
+        "eth_per_transaction": 0.000002,
         "contributor_payout_count": 1,
         "total_payout_per_run": 0.000002,
 
@@ -127,8 +127,16 @@ class OpenSeleryConfig(object):
             if t1 != t2:
                 raise ValueError("Configuration parameter '%s' has failed type check! 's'<'%s'> should be 's'<'%s'>" % (
                     k, v1, t1, v2, t2))
+
+        # print all logs to stdout
+        if self.inspection == True:
+            loggingFilePath = os.path.join(
+                self.result_dir, "pythonlogs.txt")
+            logging.basicConfig(level=logging.DEBUG,
+                                filename=loggingFilePath, filemode='a')
+
         # special evaluations
-        if not self.total_payout_per_run / self.contributor_payout_count == self.btc_per_transaction:
+        if not self.total_payout_per_run / self.contributor_payout_count == self.eth_per_transaction:
             raise ValueError("Payout values do not match")
         self.apply(yamlDict)
 
@@ -137,11 +145,6 @@ class OpenSeleryConfig(object):
         if extractor.has_urls(self.email_note):
             raise ValueError("Using URLs in note not possible")
 
-        # print all logs to stdout
-        if self.inspection == True:
-            loggingFilePath = os.path.join(
-                self.result_dir, "pythonlogs.txt")
-            logging.basicConfig(level=logging.DEBUG, filename=loggingFilePath,filemode='a')
 
     def __repr__(self):
         # make config safe for printing
@@ -187,13 +190,22 @@ class OpenSelery(object):
         # apply yaml config to our configuration if possible
         self.log("Loading configuration [%s]" % self.config.config_path)
         self.loadYaml(self.config.config_path)
-        # load our funding file
-        fundingPath = self._getFile("FUNDING.yml")
+        # load our readme file
+        fundingPath = self._getFile("README.md")
         if fundingPath is not None:
-            self.log("Loading funding file [%s] for bitcoin wallet" % fundingPath)
-            self.loadYaml(fundingPath)
+            self.log("Loading funding file [%s] for ethereum wallet" % fundingPath)
+            mdfile = open('README.md', 'r')
+            f = open('README.md')
+            mdstring = f.read()
+            extractor = URLExtract()
+            urls = extractor.find_urls(mdstring)
+            badges_string = "https://en.cryptobadges.io/donate/"
+            for url in urls:
+                if badges_string in url:
+                    self.config.ethereum_address=url.split(badges_string, 1)[1]
+                    self.log("Found ethereum address [%s]" % self.config.ethereum_address)
         else:
-            self.log("Using bitcoin wallet from configuration file [%s]" % self.config.bitcoin_wallet)
+            self.log("Using ethereum wallet from configuration file [%s]" % self.config.ethereum_address)
         # load tooling url
         toolingPath = args.tooling_path
         # load our environment variables
@@ -381,6 +393,8 @@ class OpenSelery(object):
             transactionFilePath = os.path.join(self.config.result_dir, "transactions.txt")
             receiptFilePath = os.path.join(self.config.result_dir, "receipt.txt")
 
+            # check if the public address is in the privat wallet
+
             # Check what is done on the account.
             self.log(
             "Checking transaction history of given account [%s]" % transactionFilePath)
@@ -389,10 +403,9 @@ class OpenSelery(object):
                 f.write(str(transactions))
 
             self.log("Trying to pay out donations to recipients")
-
             self.receiptStr = ""
             for contributor in recipients:
-                receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.btc_per_transaction,
+                receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.eth_per_transaction,
                                                     self.config.skip_email, self.config.email_note)
                 self.receiptStr = self.receiptStr + str(self.receipt)
 
@@ -403,8 +416,8 @@ class OpenSelery(object):
             self.logWarning(
                     "Configuration 'simulation' is active, so NO transaction will be executed")
             for contributor in recipients:
-                self.log(" -- would have been a payout of '%.10f' to '%s'" %
-                         (self.config.btc_per_transaction, contributor.stats.author.name))
+                self.log(" -- would have been a payout of '%.10f' ethereum to '%s'" %
+                         (self.config.eth_per_transaction, contributor.stats.author.name))
 
     def dump(self, local_repo, projects, deps, all_related_contributors, weights, recipients):
         pp = MyPrettyPrinter()
