@@ -35,7 +35,7 @@ Constributors on the master branch will probably get emails with cryptocurrency.
 
 5. Transfer some money to this wallet for testing. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transfering money to the coinbase account.
 
-6. Add your tokens API: 
+6. Add your tokens API keys to your local file: 
 
   ```bash
   nano ~/.openselery/tokens.env
@@ -44,7 +44,6 @@ Constributors on the master branch will probably get emails with cryptocurrency.
   COINBASE_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-  # NEVER PRINT THIS
   ```
 
 7. Configure your distribution in the `selery.yml` in root of your target project. `simulation` is set `True` by default. You will need `COINBASE_TOKEN` and `COINBASE_SECRET` when setting Simulation to False in your selery.yml 
