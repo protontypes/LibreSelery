@@ -191,23 +191,34 @@ class OpenSelery(object):
         self.log("Loading configuration [%s]" % self.config.config_path)
         self.loadYaml(self.config.config_path)
         # load our readme file
+        extractor = URLExtract()
         fundingPath = self._getFile("README.md")
         if fundingPath is not None:
             self.log("Loading funding file [%s] for ethereum wallet" % fundingPath)
             mdfile = open('README.md', 'r')
-            f = open('README.md')
-            mdstring = f.read()
-            extractor = URLExtract()
+            mdstring = mdfile.read()
             urls = extractor.find_urls(mdstring)
-            badges_string = "https://en.cryptobadges.io/donate/"
+            badge_string = "https://en.cryptobadges.io/donate/"
             for url in urls:
-                if badges_string in url:
-                    self.config.ethereum_address=url.split(badges_string, 1)[1]
+                if badge_string in url:
+                    self.config.ethereum_address=url.split(badge_string, 1)[1]
                     self.log("Found ethereum address [%s]" % self.config.ethereum_address)
         else:
             self.log("Using ethereum wallet from configuration file [%s]" % self.config.ethereum_address)
         # load tooling url
-        toolingPath = args.tooling_path
+
+        if self.config.include_tooling_and_runtime: 
+            with open(self.config.tooling_path) as f:
+                tooldict = yaml.safe_load(f)
+            if tooldict is not None:
+                self.log("Loading tooling file [%s]" % tooldict)
+                for k in tooldict.items():
+                    print(k)
+            else: 
+                self.log("No tooling urls found")
+        else:
+            self.log("Tooling not included")
+            
         # load our environment variables
         self.loadEnv()
         self.logNotify("Initialized")
@@ -438,7 +449,7 @@ class OpenSelery(object):
     def _getFile(self, file):
         file_path = os.path.join(self.seleryDir, file)
         if os.path.exists(file_path):
-            self.log("FUNDING.yml not found")
+            self.log(file_path+" read")
             return file_path
         else:
             return None
