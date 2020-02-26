@@ -1,6 +1,6 @@
 <img align="middle" src="./docs/design/OpenSelery-04.svg" width="400"> 
 
-> Automated Open Source Funding 
+> Software Defined Funding Distribution
 
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions)
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openselery/openselery)                               
