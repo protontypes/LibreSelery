@@ -74,7 +74,7 @@ Constributors on the master branch will probably get emails with cryptocurrency.
   ```
 3. Set the simulation parameter `False` and `COINBASE_LIVE` environment variable to `True`.
 
-4. Depending on the `openselery.yml` OpenSelery will be triggered. The default setting runs OpenSelery with every new version of the destination project. 
+4. Depending on the `openselery.yml` a payout will be triggered. The default setting runs OpenSelery with every new version of the destination project. 
 
 5. Protect your master branch in the Github Setting under 'Branches'. Activate the 'Restrict who can push to matching branches' option. 
 
