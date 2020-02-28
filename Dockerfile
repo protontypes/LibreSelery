@@ -22,9 +22,9 @@ COPY requirements.txt .
 ### Install python dependencies
 RUN pip install -r requirements.txt
 
-WORKDIR /home/selery/runningrepo/openselery
+WORKDIR /home/selery/openselery
 
-RUN chown -R selery:selery /home/selery/runningrepo/openselery
+RUN chown -R selery:selery /home/selery/openselery
 
 USER selery
 # Copy all
