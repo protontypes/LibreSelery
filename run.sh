@@ -3,6 +3,10 @@
 
 TARGET_DIR="/home/selery/runningrepo"
 
+if [ ! -f = ./results ]
+then
+    mkdir ./results
+fi
 # Mount the argument folder into the container \
 docker run --rm -t \
 --env GITHUB_TOKEN=$GITHUB_TOKEN \
@@ -13,5 +17,6 @@ docker run --rm -t \
 -v $(pwd):$(pwd)/results \
 -u $(id -u $USER):$(id -g $USER) \
 openselery \
-bash -c "python selery.py --config $TARGET_DIR/selery.yml --directory $TARGET_DIR --result $(pwd)/results --tooling $TARGET_DIR/environment.yml"
+bash -c "python /home/selery/openselery/selery.py --config $TARGET_DIR/selery.yml --directory $TARGET_DIR --result $TARGET_DIR/results --tooling $TARGET_DIR/environment.yml"
+
 
