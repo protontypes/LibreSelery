@@ -94,7 +94,7 @@ class OpenSeleryConfig(object):
         "total_payout_per_run": 0.000002,
 
         "min_contributions": 1,
-        "releases_included": 3,
+        "releases_included": 1,
         "uniform_weight": 10,
         "release_weight": 10
     }
