@@ -1,4 +1,4 @@
-<img align="middle" src="./docs/design/OpenSelery-04.svg" width="400"> 
+<img align="middle" src="./docs/design/OpenSelery-04.png" width="400"> 
 
 > Software Defined Funding Distribution
 
