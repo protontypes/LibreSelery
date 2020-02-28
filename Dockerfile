@@ -25,6 +25,7 @@ RUN pip install -r requirements.txt
 WORKDIR /home/selery/openselery
 
 RUN chown -R selery:selery /home/selery/openselery
+RUN chown -R selery:selery /home/selery/results
 
 USER selery
 # Copy all
