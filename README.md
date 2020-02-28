@@ -29,7 +29,7 @@ Constributors on the master branch will probably get emails with cryptocurrency.
   ./build.sh
   ```
 
-3. Create a dedicated coinbase account with limited amounts. OpenSelery is based on the APIs of The Libraries.io, Github and Coinbase. To provide service you need create to tokens in the corresponding accounts. Setting simulation to false will require your coinbase tokens.
+3. Create a dedicated coinbase account with limited amounts. OpenSelery is based on the APIs of The Libraries.io, Github and Coinbase. To provide service you need create tokens in the corresponding accounts. Setting simulation to false will require your coinbase tokens.
 
 4. Never transfer or store large values with automated cryptocurrency wallets. Use recurring automated transaction from another account to recharge you wallet on a regular base. 
 
@@ -42,7 +42,6 @@ Constributors on the master branch will probably get emails with cryptocurrency.
   touch ~/.openselery/tokens.env
   chmod 400 ~/.openselery/tokens.env
   ```
-
 
 7. Add your tokens API keys to the local file: 
 
