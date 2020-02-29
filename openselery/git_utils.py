@@ -51,3 +51,14 @@ def ScanCommits(git_folder, branch='master'):
             c.author), 'email': c.author.email, 'msg': c.message}
         commit_msgs.append(commit_msg)
     return commit_msgs
+
+
+def get_head_sha(git_folder):
+    repo = git.Repo(git_folder, search_parent_directories=True)
+    return repo.head.object.hexsha
+
+
+def get_lastest_tag(git_folder):
+    repo = git.Repo(git_folder, search_parent_directories=True)
+    tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
+    return tags[-1]

@@ -12,63 +12,11 @@ import github
 import logging
 from urlextract import URLExtract
 
-
 from openselery.github_connector import GithubConnector
 from openselery.librariesio_connector import LibrariesIOConnector
 from openselery.coinbase_connector import CoinbaseConnector
 from openselery import git_utils
 from openselery import selery_utils
-
-def StatusContributorRepr(self):
-    result = "StatusContributor(author: "
-    result += str(self.author)
-    result += ", total: "
-    result += str(self.total)
-    result += ", weeks: "
-    result += str(self.weeks)
-    result += ")"
-    return result
-
-github.StatsContributor.StatsContributor.__repr__ = StatusContributorRepr
-
-def WeekRepr(self):
-    result = "Week(w: "
-    result += str(self.w)
-    result += ", a: "
-    result += str(self.a)
-    result += ", d: "
-    result += str(self.d)
-    result += ", c: "
-    result += str(self.c)
-    result += ")"
-    return result
-
-github.StatsContributor.StatsContributor.Week.__repr__ = WeekRepr
-
-
-class MyPrettyPrinter(pprint.PrettyPrinter):
-    def pprint_StatsContributor(self, object, stream, indent, allowance, context, level):
-        pdb.set_trace()
-        stream.write('StatsContributor(')
-        self._format(object.author, stream, indent, allowance + 1, context, level)
-        self._format(object.total, stream, indent, allowance + 1, context, level)
-        self._format(object.weeks, stream, indent, allowance + 1, context, level)
-        stream.write(')')
-
-    def pprint_Week(self, object, stream, indent, allowance, context, level):
-        pdb.set_trace()
-        stream.write('Week(')
-        self._format(object.w, stream, indent, allowance + 1, context, level)
-        self._format(object.a, stream, indent, allowance + 1, context, level)
-        self._format(object.d, stream, indent, allowance + 1, context, level)
-        self._format(object.c, stream, indent, allowance + 1, context, level)
-        stream.write(')')
-
-    def __init__(self):
-        super(MyPrettyPrinter, self).__init__()
-        self._dispatch = pprint.PrettyPrinter._dispatch.copy()
-        self._dispatch[github.StatsContributor.StatsContributor.__repr__] = MyPrettyPrinter.pprint_StatsContributor
-        self._dispatch[github.StatsContributor.StatsContributor.Week.__repr__] = MyPrettyPrinter.pprint_Week
 
 class OpenSeleryConfig(object):
     __default_env_template__ = {
@@ -179,6 +127,15 @@ class OpenSelery(object):
 
     def initialize(self):
         self.logNotify("Initializing OpenSelery")
+        
+        # return openselery version
+        selerypath = os.path.realpath(__file__)
+        # return openselery version
+        self.log("OpenSelery HEAD sha [%s]" %
+                 git_utils.get_head_sha(selerypath))
+        self.log("OpenSelery last tag [%s]" %
+                 git_utils.get_lastest_tag(selerypath))
+
         # initialize config dict with default from template
         self.log("Preparing Configuration")
         self.config = OpenSeleryConfig()
@@ -222,7 +179,7 @@ class OpenSelery(object):
         # load our environment variables
         self.loadEnv()
         self.logNotify("Initialized")
-        print(self.getConfig())
+        
 
     def parseArgs(self):
         parser = argparse.ArgumentParser(
@@ -431,20 +388,7 @@ class OpenSelery(object):
                          (self.config.eth_per_transaction, contributor.stats.author.name))
 
     def dump(self, local_repo, projects, deps, all_related_contributors, weights, recipients):
-        pp = MyPrettyPrinter()
-        print("local_repo")
-        pp.pprint(local_repo)
-        print("projects")
-        pp.pprint(projects)
-        print("deps")
-        pp.pprint(deps)
-        print("all related contributors")
-        pp.pprint(all_related_contributors)
-        print("weights")
-        pp.pprint(weights)
-        print("recipients")
-        pp.pprint(recipients)
-        #pdb.set_trace()
+        pass
 
     def _getFile(self, file):
         file_path = os.path.join(self.seleryDir, file)
