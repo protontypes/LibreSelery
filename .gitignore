@@ -4,6 +4,7 @@
 receipt.txt
 transactions.txt
 pythonlogs.txt
+results/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

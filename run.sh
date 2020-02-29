@@ -3,8 +3,9 @@
 
 TARGET_DIR="/home/selery/runningrepo"
 RESULTS_DIR="~/.openselery/results/"
+RESULTS_DIR="${RESULTS_DIR/#\~/$HOME}"
 
-if [ ! -f = $RESULTS_DIR ]
+if [ ! -d $RESULTS_DIR ]
 then
     mkdir $RESULTS_DIR
 fi
@@ -15,7 +16,7 @@ docker run --rm -t \
 --env COINBASE_TOKEN=$COINBASE_TOKEN \
 --env COINBASE_SECRET=$COINBASE_SECRET \
 -v $@:$TARGET_DIR \
--v $RESULTS_DIR:$(pwd)/results \
+-v $(realpath $RESULTS_DIR):$(pwd)/results \
 -u $(id -u $USER):$(id -g $USER) \
 openselery \
 bash -c "python /home/selery/openselery/selery.py --config $TARGET_DIR/selery.yml --directory $TARGET_DIR --result $TARGET_DIR/results --tooling $TARGET_DIR/environment.yml"

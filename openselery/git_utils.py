@@ -18,7 +18,7 @@ def find_release_contributor(repo_path, releases):
         break
 
     last_release_commits_sha = repo.git.log(
-        "--oneline", "--format=format:%H", str(check_tag)+"..master").splitlines()
+        "--oneline", "--format=format:%H", str(check_tag)+"..HEAD").splitlines()
 
     commits = {}
     for git_commit in repo.iter_commits():
