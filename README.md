@@ -66,7 +66,7 @@ Constributors on the master branch will probably get emails with cryptocurrency.
 ### Continuous Integration  
 1. Add the token of libraries.io and coinbase to your [secrets](https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets).
 
-2. You can integrate OpenSelery in your CI by copying the `openselery.yml` file in your `.github/actions/` destination project directory. Check the setting before appling to your CI Pipeline:
+2. You can integrate OpenSelery in your CI by copying the `openselery.yml` file in your `.github/actions/` destination project directory. Check the setting before running your CI Pipeline:
 
   ```
   cat .github/actions/openselery.yml 
