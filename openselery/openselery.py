@@ -164,7 +164,7 @@ class OpenSelery(object):
             self.log("Using ethereum wallet from configuration file [%s]" % self.config.ethereum_address)
         # load tooling url
 
-        if self.config.include_tooling_and_runtime: 
+        if self.config.include_tooling_and_runtime and self.config.tooling_path:
             with open(self.config.tooling_path) as f:
                 tooldict = yaml.safe_load(f)
             if tooldict is not None:

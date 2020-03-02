@@ -34,4 +34,4 @@ USER selery
 # Copy all
 COPY . .
 
-CMD /bin/bash
+ENTRYPOINT ["python3","/home/selery/openselery/selery.py"]
