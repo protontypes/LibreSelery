@@ -4,8 +4,8 @@
 
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions)
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openselery/openselery)                               
-[![Donate with bitcoin](https://en.cryptobadges.io/badge/small/0x187cC0D89078Cd6177a1A8Fe7DE04388ECCc4029)](https://en.cryptobadges.io/donate/0x187cC0D89078Cd6177a1A8Fe7DE04388ECCc4029)           
-[![Balance](https://img.balancebadge.io/eth/0x187cC0D89078Cd6177a1A8Fe7DE04388ECCc4029.svg)](https://img.balancebadge.io/eth/0x187cC0D89078Cd6177a1A8Fe7DE04388ECCc4029.svg)           
+[![Donate with bitcoin](https://en.cryptobadges.io/badge/small/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w)](https://en.cryptobadges.io/donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w)           
+[![Balance](https://img.balancebadge.io/btc/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w.svg)](https://img.balancebadge.io/eth/0x187cC0D89078Cd6177a1A8Fe7DE04388ECCc4029.svg)           
 
 * [Project Slides](http://protontypes.eu/)
 * [Roadmap](https://github.com/protontypes/openselery/wiki)
