@@ -80,7 +80,7 @@ jobs:
 
         # Never print
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_API_TOKEN }}
           LIBRARIES_API_KEY: ${{ secrets.LIBRARIES_API_KEY }}
           COINBASE_TOKEN: ${{ secrets.COINBASE_TOKEN }}
           COINBASE_SECRET: ${{ secrets.COINBASE_SECRET }}
