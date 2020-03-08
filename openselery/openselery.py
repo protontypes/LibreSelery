@@ -179,6 +179,7 @@ class OpenSelery(object):
         # load our environment variables
         self.loadEnv()
         self.logNotify("Initialized")
+        print(self.getConfig())
         
 
     def parseArgs(self):
