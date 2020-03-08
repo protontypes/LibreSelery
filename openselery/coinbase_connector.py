@@ -15,11 +15,11 @@ class CoinbaseConnector(selery_utils.Connector):
 
     def iswalletAddress(self, tocheck):
         for address in tocheck:
-            if self.addresses['data'][0]['address'] == tocheck:
+            if self.addresses['data'][0]['address'] == address:
                 return True
         return False
 
     def payout(self, target_email, target_amount, skip_notifications, description):
         tx = self.account.send_money(
-            to=target_email, amount=float(target_amount), currency='eth', skip_notification=['false', 'true'][skip_notifications], description=description)
+            to=target_email, amount=float(target_amount), currency='btc', skip_notification=['false', 'true'][skip_notifications], description=description)
         return tx

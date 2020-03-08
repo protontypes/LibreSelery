@@ -33,11 +33,11 @@ class OpenSeleryConfig(object):
         "include_self": True,
         "include_tooling_and_runtime": False,
 
-        "ethereum_address": "",
+        "bitcoin_address": "",
         "check_equal_privat_and_public_address": True,
         "skip_email": True,
         "email_note": "Fresh OpenCelery Donation",
-        "eth_per_transaction": 0.000002,
+        "btc_per_transaction": 0.000002,
         "contributor_payout_count": 1,
         "total_payout_per_run": 0.000002,
 
@@ -84,7 +84,7 @@ class OpenSeleryConfig(object):
                                 filename=loggingFilePath, filemode='a')
 
         # special evaluations
-        if not self.total_payout_per_run / self.contributor_payout_count == self.eth_per_transaction:
+        if not self.total_payout_per_run / self.contributor_payout_count == self.btc_per_transaction:
             raise ValueError("Payout values do not match")
         self.apply(yamlDict)
 
@@ -151,17 +151,17 @@ class OpenSelery(object):
         extractor = URLExtract()
         fundingPath = self._getFile("README.md")
         if fundingPath is not None:
-            self.log("Loading funding file [%s] for ethereum wallet" % fundingPath)
+            self.log("Loading funding file [%s] for bitcoin wallet" % fundingPath)
             mdfile = open('README.md', 'r')
             mdstring = mdfile.read()
             urls = extractor.find_urls(mdstring)
             badge_string = "https://en.cryptobadges.io/donate/"
             for url in urls:
                 if badge_string in url:
-                    self.config.ethereum_address=url.split(badge_string, 1)[1]
-                    self.log("Found ethereum address [%s]" % self.config.ethereum_address)
+                    self.config.bitcoin_address=url.split(badge_string, 1)[1]
+                    self.log("Found bitcoin address [%s]" % self.config.bitcoin_address)
         else:
-            self.log("Using ethereum wallet from configuration file [%s]" % self.config.ethereum_address)
+            self.log("Using bitcoin wallet from configuration file [%s]" % self.config.bitcoin_address)
         # load tooling url
 
         if self.config.include_tooling_and_runtime and self.config.tooling_path:
@@ -373,19 +373,18 @@ class OpenSelery(object):
             self.log("Trying to pay out donations to recipients")
             self.receiptStr = ""
             for contributor in recipients:
-                receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.eth_per_transaction,
+                self.receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.btc_per_transaction,
                                                     self.config.skip_email, self.config.email_note)
-                self.receiptStr = self.receiptStr + str(self.receipt)
-
+                
             with open(receiptFilePath, "w") as f:
-                f.write(self.receiptStr)
+                f.write(str(self.receipt))
 
         if self.config.simulation:
             self.logWarning(
                     "Configuration 'simulation' is active, so NO transaction will be executed")
             for contributor in recipients:
-                self.log(" -- would have been a payout of '%.10f' ethereum to '%s'" %
-                         (self.config.eth_per_transaction, contributor.stats.author.name))
+                self.log(" -- would have been a payout of '%.10f' bitcoin to '%s'" %
+                         (self.config.btc_per_transaction, contributor.stats.author.name))
 
     def dump(self, local_repo, projects, deps, all_related_contributors, weights, recipients):
         pass

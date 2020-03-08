@@ -1,6 +1,6 @@
 # debug states
 ## simulation let you run without payout at the end
-simulation: True
+simulation: False 
 ## dump all logging to results
 inspection: True
 
@@ -8,9 +8,9 @@ inspection: True
 ## include the target folders contributors
 include_self: True
 ## include the dependencies of the target folder
-include_dependencies: True 
+include_dependencies: False 
 ## include the tooling and runtime from file
-include_tooling_and_runtime: True
+include_tooling_and_runtime: False 
 ## minimum contributions made to be considered
 min_contributions: 1
 
@@ -23,13 +23,13 @@ releases_included: 3
 release_weight: 70
 
 # payout configurations
-ethereum_address: "3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w"
+bitcoin_address: "3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w"
 ## check the public address from FUNDING.yml vs the secret coinbase address
-check_equal_privat_and_public_address: False
+check_equal_privat_and_public_address: True
 ## Skip email sended by coinbase
 skip_email: False
 ## the amount of eth send per user
-eth_per_transaction: 0.000002
+btc_per_transaction: 0.000002
 ## numbers of contributors payout per run
 contributor_payout_count: 1
 ## the total amount of payout per run
