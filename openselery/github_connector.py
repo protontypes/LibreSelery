@@ -60,7 +60,7 @@ class GithubConnector(selery_utils.Connector):
             try:
                 contributors = project.get_stats_contributors()  # .get_contributors()
                 break
-            except BadCredentialsException:
+            except:
                 attempts += 1
                 time.sleep(5.0)
         if attempts >= max_attempts:
