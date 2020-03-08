@@ -3,13 +3,17 @@
 # For configuration create an .openselery.yml file in your project repo.
 name: openselery
 
-on:
-  release:
-    types: [created]
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - v*  # Event to all release tags
+#on:
+#  release:
+#    types: [created]
+#    # Sequence of patterns matched against refs/tags
+#    tags:
+#     - v*  # Event to all release tags
         
+on:
+  push:
+    branches: 
+      - master   
 
 jobs:
   openselery:
