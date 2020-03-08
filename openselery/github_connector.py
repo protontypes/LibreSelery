@@ -55,13 +55,17 @@ class GithubConnector(selery_utils.Connector):
     def grabRemoteProjectContributors(self, project):
         cachedContributors = []
         attempts = 0
-        while attempts <= 5:
+        max_attempts = 5
+        while attempts <= max_attempts:
             try:
                 contributors = project.get_stats_contributors()  # .get_contributors()
                 break
-            except:
+            except BadCredentialsException:
                 attempts += 1
                 time.sleep(5.0)
+        if attempts >= max_attempts:
+            raise KeyError(
+                "Not able to connect to Github with current credentials")
 
         # cash collect all contributors by iterating over them
         for c in contributors:
