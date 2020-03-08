@@ -77,7 +77,6 @@ jobs:
                 -v $PWD/results:/home/selery/results/
                 openselery/openselery 
                 --directory=/home/selery/runningrepo/ --config=/home/selery/runningrepo/selery.yml  --results_dir=/home/selery/results/ 
-
         # Never print
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_API_TOKEN }}
@@ -94,6 +93,3 @@ jobs:
         run: | 
               cat ./results/receipt.txt 
               echo "Payout receipt found"
-                
-
-                
