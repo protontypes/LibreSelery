@@ -5,6 +5,7 @@ from github import Github, StatsContributor
 from openselery import selery_utils
 from pprint import pprint, PrettyPrinter
 
+
 class Contributor(object):
     def __init__(self, fromProject, c):
         self.fromProject = fromProject
@@ -19,6 +20,7 @@ class Contributor(object):
         result += str(self.stats)
         result += ")"
         return result
+
 
 class GithubConnector(selery_utils.Connector):
     def __init__(self, token):
@@ -52,7 +54,15 @@ class GithubConnector(selery_utils.Connector):
 
     def grabRemoteProjectContributors(self, project):
         cachedContributors = []
-        contributors = project.get_stats_contributors()  # .get_contributors()
+        attempts = 0
+        while attempts <= 5:
+            try:
+                contributors = project.get_stats_contributors()  # .get_contributors()
+                break
+            except:
+                attempts += 1
+                time.sleep(5.0)
+
         # cash collect all contributors by iterating over them
         for c in contributors:
             cachedContributors.append(Contributor(project.html_url, c))
