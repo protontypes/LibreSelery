@@ -3,13 +3,17 @@
 # For configuration create an .openselery.yml file in your project repo.
 name: openselery
 
-on:
-  release:
-    types: [created]
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - v*  # Event to all release tags
+#on:
+#  release:
+#    types: [created]
+#    # Sequence of patterns matched against refs/tags
+#    tags:
+#     - v*  # Event to all release tags
         
+on:
+  push:
+    branches: 
+      - master   
 
 jobs:
   openselery:
@@ -73,10 +77,9 @@ jobs:
                 -v $PWD/results:/home/selery/results/
                 openselery/openselery 
                 --directory=/home/selery/runningrepo/ --config=/home/selery/runningrepo/selery.yml  --results_dir=/home/selery/results/ 
-
         # Never print
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_API_TOKEN }}
           LIBRARIES_API_KEY: ${{ secrets.LIBRARIES_API_KEY }}
           COINBASE_TOKEN: ${{ secrets.COINBASE_TOKEN }}
           COINBASE_SECRET: ${{ secrets.COINBASE_SECRET }}
@@ -90,6 +93,3 @@ jobs:
         run: | 
               cat ./results/receipt.txt 
               echo "Payout receipt found"
-                
-
-                
