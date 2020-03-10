@@ -63,7 +63,7 @@ Constributors on the master branch will probably get emails with cryptocurrency.
   ```
 
 ### Continuous Integration  
-1. Use the [github template](https://github.com/protontypes/seleryexample) to create a new selery in your project:
+1. Use the [github template](https://github.com/protontypes/seleryexample) to create a new selery in your project.
 
 
 Get into [selery.py](selery.py)   
