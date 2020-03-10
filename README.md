@@ -54,7 +54,7 @@ Constributors on the master branch will probably get emails with cryptocurrency.
   LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   ```
 
-8. Configure your distribution in the `selery.yml` in root of your target project. `simulation` is set `True` by default. You will need `COINBASE_TOKEN` and `COINBASE_SECRET` when setting Simulation to False in your selery.yml 
+8. Configure your distribution in the `selery.yml` in root of your target project. `simulation` is set `True` by default. You will need the `COINBASE_TOKEN` and `COINBASE_SECRET` when setting Simulation to False in your selery.yml 
 
 
 9. Run OpenSelery on the project folder you want to fund. This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit: 
