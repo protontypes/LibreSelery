@@ -77,6 +77,7 @@ Constributors on the master branch will probably get emails with cryptocurrency.
 
 5. Protect your master branch in the Github Setting under 'Branches'. Activate the 'Restrict who can push to matching branches' option. 
 
+6. To enable runner diagnostic logging, set the following secret in the repository that contains the workflow: ACTIONS_RUNNER_DEBUG to true. This also changes the workflow behavior so that Github API calls are more stable.
 
 Get into [selery.py](selery.py)   
 
