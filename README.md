@@ -63,20 +63,8 @@ Constributors on the master branch will probably get emails with cryptocurrency.
   ```
 
 ### Continuous Integration  
-1. Add the token of libraries.io and coinbase to your [secrets](https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets).
+1. Use the [github template](https://github.com/protontypes/seleryexample) to create a new selery in your project:
 
-2. You can integrate OpenSelery in your CI by copying the `openselery.yml` file in your `.github/actions/` destination project directory. Check the setting before running your CI Pipeline:
-
-  ```
-  cat .github/actions/openselery.yml 
-  ```
-3. Set the simulation parameter `False` and `COINBASE_LIVE` environment variable to `True`.
-
-4. Depending on the `openselery.yml` a payout will be triggered. The default setting runs OpenSelery with every new version of the destination project. 
-
-5. Protect your master branch in the Github Setting under 'Branches'. Activate the 'Restrict who can push to matching branches' option. 
-
-6. To enable runner diagnostic logging, set the following secret in the repository that contains the workflow: ACTIONS_RUNNER_DEBUG to true. This also changes the workflow behavior so that Github API calls are more stable.
 
 Get into [selery.py](selery.py)   
 
