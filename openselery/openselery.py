@@ -364,12 +364,16 @@ class OpenSelery(object):
 
             # check if the public address is in the privat wallet
 
+
             # Check what is done on the account.
             self.log(
             "Checking transaction history of given account [%s]" % transactionFilePath)
             transactions = self.coinConnector.pastTransactions()
             with open(transactionFilePath, "a") as f:
                 f.write(str(transactions))
+            
+            amount,currency = self.coinConnector.balancecheck()
+            self.log("Chech primary account wallet balance [%s] : [%s]" % (amount, currency))
 
             self.log("Trying to pay out donations to recipients")
             self.receiptStr = ""

@@ -23,3 +23,8 @@ class CoinbaseConnector(selery_utils.Connector):
         tx = self.account.send_money(
             to=target_email, amount=float(target_amount), currency='btc', skip_notification=['false', 'true'][skip_notifications], description=description)
         return tx
+
+    def balancecheck(self):
+        amount = self.account['native_balance']['amount']
+        currency = self.account['native_balance']['currency']
+        return amount, currency
