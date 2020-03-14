@@ -363,6 +363,13 @@ class OpenSelery(object):
             receiptFilePath = os.path.join(self.config.result_dir, "receipt.txt")
 
             # check if the public address is in the privat wallet
+            if self.config.check_equal_privat_and_public_address:
+                if self.coinConnector.iswalletAddress(self.config.bitcoin_address):
+                    self.log("Public and privat address match")
+                else:    
+                    self.logError("Public address does not match wallet address")
+                    raise Exception("Aborting")
+                
 
 
             # Check what is done on the account.
@@ -380,6 +387,7 @@ class OpenSelery(object):
             for contributor in recipients:
                 self.receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.btc_per_transaction,
                                                     self.config.skip_email, self.config.email_note)
+                self.log("Payout of [%s][%s] succeeded" % (self.receipt['amount']['amount'],self.receipt['amount']['currency']))
                 
             with open(receiptFilePath, "w") as f:
                 f.write(str(self.receipt))

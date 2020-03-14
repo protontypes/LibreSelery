@@ -14,8 +14,8 @@ class CoinbaseConnector(selery_utils.Connector):
         return self.client.get_transactions(self.account.id)
 
     def iswalletAddress(self, tocheck):
-        for address in tocheck:
-            if self.addresses['data'][0]['address'] == address:
+        for wallet in self.addresses['data']:
+            if wallet['address'] == tocheck:
                 return True
         return False
 
