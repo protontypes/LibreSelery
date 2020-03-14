@@ -16,17 +16,19 @@
 Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the Github profile page are considered. We will never send a URL in the note.
 
 ## Usage
-### Command-Line Tool
+
+# Create the access tokens and accounts
+
 1. The [Gitub](https://github.com/settings/tokens) and [Libraries.io](https://libraries.io/api) tokens are easy to obtain. Simulate payouts without the [coinbase token](https://www.coinbase.com/settings/api) to find the right settings. Configure the [access control settings](https://github.com/protontypes/openselery/wiki/Coinbase-Settings) of the automated coinbase account.
 
 2. Install with [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/):
 
-  ```bash
-  cd ~
-  git clone https://github.com/openselery/openselery.git
-  cd openselery
-  ./build.sh
-  ```
+```bash
+cd ~
+git clone https://github.com/openselery/openselery.git
+cd openselery
+./build.sh
+```
 
 3. Create a dedicated coinbase account with limited amounts. OpenSelery is based on the APIs of The Libraries.io, Github and Coinbase. To provide service you need create tokens in the corresponding accounts. Setting simulation to false will require your coinbase tokens.
 
@@ -36,32 +38,59 @@ Constributors on the master branch will probably get emails with cryptocurrency.
 
 6. Create a read only token file for your user:
 
-  ```bash
-  mkdir ~/.openselery/
-  touch ~/.openselery/tokens.env
-  chmod 400 ~/.openselery/tokens.env
-  ```
+```bash
+mkdir ~/.openselery/
+touch ~/.openselery/tokens.env
+chmod 400 ~/.openselery/tokens.env
+```
 
 7. Add your tokens API keys to the local file: 
 
-  ```bash
-  nano ~/.openselery/tokens.env
+```bash
+nano ~/.openselery/tokens.env
 
-  COINBASE_TOKEN=XXXXXXXXXXXXXXXX
-  COINBASE_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-  GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-  LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-  ```
+COINBASE_TOKEN=XXXXXXXXXXXXXXXX
+COINBASE_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
 
-8. Configure your distribution in the `selery.yml` in root of your target project. `simulation` is set `True` by default. You will need the `COINBASE_TOKEN` and `COINBASE_SECRET` when setting Simulation to False in your selery.yml 
+8. Configure your distribution in the `selery.yml` file. The `simulation` paramter is set `True` by default. You will need the `COINBASE_TOKEN` and `COINBASE_SECRET` when setting Simulation to False in your selery.yml 
 
 
-9. Run OpenSelery on the project folder you want to fund. This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit: 
+# Clone OpenSelery
+      
+```bash
+git clone https://github.com/protontypes/openselery.git
+```
 
-  ```bash
-  env $(cat ~/.openselery/tokens.env) ~/openselery/run.sh <target_directory>
-  ```
+# Run OpenSelery on the project folder you want to fund. 
 
+> This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit: 
+
+1. Run as Dockerized Command-Line Tool
+
+```bash
+env $(cat ~/.openselery/tokens.env) ~/openselery/run.sh <target_repository>
+```
+
+2. Run nativly on Debian / Ubuntu
+
+> Install Dependencies
+
+```bash
+sudo apt update && apt install git ruby ruby-dev ruby-bundler build-essentail curl python3-pip
+cd openselery
+bundle install 
+pip install -r requirements.txt
+```
+
+> Run OpenSelery
+
+```bash
+TARGET_DIR=<target_repository> && env $(cat ~/.openselery/tokens.env) python3 selery.py --config $TARGET_DIR/selery.yml --directory $TARGET_DIR --result results
+```
+    
 ### Continuous Integration  
 1. Use the [github template](https://github.com/protontypes/seleryexample) to create a new selery in your project.
 
