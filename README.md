@@ -17,7 +17,7 @@ Constributors on the master branch will probably get emails with cryptocurrency.
 
 ## Usage
 
-# Create the access tokens and accounts
+### Create the access tokens and accounts
 
 1. The [Gitub](https://github.com/settings/tokens) and [Libraries.io](https://libraries.io/api) tokens are easy to obtain. Simulate payouts without the [coinbase token](https://www.coinbase.com/settings/api) to find the right settings. Configure the [access control settings](https://github.com/protontypes/openselery/wiki/Coinbase-Settings) of the automated coinbase account.
 
@@ -58,13 +58,13 @@ LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 8. Configure your distribution in the `selery.yml` file. The `simulation` paramter is set `True` by default. You will need the `COINBASE_TOKEN` and `COINBASE_SECRET` when setting Simulation to False in your selery.yml 
 
 
-# Clone OpenSelery
+### Clone OpenSelery
       
 ```bash
 git clone https://github.com/protontypes/openselery.git
 ```
 
-# Run OpenSelery on the project folder you want to fund. 
+### Run OpenSelery on the project folder you want to fund. 
 
 > This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit: 
 
