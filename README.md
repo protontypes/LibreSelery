@@ -67,7 +67,7 @@ git clone https://github.com/protontypes/openselery.git
 
 ### Fund the target repository
 
-> This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit: 
+This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit: 
 
 1. Run as Dockerized Command-Line Tool
 
@@ -77,7 +77,7 @@ env $(cat ~/.openselery/tokens.env) ~/openselery/run.sh <target_repository>
 
 2. Run nativly on Debian / Ubuntu
 
-> Install Dependencies
+Install Dependencies
 
 ```bash
 sudo apt update && apt install git ruby ruby-dev ruby-bundler build-essentail curl python3-pip
@@ -86,14 +86,14 @@ bundle install
 pip install -r requirements.txt
 ```
 
-> Run OpenSelery
+Run OpenSelery
 
 ```bash
 TARGET_DIR=<target_repository> && env $(cat ~/.openselery/tokens.env) python3 selery.py --config $TARGET_DIR/selery.yml --directory $TARGET_DIR --result results
 ```
     
 ### Continuous Integration  
-1. Use the [github template](https://github.com/protontypes/seleryexample) to create a new selery in your project.
+Use the [github template](https://github.com/protontypes/seleryexample) to create a new selery in your project.
 
 
 Get into [selery.py](selery.py)   
