@@ -10,6 +10,7 @@ import pprint
 import pdb
 import github
 import logging
+import pickle
 from urlextract import URLExtract
 
 from openselery.github_connector import GithubConnector
@@ -33,10 +34,10 @@ class OpenSeleryConfig(object):
         "include_self": True,
         "include_tooling_and_runtime": False,
 
-        "bitcoin_address": "",
+        "bitcoin_address": '',
         "check_equal_privat_and_public_address": True,
         "skip_email": True,
-        "email_note": "Fresh OpenCelery Donation",
+        "email_note": 'Fresh OpenCelery Donation',
         "btc_per_transaction": 0.000002,
         "contributor_payout_count": 1,
         "total_payout_per_run": 0.000002,
@@ -44,8 +45,8 @@ class OpenSeleryConfig(object):
         "min_contributions": 1,
         "releases_included": 1,
         "uniform_weight": 10,
-        "release_weight": 10
-    }
+        "release_weight": 10,
+    }       
     __secure_config_entries__ = ["libraries_api_key", "github_token", "coinbase_token", "coinbase_secret",
                                  "coinbase_secret"]
 
@@ -400,7 +401,10 @@ class OpenSelery(object):
                          (self.config.btc_per_transaction, contributor.stats.author.name))
 
     def dump(self, local_repo, projects, deps, all_related_contributors, weights, recipients):
-        pass
+        for argument in locals():
+            pickle.dump(argument, open(
+                self.config.result_dir+'/'+argument+".p", "wb"))
+        self.log("All selery objects dumped")
 
     def _getFile(self, file):
         file_path = os.path.join(self.seleryDir, file)

@@ -96,6 +96,4 @@ TARGET_DIR=<target_repository> && env $(cat ~/.openselery/tokens.env) python3 se
 Use the [github template](https://github.com/protontypes/seleryexample) to create a new selery in your project.
 
 
-Get into [selery.py](selery.py)   
-
   *Artwork by Miriam Winter*
