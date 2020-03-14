@@ -55,7 +55,8 @@ GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-8. Configure your distribution in the `selery.yml` file. The `simulation` paramter is set `True` by default. You will need the `COINBASE_TOKEN` and `COINBASE_SECRET` when setting Simulation to False in your selery.yml 
+8. Configure your distribution in the `selery.yml` file located in ~/.openselery/ or your <target_repository>
+The `simulation` paramter is set `True` by default. You will need the `COINBASE_TOKEN` and `COINBASE_SECRET` when setting Simulation to False in your selery.yml 
 
 
 ### Clone OpenSelery
@@ -64,7 +65,7 @@ LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 git clone https://github.com/protontypes/openselery.git
 ```
 
-### Run OpenSelery on the project folder you want to fund. 
+### Fund the target repository
 
 > This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit: 
 
