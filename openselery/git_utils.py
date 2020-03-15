@@ -1,4 +1,3 @@
-
 import git
 import re
 
@@ -38,12 +37,11 @@ def grabLocalProject(repo_path, remoteName='origin'):
         if remote.name == remoteName:
             return remote.url
         else:
-            print(process.stderr)
             raise Exception("No Remote URL found")
 
 
 def ScanCommits(git_folder, branch='master'):
-    repo = Repo(git_folder)
+    repo = git.Repo(git_folder)
     commit_msgs = []
     commits = list(repo.iter_commits('master'))
     for c in commits:

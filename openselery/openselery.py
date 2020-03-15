@@ -324,12 +324,13 @@ class OpenSelery(object):
 
     def weight(self, contributor, local_repo, projects, deps):
         # calc release weights
-        self.log("add additional weight to release contributors of last "+str(self.config.releases_included)+" releases")
+        self.log("Add additional weight to release contributors of last "+str(self.config.releases_included)+" releases")
         release_contributor = git_utils.find_release_contributor(
             local_repo, self.config.releases_included)
 
+        # Create a unique list of all release contributor
+        release_contributor = set(i.lower() for i in release_contributor)
         self.log("Found release contributor: "+str(len(release_contributor)))
-
         release_weights = selery_utils.calculateContributorWeights(
             release_contributor, self.config.release_weight)
 
@@ -375,7 +376,7 @@ class OpenSelery(object):
             self.log(
             "Checking transaction history of given account [%s]" % transactionFilePath)
             transactions = self.coinConnector.pastTransactions()
-            with open(transactionFilePath, "a") as f:
+            with open(transactionFilePath, "w") as f:
                 f.write(str(transactions))
             
             amount,currency = self.coinConnector.balancecheck()
@@ -390,15 +391,21 @@ class OpenSelery(object):
                 self.receiptStr = self.receiptStr + str(self.receipt)
                 self.log("Payout of [%s][%s] succeeded" % (self.receipt['amount']['amount'],self.receipt['amount']['currency']))
                 
-            with open(receiptFilePath, "w") as f:
+            with open(receiptFilePath, "a") as f:
                 f.write(str(self.receiptStr))
 
         if self.config.simulation:
+            simulatedreceiptFilePath = os.path.join(
+                self.config.result_dir, "simulatedreceipt.txt")
+
             self.logWarning(
                     "Configuration 'simulation' is active, so NO transaction will be executed")
             for contributor in recipients:
                 self.log(" -- would have been a payout of '%.10f' bitcoin to '%s'" %
                          (self.config.btc_per_transaction, contributor.stats.author.name))
+
+                with open(simulatedreceiptFilePath, "a") as f:
+                    f.write(str(contributor))
 
     def dump(self, local_repo, projects, deps, all_related_contributors, weights, recipients):
         for argument in locals():
