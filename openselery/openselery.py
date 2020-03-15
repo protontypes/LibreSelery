@@ -371,9 +371,7 @@ class OpenSelery(object):
                     self.logError("Public address does not match wallet address")
                     raise Exception("Aborting")
                 
-
-
-            # Check what is done on the account.
+            # Check what transactions are done on the account.
             self.log(
             "Checking transaction history of given account [%s]" % transactionFilePath)
             transactions = self.coinConnector.pastTransactions()
@@ -388,10 +386,12 @@ class OpenSelery(object):
             for contributor in recipients:
                 self.receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.btc_per_transaction,
                                                     self.config.skip_email, self.config.email_note)
+                
+                self.receiptStr = self.receiptStr + str(self.receipt)
                 self.log("Payout of [%s][%s] succeeded" % (self.receipt['amount']['amount'],self.receipt['amount']['currency']))
                 
             with open(receiptFilePath, "w") as f:
-                f.write(str(self.receipt))
+                f.write(str(self.receiptStr))
 
         if self.config.simulation:
             self.logWarning(

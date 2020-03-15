@@ -1,10 +1,13 @@
-
-# Created by https://www.gitignore.io/api/python
-# Edit at https://www.gitignore.io/?templates=python
 receipt.txt
 transactions.txt
 pythonlogs.txt
 results/
+.bash_history
+.python_history
+
+# Created by https://www.gitignore.io/api/python
+# Edit at https://www.gitignore.io/?templates=python
+
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
@@ -115,7 +118,3 @@ dmypy.json
 .idea/
 
 # End of https://www.gitignore.io/api/python
-
-.bash_history
-.python_history
-dependencies.json
