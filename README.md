@@ -17,7 +17,7 @@ Constributors on the master branch will probably get emails with cryptocurrency.
 
 ## Usage
 
-### Create the access tokens and accounts
+### Create the access Tokens and Accounts
 
 1. The [Gitub](https://github.com/settings/tokens) and [Libraries.io](https://libraries.io/api) tokens are easy to obtain. Simulate payouts without the [coinbase token](https://www.coinbase.com/settings/api) to find the right settings. Configure the [access control settings](https://github.com/protontypes/openselery/wiki/Coinbase-Settings) of the automated coinbase account.
 
@@ -34,7 +34,7 @@ cd openselery
 
 4. Never transfer or store large values with automated cryptocurrency wallets. Use recurring automated transaction from another account to recharge you wallet on a regular base. 
 
-5. Transfer some money to this wallet for testing. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transfering money to the coinbase account.
+5. Transfer some money to this wallet for testing. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transfering money into the coinbase account.
 
 6. Create a read only token file for your user:
 
@@ -69,7 +69,7 @@ git clone https://github.com/protontypes/openselery.git
 
 This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform or git commit:
 
-#### Run as Dockerized Command-Line Tool
+#### Run as dockerized Command-Line Tool
 
 ```bash
 env $(cat ~/.openselery/tokens.env) ~/openselery/run.sh <target_repository>
