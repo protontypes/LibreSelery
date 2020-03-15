@@ -10,7 +10,7 @@ include_self: True
 ## include the dependencies of the target folder
 include_dependencies: False 
 ## include the tooling and runtime from file
-include_tooling_and_runtime: False 
+include_tooling_and_runtime: True 
 ## minimum contributions made to be considered
 min_contributions: 1
 

@@ -2,12 +2,12 @@
 # Never print SECRET or TOKENS.
 
 TARGET_DIR="/home/selery/runningrepo"
-RESULTS_DIR="~/.openselery/results/"
-RESULTS_DIR="${RESULTS_DIR/#\~/$HOME}"
+DOT_DIR="~/.openselery/"
+DOT_DIR="${DOT_DIR/#\~/$HOME}"
 
-if [ ! -d $RESULTS_DIR ]
+if [ ! -d $DOT_DIR ]
 then
-    mkdir $RESULTS_DIR
+    mkdir $DOT_DIR
 fi
 # Mount the argument folder into the container \
 docker run --rm -t \
@@ -15,10 +15,12 @@ docker run --rm -t \
 --env LIBRARIES_API_KEY=$LIBRARIES_API_KEY \
 --env COINBASE_TOKEN=$COINBASE_TOKEN \
 --env COINBASE_SECRET=$COINBASE_SECRET \
+--env INITIATE_PAYOUT=$INITIATE_PAYOUT \
 -v $@:$TARGET_DIR \
--v $(realpath $RESULTS_DIR):$(pwd)/results \
+-v $(realpath $DOT_DIR/results):/home/selery/results \
+-v $(realpath $DOT_DIR/config):/home/selery/config \
 -u $(id -u $USER):$(id -g $USER) \
 openselery \
---config $TARGET_DIR/selery.yml --directory $TARGET_DIR --result $TARGET_DIR/results
+--config $TARGET_DIR/selery.yml --directory $TARGET_DIR --result /home/selery/results --tooling /home/selery/config/tooling_repos.yml
 
 

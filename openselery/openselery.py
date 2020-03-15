@@ -25,6 +25,7 @@ class OpenSeleryConfig(object):
         "github_token": 'GITHUB_TOKEN',
         "coinbase_token": 'COINBASE_TOKEN',
         "coinbase_secret": 'COINBASE_SECRET',
+        "initiate_payout": 'INITIATE_PAYOUT'
     }
     __default_config_template__ = {
         "simulation": True,
@@ -41,11 +42,13 @@ class OpenSeleryConfig(object):
         "btc_per_transaction": 0.000002,
         "contributor_payout_count": 1,
         "total_payout_per_run": 0.000002,
+        
 
         "min_contributions": 1,
         "releases_included": 1,
         "uniform_weight": 10,
-        "release_weight": 10,
+        "release_weight": 10
+
     }       
     __secure_config_entries__ = ["libraries_api_key", "github_token", "coinbase_token", "coinbase_secret",
                                  "coinbase_secret"]
@@ -162,25 +165,24 @@ class OpenSelery(object):
                     self.config.bitcoin_address=url.split(badge_string, 1)[1]
                     self.log("Found bitcoin address [%s]" % self.config.bitcoin_address)
         else:
-            self.log("Using bitcoin wallet from configuration file [%s]" % self.config.bitcoin_address)
+            self.log("Using bitcoin address from configuration file for validation check [%s]" % self.config.bitcoin_address)
         # load tooling url
 
         if self.config.include_tooling_and_runtime and self.config.tooling_path:
             with open(self.config.tooling_path) as f:
-                tooldict = yaml.safe_load(f)
-            if tooldict is not None:
-                self.log("Loading tooling file [%s]" % tooldict)
-                for k in tooldict.items():
-                    print(k)
+                self.toolrepos = yaml.safe_load(f)
+            if self.toolrepos is not None:
+                self.log("Tooling file loaded [%s]" % self.toolrepos)
             else: 
                 self.log("No tooling urls found")
         else:
             self.log("Tooling not included")
             
+
         # load our environment variables
         self.loadEnv()
         self.logNotify("Initialized")
-        print(self.getConfig())
+        self.log(str(self.getConfig()))
         
 
     def parseArgs(self):
@@ -234,6 +236,7 @@ class OpenSelery(object):
         if self.config.include_self:
             self.logWarning("Including local project '%s'" %
                             self.config.directory)
+
             # find official repositories
             projectUrl = git_utils.grabLocalProject(
                 self.config.directory)
@@ -292,12 +295,14 @@ class OpenSelery(object):
                             generalDependencies.extend(libIoDependencies)
 
         if self.config.include_tooling_and_runtime:
-            ###
-            ###
-            # to be implemented
-            ###
-            ###
-            pass
+            for toolurl in self.toolrepos['github']:
+                toolingProject = self.githubConnector.grabRemoteProjectByUrl(
+                    toolurl)
+                self.log(" -- %s" % toolingProject)
+                self.log(" -- %s" % toolingProject.html_url)
+
+                # safe dependency information
+                generalProjects.append(toolingProject)
 
         self.log("Gathering contributor information")
         # scan for project contributors
