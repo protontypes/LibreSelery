@@ -35,4 +35,4 @@ contributor_payout_count: 1
 ## the total amount of payout per run
 total_payout_per_run: 0.000002
 ## message send with every coinbase email. Never send an URL.
-email_note: "Fresh OpenCelery Funding"
+email_note: "Fresh OpenSelery Funding"
