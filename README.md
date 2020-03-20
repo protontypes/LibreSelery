@@ -56,7 +56,7 @@ LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 8. Configure your distribution in the `selery.yml` file located in ~/.openselery/ or your <target_repository>
-The `simulation` paramter is set `True` by default. You will need the `COINBASE_TOKEN` and `COINBASE_SECRET` when setting Simulation to False in your selery.yml 
+The `simulation` paramter is set `True` by default. You will need the `COINBASE_TOKEN` and `COINBASE_SECRET` when setting Simulation to False in your selery.yml. You can use the `selery.yml` template from the OpenSelery project, modifiy it and copy it into you <target_repository>. 
 
 
 ### Clone OpenSelery
