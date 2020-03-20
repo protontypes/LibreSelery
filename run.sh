@@ -1,14 +1,10 @@
 #!/bin/bash
-# Never print SECRET or TOKENS.
+# Never print SECRETS or TOKENS.
 
 TARGET_DIR="/home/selery/runningrepo/"
 DOT_DIR="~/.openselery/"
 DOT_DIR="${DOT_DIR/#\~/$HOME}"
 
-if [ ! -d $DOT_DIR ]
-then
-    mkdir $DOT_DIR
-fi
 # Mount the argument folder into the container \
 docker run --rm -t \
 --env GITHUB_TOKEN=$GITHUB_TOKEN \

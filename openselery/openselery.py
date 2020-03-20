@@ -329,12 +329,12 @@ class OpenSelery(object):
         return  self.config.directory, generalProjects, generalDependencies, generalContributors
 
     def weight(self, contributor, local_repo, projects, deps):
-        # calc release weights
-        self.log("Add additional weight to release contributors of last "+str(self.config.releases_included)+" releases")
-
-
-        # Create a unique list of all release contributor
+    
         if self.config.consider_releases:
+             # calc release weights
+            self.log("Add additional weight to release contributors of last " +
+                    str(self.config.releases_included)+" releases")
+            # Create a unique list of all release contributor
             release_contributor = git_utils.find_release_contributor(
                 local_repo, self.config.releases_included)
             release_contributor = set(i.lower() for i in release_contributor)
@@ -368,7 +368,7 @@ class OpenSelery(object):
         return recipients
 
     def payout(self, recipients):
-        if not self.config.simulation:
+        if not self.config.simulation and self.config.initiate_payout == "True":
             transactionFilePath = os.path.join(self.config.result_dir, "transactions.txt")
             receiptFilePath = os.path.join(self.config.result_dir, "receipt.txt")
 
