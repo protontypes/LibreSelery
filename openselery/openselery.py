@@ -170,9 +170,9 @@ class OpenSelery(object):
 
         if self.config.include_tooling_and_runtime and self.config.tooling_path:
             with open(self.config.tooling_path) as f:
-                self.toolrepos = yaml.safe_load(f)
-            if self.toolrepos is not None:
-                self.log("Tooling file loaded [%s]" % self.toolrepos)
+                self.config.toolrepos = yaml.safe_load(f)
+            if self.config.toolrepos is not None:
+                self.log("Tooling file loaded [%s]" % self.config.toolrepos)
             else: 
                 self.log("No tooling urls found")
         else:
@@ -294,8 +294,8 @@ class OpenSelery(object):
                             generalProjects.append(gitproject)
                             generalDependencies.extend(libIoDependencies)
 
-        if self.config.include_tooling_and_runtime:
-            for toolurl in self.toolrepos['github']:
+        if self.config.include_tooling_and_runtime and self.config.tooling_path:
+            for toolurl in self.config.toolrepos['github']:
                 toolingProject = self.githubConnector.grabRemoteProjectByUrl(
                     toolurl)
                 self.log(" -- %s" % toolingProject)

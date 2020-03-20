@@ -1,7 +1,7 @@
 #!/bin/bash
 # Never print SECRET or TOKENS.
 
-TARGET_DIR="/home/selery/runningrepo"
+TARGET_DIR="/home/selery/runningrepo/"
 DOT_DIR="~/.openselery/"
 DOT_DIR="${DOT_DIR/#\~/$HOME}"
 
