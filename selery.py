@@ -19,8 +19,8 @@ def main():
     local_repo, projects, deps, all_related_contributors = selery.gather()
     # please modify the weights
     # calculation to your need
-    uniform_weights, release_weights = selery.weight(all_related_contributors,
-                                                     local_repo, projects, deps)
+    uniform_weights = selery.weight(all_related_contributors,
+                                    local_repo, projects, deps)
     # let openselery roll the dice
     # and choose some lucky contributors
     # who should receive donations

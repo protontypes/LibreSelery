@@ -17,6 +17,8 @@ min_contributions: 1
 # weight configuations
 ## base weight for all included contributors
 uniform_weight: 30
+# use release tags to increased the weight of the last release contributors
+consider_releases: False 
 ## last releases additionaly weighted.
 releases_included: 3
 ## release weights

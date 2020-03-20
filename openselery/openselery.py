@@ -45,6 +45,7 @@ class OpenSeleryConfig(object):
         
 
         "min_contributions": 1,
+        "consider_releases": False,
         "releases_included": 1,
         "uniform_weight": 10,
         "release_weight": 10
@@ -330,17 +331,19 @@ class OpenSelery(object):
     def weight(self, contributor, local_repo, projects, deps):
         # calc release weights
         self.log("Add additional weight to release contributors of last "+str(self.config.releases_included)+" releases")
-        release_contributor = git_utils.find_release_contributor(
-            local_repo, self.config.releases_included)
+
 
         # Create a unique list of all release contributor
-        release_contributor = set(i.lower() for i in release_contributor)
-        self.log("Found release contributor: "+str(len(release_contributor)))
-        release_weights = selery_utils.calculateContributorWeights(
-            release_contributor, self.config.release_weight)
+        if self.config.consider_releases:
+            release_contributor = git_utils.find_release_contributor(
+                local_repo, self.config.releases_included)
+            release_contributor = set(i.lower() for i in release_contributor)
+            self.log("Found release contributor: "+str(len(release_contributor)))
+            release_weights = selery_utils.calculateContributorWeights(
+                release_contributor, self.config.release_weight)
 
-        # considers all release contributor equal
-        release_contributor = set(release_contributor)
+            # considers all release contributor equal
+            release_contributor = set(release_contributor)
 
         # create uniform probability
         self.log("Start with unifrom porbability weights for contributors")
@@ -348,7 +351,7 @@ class OpenSelery(object):
             contributor, self.config.uniform_weight)
 
         # read @user from commit
-        return uniform_weights, release_weights
+        return uniform_weights
 
     def choose(self, contributors, repo_path, weights):
         recipients = []

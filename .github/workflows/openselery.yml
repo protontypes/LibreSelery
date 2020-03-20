@@ -60,6 +60,11 @@ jobs:
                 email_note: "Fresh OpenCelery Funding"
                 # weight set for all include contributors
                 uniform_weight: 1
+                # consider_releases: False
+                 ## last releases additionaly weighted.
+                releases_included: 3
+                ## release weights
+                release_weight: 70
               EOF
               else 
                 echo "Use existing local selery.yml"
