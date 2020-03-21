@@ -4,13 +4,18 @@
 
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions)
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openselery/openselery)                               
-[![Donate with bitcoin](https://en.cryptobadges.io/badge/small/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w)](https://en.cryptobadges.io/donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w)                     
+[![Donate with bitcoin](https://en.cryptobadges.io/badge/small/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w)](https://en.cryptobadges.io/donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w)  
 
 * [Project Slides](http://protontypes.eu/)
 * [Roadmap](https://github.com/protontypes/openselery/wiki)
 * [Knowledge-Links](https://github.com/protontypes/openselery/wiki/Knowledge-Links)
 
 > Please keep in mind that OpenSelery is in an experimental state. The amount of funding should therefore be kept to a minimum. OpenSelery is not unit tested yet.
+
+* Software defined developers payout fully transparent to the bones for your Github project.
+* Dependencies scanning for most languages to include all developers.
+* Only the sender needs an Coinbase account in the first instance.
+* Investor creates a transparent payout with public CI logs.
 
 ## Contribution
 Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the Github profile page are considered. We will never send a URL in the note.
