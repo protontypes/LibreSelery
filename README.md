@@ -73,7 +73,7 @@ The `simulation` paramter is set `True` by default. You will need the `COINBASE_
       
 ```bash
 git clone https://github.com/protontypes/openselery.git
-```
+```  
 
 ### Fund the target repository
 
