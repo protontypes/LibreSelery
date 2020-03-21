@@ -5,7 +5,7 @@ project_root = ''
 options = {}
 OptionParser.new do |parser|
   parser.on("-p", "--project LIBRARY",
-            "Project root folder to scan for manifesto files recursaivly") do |lib|
+            "Project root folder to scan for manifesto files recursively") do |lib|
     project_root = lib
   end
 end.parse!

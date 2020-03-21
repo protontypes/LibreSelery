@@ -3,7 +3,6 @@ import re
 from github import Github, StatsContributor
 
 from openselery import selery_utils
-from pprint import pprint, PrettyPrinter
 
 
 class Contributor(object):
@@ -39,7 +38,7 @@ class GithubConnector(selery_utils.Connector):
         # git@github.com:protontypes/protontypes.git
 
         matchObj = re.match(
-            "^(?:git@|https://)[^/:]+[/:]([^/]+)/([^/]+?)(?:\.git)?$", url)
+            r"^(?:git@|https://)[^/:]+[/:]([^/]+)/([^/]+?)(?:\.git)?$", url)
         if not matchObj:
             raise ValueError("url cannot be parsed. (url: %s)" % (url))
 
