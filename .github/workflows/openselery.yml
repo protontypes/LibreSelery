@@ -78,7 +78,7 @@ jobs:
                 --env LIBRARIES_API_KEY=$LIBRARIES_API_KEY 
                 --env COINBASE_TOKEN=$COINBASE_TOKEN 
                 --env COINBASE_SECRET=$COINBASE_SECRET
-                --env INITIATE_PAYOUT=true
+                --env INITIATE_PAYOUT=True
                 -v $PWD/:/home/selery/runningrepo/ 
                 -v $PWD/results:/home/selery/results/
                 openselery/openselery 
