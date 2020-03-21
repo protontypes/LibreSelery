@@ -11,7 +11,7 @@ def find_release_contributor(repo_path, releases):
     for check_tag in reversed(tags):
         # TODO: re expressions should be in selery.yml
         # Matches for semantic versioning
-        if re.match("^v(\d+\.)?(\d+\.)?(\*|\d+)$", str(check_tag)) and bool(release_counter):
+        if re.match(r"^v(\d+\.)?(\d+\.)?(\*|\d+)$", str(check_tag)) and bool(release_counter):
             release_counter = release_counter - 1
             continue
         break

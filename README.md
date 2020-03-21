@@ -34,7 +34,7 @@ Constributors on the master branch will probably get emails with cryptocurrency.
 
 ```bash
 cd ~
-git clone https://github.com/openselery/openselery.git
+git clone https://github.com/protontypes/openselery.git
 cd openselery
 ./build.sh
 ```
