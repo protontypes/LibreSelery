@@ -15,10 +15,16 @@
 * Software defined developers payout fully transparent to the bones for your Github project.
 * Dependencies scanning for most languages to include all developers.
 * Only the sender needs an Coinbase account in the first instance.
-* Investor creates a transparent payout with public CI logs.
+* Investors create a transparent payout with public CI logs.
 
-## Contribution
-Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the Github profile page are considered. We will never send a URL in the note.
+## How does OpenSelery work?
+
+0. Configure OpenSelery based on the selery.yml file
+1. Gather contributor information about the target project via the Github and Libraries.io API. 
+2. Filter our contributors that have not made the email address visible in the Github profile.
+3. Creates a uniform weight distribution between all contributors. Custom distributions like release participation are under construction. 
+4. Randomly choose contributors based on the weights.
+5. Payout Bitcoin to the chosen contributors email address via the Coinbase API. Contributor without a Coinbase account will get a email to claim the donation.
 
 ## Demo
 
@@ -105,5 +111,8 @@ TARGET_DIR=<target_repository> && env $(cat ~/.openselery/tokens.env) python3 se
 ### Continuous Integration  
 Use the [github template](https://github.com/protontypes/seleryexample) to create a new selery in your project.
 
+
+## Contribution
+Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the Github profile page are considered. We will never send a URL in the note.
 
   *Artwork by Miriam Winter*
