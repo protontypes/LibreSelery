@@ -21,8 +21,8 @@
 
 0. Configure OpenSelery based on the selery.yml file
 1. Gather contributor information about the target project via the Github and Libraries.io API
-2. Filter our contributors that have not made the email address visible in the Github profile.
-3. Create a uniform weight distribution between all contributors. Custom distributions like release participation are under construction. 
+2. Filter out contributors that have not made the email address visible in the Github profile.
+3. Create a uniform weight distribution between all contributors. Custom distributions like release participation are under construction.
 4. Randomly choose contributors based on the weights.
 5. Payout Bitcoin to the chosen contributor email addresses via the Coinbase API. Contributor without a Coinbase account will get a email to claim the donation.
 
