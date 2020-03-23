@@ -59,7 +59,7 @@ touch ~/.openselery/tokens.env
 chmod 400 ~/.openselery/tokens.env
 ```
 
-7. Add your tokens API keys to the local file: 
+7. Add your tokens API keys to the local file. **Never store this tokens in a repository**.
 
 ```bash
 nano ~/.openselery/tokens.env
