@@ -12,6 +12,8 @@
 
 > Please keep in mind that OpenSelery is in an experimental state. The amount of funding should therefore be kept to a minimum. OpenSelery is not unit tested yet.
 
+## Features
+
 * Software defined developers payout fully transparent to the bones for your Github project.
 * Dependencies scanning for most languages to include all developers.
 * Only the sender needs an Coinbase account in the first instance.
