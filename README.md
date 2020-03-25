@@ -1,6 +1,6 @@
 <img align="middle" src="./docs/design/OpenSelery-04.png" width="400"> 
 
-> Software Defined Funding Distribution
+> Salary is what people are after. It gives you the the possibility to survive in modern society. OpenSelery is the attempt to create a digital framework for an free and transparent salary distribution for everyone. The software defined funding distribution let's you create a fully digital, transparent and adaptable cash flow to your digital project and all its contributors, including your dependencies.
 
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions)
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openselery/openselery)                               
