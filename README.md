@@ -14,7 +14,7 @@
 
 ## Features
 
-* A Software defined developers payout fully transparent to the bones for your Github project.
+* Transparent Developers payout for your Github project.
 * Dependencies scanning for most languages to include all developers.
 * Only the sender needs an Coinbase account in the first instance.
 * Investors create a transparent payout with public CI logs.
