@@ -51,7 +51,7 @@ jobs:
                 # include the dependencies of the target folder
                 include_dependencies: False
                 # include the tooling and runtime from the file
-                include_tooling_and_runtime: True
+                include_tooling_and_runtime: False
                 # minimum contributions made to be considered
                 min_contributions: 1
                 # check the public address from FUNDING.yml vs the secret coinbase address
@@ -59,11 +59,11 @@ jobs:
                 # Skip email sended by coinbase
                 skip_email: False
                 # the amount of btc send per user
-                btc_per_transaction: 0.000002
+                btc_per_transaction: 0.000200
                 # numbers of contributors payout per run
                 contributor_payout_count: 10
                 # the total amount of payout per run
-                total_payout_per_run: 0.000020
+                total_payout_per_run: 0.002000
                 # message send with every coinbase email. Never send an URL.
                 email_note: "Fresh OpenSelery funding. Search for OpenSelery to get more information"
                 # weight set for all include contributors
@@ -113,7 +113,7 @@ jobs:
           name: selery_dump
           path: ~/.openselery/results/
 
-      - name: Check for payout receipt.txt
-        run: | 
-              cat ${results_folder}/receipt.txt 
-              echo "Payout receipt found"
+#      - name: Check for payout receipt.txt
+#        run: | 
+#              cat ${results_folder}/receipt.txt 
+#              echo "Payout receipt found"
