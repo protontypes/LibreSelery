@@ -15,39 +15,47 @@ on:
     branches: 
       - master   
 
+
 jobs:
   openselery:
     name: openselery
     runs-on: ubuntu-latest
+    env: 
+            results_folder: ~/.openselery/results/
+            config_folder: ~/.openselery/config/
     steps:
       # Check out the repo openselery is working on.
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v1 
       - name: Pull openselery from dockerhub
         run: docker pull openselery/openselery
-      - name: Create Result folder
-        run: mkdir ./results
+      - name: Create result and config folder
+        run:  |
+               mkdir -p $results_folder
+               mkdir -p $config_folder
       - name: Give everyone permission to write to this folder
-        run: chmod a+rw ./results
+        run: chmod a+rw $results_folder
       - name: Create openselery configuation
         run: |
-              if [ ! -f ./selery.yml ]
+              if [ ! -f ${GITHUB_WORKSPACE/selery.yml} ]
               then
                 echo "No local config found. Create selery.yml"
-                touch ./selery.yml
-                chmod 700 ./selery.yml
-                cat > ./selery.yml <<EOF
+                touch $config_folder/selery.yml
+                chmod 700 $config_folder/selery.yml
+                cat > $config_folder/selery.yml <<EOF
                 # simulation let you run without payout at the end  
                 simulation: False
+                # create inspection loggings
+                inspection: True
                 # include the target folders contributors
                 include_self: True
                 # include the dependencies of the target folder
                 include_dependencies: False
                 # include the tooling and runtime from the file
-                include_tooling_and_runtime: False
+                include_tooling_and_runtime: True
                 # minimum contributions made to be considered
                 min_contributions: 1
                 # check the public address from FUNDING.yml vs the secret coinbase address
-                check_equal_privat_and_public_address: False
+                check_equal_privat_and_public_address: True
                 # Skip email sended by coinbase
                 skip_email: False
                 # the amount of eth send per user
@@ -55,47 +63,57 @@ jobs:
                 # numbers of contributors payout per run
                 contributor_payout_count: 1
                 # the total amount of payout per run
-                total_payout_per_run: 0.000002
+                total_payout_per_run: 0.00021
                 # message send with every coinbase email. Never send an URL.
-                email_note: "Fresh OpenCelery Funding"
+                email_note: "Fresh OpenSelery funding. Search for OpenSelery to get more information"
                 # weight set for all include contributors
                 uniform_weight: 1
-                # consider_releases: False
-                 ## last releases additionaly weighted.
-                releases_included: 3
-                ## release weights
-                release_weight: 70
               EOF
+              cat $config_folder/selery.yml
               else 
-                echo "Use existing local selery.yml"
+                echo "Use existing local selery.yml from directory: ${GITHUB_WORKSPACE}"
+                cat ${GITHUB_WORKSPACE/selery.yml}
               fi
-              cat ./selery.yml
+      - name: Add additional tooling list
+        run: |
+              if [ ! -f ${config_folder}/tooling_repos.yml ]
+              then
+                echo "No local config found. Create selery.yml"
+                touch ${config_folder}/tooling_repos.yml
+                chmod 700 ${config_folder}/tooling_repos.yml
+                cat > ${config_folder}/tooling_repos.yml <<EOF
+                github:
+                #    - https://github.com/protontypes/openselery
+                #    - https://github.com/torvalds/linux
+                #    - https://github.com/python/cpython
+                - https://github.com/docker/docker-ce
+              EOF
+              cat ${config_folder}/tooling_repos.yml 
+              else 
+                  echo "Use existing local selery.yml"
+                  cat ${config_folder}/tooling_repos.yml  
+              fi 
       # Run Openselery on the current folder.
       - name: Run openselery on sources
         run:  > 
                 docker run --rm 
-                --env GITHUB_TOKEN=$GITHUB_TOKEN 
-                --env LIBRARIES_API_KEY=$LIBRARIES_API_KEY 
-                --env COINBASE_TOKEN=$COINBASE_TOKEN 
-                --env COINBASE_SECRET=$COINBASE_SECRET
-                --env INITIATE_PAYOUT=True
+                --env GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} 
+                --env LIBRARIES_API_KEY=${{ secrets.LIBRARIES_API_KEY }}
+                --env COINBASE_TOKEN=${{ secrets.COINBASE_TOKEN }}
+                --env COINBASE_SECRET=${{ secrets.COINBASE_SECRET }}
+                --env INITIATE_PAYOUT=true
                 -v $PWD/:/home/selery/runningrepo/ 
-                -v $PWD/results:/home/selery/results/
+                -v $(realpath $results_folder):/home/selery/results/
+                -v $(realpath $config_folder):/home/selery/config/ 
                 openselery/openselery 
-                --directory=/home/selery/runningrepo/ --config=/home/selery/runningrepo/selery.yml  --results_dir=/home/selery/results/ 
-        # Never print
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_API_TOKEN }}
-          LIBRARIES_API_KEY: ${{ secrets.LIBRARIES_API_KEY }}
-          COINBASE_TOKEN: ${{ secrets.COINBASE_TOKEN }}
-          COINBASE_SECRET: ${{ secrets.COINBASE_SECRET }}
+                --directory=/home/selery/runningrepo/ --config=/home/selery/config/selery.yml  --results_dir=/home/selery/results/  --tooling=/home/selery/config/tooling_repos.yml
         # Upload the receipt file to github artifact.
       - uses: actions/upload-artifact@v1
         with:
-          name: Logs_and_Billing
-          path: ./results/
+          name: selery_dump
+          path: ~/.openselery/results/
 
       - name: Check for payout receipt.txt
         run: | 
-              cat ./results/receipt.txt 
+              cat ${results_folder}/receipt.txt 
               echo "Payout receipt found"
