@@ -43,7 +43,7 @@ jobs:
                 chmod 700 $config_folder/selery.yml
                 cat > $config_folder/selery.yml <<EOF
                 # simulation let you run without payout at the end  
-                simulation: True
+                simulation: False
                 # create inspection loggings
                 inspection: True
                 # include the target folders contributors
@@ -58,12 +58,12 @@ jobs:
                 check_equal_privat_and_public_address: True
                 # Skip email sended by coinbase
                 skip_email: False
-                # the amount of eth send per user
+                # the amount of btc send per user
                 btc_per_transaction: 0.000002
                 # numbers of contributors payout per run
-                contributor_payout_count: 1
+                contributor_payout_count: 10
                 # the total amount of payout per run
-                total_payout_per_run: 0.00021
+                total_payout_per_run: 0.000020
                 # message send with every coinbase email. Never send an URL.
                 email_note: "Fresh OpenSelery funding. Search for OpenSelery to get more information"
                 # weight set for all include contributors
