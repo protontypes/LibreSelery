@@ -117,4 +117,6 @@ Use the [github template](https://github.com/protontypes/seleryexample) to creat
 ## Contribution
 Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the Github profile page are considered. We will never send a URL in the note.
 
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+
   *Artwork by Miriam Winter*
