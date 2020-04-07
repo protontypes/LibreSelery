@@ -1,6 +1,6 @@
 <img align="middle" src="./docs/design/OpenSelery-04.png" width="400"> 
 
-> OpenSelery is a decentralized framework for a free and transparent salary distribution in free software. Our software defines a funding distribution to generate a transparent and adaptable cash flow to your digital project and all its contributors, including your dependencies.
+> OpenSelery is a decentralized framework for a free and transparent salary distribution in free software. It defines a funding distribution to generate a transparent and adaptable cash flow to your digital project and all its contributors, including your dependencies.
 
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions)
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openselery/openselery)                               
