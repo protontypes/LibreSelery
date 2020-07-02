@@ -1,6 +1,6 @@
 <img align="middle" src="./docs/design/OpenSelery-04.png" width="400"> 
 
-# Continuous Developer Payout
+### Continuous Developer Payout
 
 > OpenSelery is a decentralized framework for a free and transparent salary distribution in free software. It defines a funding distribution to generate a transparent and adaptable cash flow to your digital project and all its contributors, including your dependencies.
 
