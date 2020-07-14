@@ -8,8 +8,6 @@
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/openselery/openselery)                               
 [![Donate with bitcoin](https://en.cryptobadges.io/badge/small/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w)](https://en.cryptobadges.io/donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w)  
 
-* [Project Slides](http://protontypes.eu/)
-* [Roadmap](https://github.com/protontypes/openselery/wiki)
 * [Knowledge-Links](https://github.com/protontypes/openselery/wiki/Knowledge-Links)
 
 > Please keep in mind that OpenSelery is in an experimental state right now. The amount of funding should therefore be kept to a minimum.
