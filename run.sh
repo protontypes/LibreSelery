@@ -1,7 +1,8 @@
 #!/bin/bash
 # Never print SECRETS or TOKENS.
 
-TARGET_DIR="/home/selery/runningrepo/"
+DOCKER_PATH_TARGET_DIR="/home/selery/runningrepo/"
+RESULT_DIR="/home/electron/"
 DOT_DIR="~/.openselery/"
 DOT_DIR="${DOT_DIR/#\~/$HOME}"
 
@@ -12,11 +13,11 @@ docker run --rm -t \
 --env COINBASE_TOKEN=$COINBASE_TOKEN \
 --env COINBASE_SECRET=$COINBASE_SECRET \
 --env INITIATE_PAYOUT=$INITIATE_PAYOUT \
--v $@:$TARGET_DIR \
+-v $@:$DOCKER_PATH_TARGET_DIR \
 -v $(realpath $DOT_DIR/results):/home/selery/results \
 -v $(realpath $DOT_DIR/config):/home/selery/config \
 -u $(id -u $USER):$(id -g $USER) \
 openselery \
---config $TARGET_DIR/selery.yml --directory $TARGET_DIR --result /home/selery/results --tooling /home/selery/config/tooling_repos.yml
+--config $DOCKER_PATH_TARGET_DIR/selery.yml --directory $DOCKER_PATH_TARGET_DIR/ --result /home/selery/results --tooling /home/config/tooling_repos.yml
 
 

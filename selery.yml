@@ -1,8 +1,6 @@
 # debug states
 ## simulation let you run without payout at the end
 simulation: False
-## dump all logging to results
-inspection: True
 
 # take into consideration
 ## include the target folders contributors

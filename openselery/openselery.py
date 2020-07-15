@@ -25,11 +25,9 @@ class OpenSeleryConfig(object):
         "github_token": 'GITHUB_TOKEN',
         "coinbase_token": 'COINBASE_TOKEN',
         "coinbase_secret": 'COINBASE_SECRET',
-        "initiate_payout": 'INITIATE_PAYOUT'
     }
     __default_config_template__ = {
         "simulation": True,
-        "inspection": True,
 
         "include_dependencies": False,
         "include_self": True,
@@ -80,13 +78,6 @@ class OpenSeleryConfig(object):
             if t1 != t2:
                 raise ValueError("Configuration parameter '%s' has failed type check! 's'<'%s'> should be 's'<'%s'>" % (
                     k, v1, t1, v2, t2))
-
-        # print all logs to stdout
-        if self.inspection == True:
-            loggingFilePath = os.path.join(
-                self.result_dir, "pythonlogs.txt")
-            logging.basicConfig(level=logging.DEBUG,
-                                filename=loggingFilePath, filemode='a')
 
         # special evaluations
         if not self.total_payout_per_run / self.contributor_payout_count == self.btc_per_transaction:
@@ -368,7 +359,7 @@ class OpenSelery(object):
         return recipients
 
     def payout(self, recipients):
-        if not self.config.simulation and self.config.initiate_payout == "True":
+        if not self.config.simulation:
             transactionFilePath = os.path.join(self.config.result_dir, "transactions.txt")
             receiptFilePath = os.path.join(self.config.result_dir, "receipt.txt")
 
@@ -404,7 +395,7 @@ class OpenSelery(object):
 
         if self.config.simulation:
             simulatedreceiptFilePath = os.path.join(
-                self.config.result_dir, "simulatedreceipt.txt")
+                    self.config.result_dir, "simulated_receipt.txt")
 
             self.logWarning(
                     "Configuration 'simulation' is active, so NO transaction will be executed")
