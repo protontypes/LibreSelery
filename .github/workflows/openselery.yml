@@ -99,7 +99,6 @@ jobs:
                 --env LIBRARIES_API_KEY=${{ secrets.LIBRARIES_API_KEY }}
                 --env COINBASE_TOKEN=${{ secrets.COINBASE_TOKEN }}
                 --env COINBASE_SECRET=${{ secrets.COINBASE_SECRET }}
-                --env INITIATE_PAYOUT=true
                 -v $PWD/:/home/selery/runningrepo/ 
                 -v $(realpath $results_folder):/home/selery/results/
                 -v $(realpath $config_folder):/home/selery/config/ 
