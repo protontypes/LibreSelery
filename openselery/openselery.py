@@ -246,7 +246,7 @@ class OpenSelery(object):
                      self.config.directory)
             # scan for dependencies repositories
             rubyScanScriptPath = os.path.join(
-                self.seleryDir, "scripts", "scan.rb")
+                self.seleryDir, "ruby", "scan.rb")
             process = subprocess.run(["ruby", rubyScanScriptPath, "--project=%s" % self.config.directory],
                                      stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
             # exec and evaluate stdout
