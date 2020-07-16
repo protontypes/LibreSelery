@@ -26,6 +26,7 @@ jobs:
     steps:
       # Check out the repo openselery is working on.
       - uses: actions/checkout@v1 
+      # Pull the container   
       - name: Pull openselery from dockerhub
         run: docker pull openselery/openselery
       - name: Create result and config folder
@@ -33,17 +34,17 @@ jobs:
                mkdir -p $results_folder
                mkdir -p $config_folder
       - name: Give everyone permission to write to this folder
-        run: chmod a+rw $results_folder
+        run: chmod a+rw $results_folder $config_folder
       - name: Create openselery configuation
         run: |
-              if [ ! -f ${GITHUB_WORKSPACE/selery.yml} ]
+              if [ ! -f ${GITHUB_WORKSPACE}/selery.yml ]
               then
                 echo "No local config found. Create selery.yml"
                 touch $config_folder/selery.yml
                 chmod 700 $config_folder/selery.yml
                 cat > $config_folder/selery.yml <<EOF
                 # simulation let you run without payout at the end  
-                simulation: True
+                simulation: False
                 # include the target folders contributors
                 include_self: True
                 # include the dependencies of the target folder
@@ -59,9 +60,9 @@ jobs:
                 # the amount of btc send per user
                 btc_per_transaction: 0.000200
                 # numbers of contributors payout per run
-                contributor_payout_count: 10
+                contributor_payout_count: 1
                 # the total amount of payout per run
-                total_payout_per_run: 0.002000
+                total_payout_per_run: 0.000200
                 # message send with every coinbase email. Never send an URL.
                 email_note: "Fresh OpenSelery funding. Search for OpenSelery to get more information"
                 # weight set for all include contributors
@@ -88,7 +89,7 @@ jobs:
               EOF
               cat ${config_folder}/tooling_repos.yml 
               else 
-                  echo "Use existing local selery.yml"
+                  echo "Use existing local tooling_repos.yml"
                   cat ${config_folder}/tooling_repos.yml  
               fi 
       # Run Openselery on the current folder.
@@ -103,14 +104,14 @@ jobs:
                 -v $(realpath $results_folder):/home/selery/results/
                 -v $(realpath $config_folder):/home/selery/config/ 
                 openselery/openselery 
-                --directory=/home/selery/runningrepo/ --config=/home/selery/config/selery.yml  --results_dir=/home/selery/results/  --tooling=/home/selery/config/tooling_repos.yml
+                --directory=/home/selery/runningrepo/ --config=$(realpath $config_folder)  --results_dir=$(realpath $config_folder)  --tooling=$(realpath $config_folder/tooling_repos.yml)
         # Upload the receipt file to github artifact.
       - uses: actions/upload-artifact@v1
         with:
           name: selery_dump
           path: ~/.openselery/results/
 
-#      - name: Check for payout receipt.txt
-#        run: | 
-#              cat ${results_folder}/receipt.txt 
-#              echo "Payout receipt found"
+      - name: Check for payout receipt.txt
+        run: | 
+              cat ${results_folder}/receipt.txt 
+              echo "Payout receipt found"
