@@ -68,10 +68,10 @@ jobs:
                 # weight set for all include contributors
                 uniform_weight: 1
               EOF
-              cat $config_folder/selery.yml
+              cat ${config_folder}/selery.yml
               else 
                 echo "Use existing local selery.yml from directory: ${GITHUB_WORKSPACE}"
-                cat ${GITHUB_WORKSPACE/selery.yml}
+                cat ${GITHUB_WORKSPACE}/selery.yml
               fi
       - name: Add additional tooling list
         run: |
@@ -104,7 +104,7 @@ jobs:
                 -v $(realpath $results_folder):/home/selery/results/
                 -v $(realpath $config_folder):/home/selery/config/ 
                 openselery/openselery 
-                --directory=/home/selery/runningrepo/ --config=$(realpath $config_folder)  --results_dir=$(realpath $config_folder)  --tooling=$(realpath $config_folder/tooling_repos.yml)
+                --directory=/home/selery/runningrepo/ --config=$(realpath $config_folder/selery.yml)  --results_dir=$(realpath $config_folder)  --tooling=$(realpath $config_folder/tooling_repos.yml)
         # Upload the receipt file to github artifact.
       - uses: actions/upload-artifact@v1
         with:
