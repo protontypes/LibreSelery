@@ -26,7 +26,6 @@ jobs:
     steps:
       # Check out the repo openselery is working on.
       - uses: actions/checkout@v1 
-      # Pull the container   
       - name: Pull openselery from dockerhub
         run: docker pull openselery/openselery
       - name: Create result and config folder
@@ -34,10 +33,10 @@ jobs:
                mkdir -p $results_folder
                mkdir -p $config_folder
       - name: Give everyone permission to write to this folder
-        run: chmod a+rw $results_folder $config_folder
+        run: chmod a+rw $results_folder
       - name: Create openselery configuation
         run: |
-              if [ ! -f ${GITHUB_WORKSPACE}/selery.yml ]
+              if [ ! -f ${GITHUB_WORKSPACE/selery.yml} ]
               then
                 echo "No local config found. Create selery.yml"
                 touch $config_folder/selery.yml
@@ -50,28 +49,28 @@ jobs:
                 # include the dependencies of the target folder
                 include_dependencies: False
                 # include the tooling and runtime from the file
-                include_tooling_and_runtime: False
+                include_tooling_and_runtime: True
                 # minimum contributions made to be considered
                 min_contributions: 1
                 # check the public address from FUNDING.yml vs the secret coinbase address
                 check_equal_privat_and_public_address: True
                 # Skip email sended by coinbase
                 skip_email: False
-                # the amount of btc send per user
-                btc_per_transaction: 0.000200
+                # the amount of eth send per user
+                btc_per_transaction: 0.000002
                 # numbers of contributors payout per run
                 contributor_payout_count: 1
                 # the total amount of payout per run
-                total_payout_per_run: 0.000200
+                total_payout_per_run: 0.000002
                 # message send with every coinbase email. Never send an URL.
                 email_note: "Fresh OpenSelery funding. Search for OpenSelery to get more information"
                 # weight set for all include contributors
                 uniform_weight: 1
               EOF
-              cat ${config_folder}/selery.yml
+              cat $config_folder/selery.yml
               else 
                 echo "Use existing local selery.yml from directory: ${GITHUB_WORKSPACE}"
-                cat ${GITHUB_WORKSPACE}/selery.yml
+                cat ${GITHUB_WORKSPACE/selery.yml}
               fi
       - name: Add additional tooling list
         run: |
@@ -89,7 +88,7 @@ jobs:
               EOF
               cat ${config_folder}/tooling_repos.yml 
               else 
-                  echo "Use existing local tooling_repos.yml"
+                  echo "Use existing local selery.yml"
                   cat ${config_folder}/tooling_repos.yml  
               fi 
       # Run Openselery on the current folder.
@@ -110,8 +109,15 @@ jobs:
         with:
           name: selery_dump
           path: ~/.openselery/results/
+ 
+      - name: Checkout Wiki Repo
+        uses: actions/checkout@v2
+        with:
+            repository: protontypes/seleryexample.wiki
+            path: wiki
 
       - name: Check for payout receipt.txt
         run: | 
               cat ${results_folder}/receipt.txt 
               echo "Payout receipt found"
+              
