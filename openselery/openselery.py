@@ -39,7 +39,7 @@ class OpenSeleryConfig(object):
         "email_note": 'Fresh OpenCelery Donation',
         "btc_per_transaction": 0.000002,
         "number_payout_contributors_per_run": 1,
-        "total_payout_per_run": 0.000002,
+        "max_payout_per_run": 0.000002,
         
 
         "min_contributions": 1,
