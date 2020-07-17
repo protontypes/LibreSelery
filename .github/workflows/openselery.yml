@@ -26,8 +26,8 @@ jobs:
     steps:
       # Check out the repo openselery is working on.
       - uses: actions/checkout@v1 
-      - name: Pull openselery from dockerhub
-        run: docker pull protontypes/openselery
+      - name: Build container from the local dockerfile
+        run: docker build -t openselery .
       - name: Create result and config folder
         run:  |
                mkdir -p $results_folder
@@ -102,7 +102,7 @@ jobs:
                 -v $PWD/:/home/selery/runningrepo/ 
                 -v $(realpath $results_folder):/home/selery/results/
                 -v $(realpath $config_folder):/home/selery/config/ 
-                protontypes/openselery 
+                openselery 
                 --directory=/home/selery/runningrepo/ --config=/home/selery/config/selery.yml  --results_dir=/home/selery/results/  --tooling=/home/selery/config/tooling_repos.yml
         # Upload the receipt file to github artifact.
       - uses: actions/upload-artifact@v1
