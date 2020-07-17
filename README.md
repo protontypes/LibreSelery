@@ -70,7 +70,6 @@ COINBASE_TOKEN=XXXXXXXXXXXXXXXX
 COINBASE_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-INITIATE_PAYOUT=True
 ```
 
 8. Configure your distribution in the `selery.yml` file located in ~/.openselery/ or your <target_repository>
@@ -116,7 +115,5 @@ Use the [github template](https://github.com/protontypes/seleryexample) to creat
 
 ## Contribution
 Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the Github profile page are considered. We will never send a URL in the note.
-
-Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
   *Artwork by Miriam Winter*

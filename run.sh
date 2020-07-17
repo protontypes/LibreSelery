@@ -12,7 +12,6 @@ docker run --rm -t \
 --env LIBRARIES_API_KEY=$LIBRARIES_API_KEY \
 --env COINBASE_TOKEN=$COINBASE_TOKEN \
 --env COINBASE_SECRET=$COINBASE_SECRET \
---env INITIATE_PAYOUT=$INITIATE_PAYOUT \
 -v $@:$DOCKER_PATH_TARGET_DIR \
 -v $(realpath $DOT_DIR/results):/home/selery/results \
 -v $(realpath $DOT_DIR/config):/home/selery/config \

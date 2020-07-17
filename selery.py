@@ -30,9 +30,6 @@ def main():
     # address containing virtual currency
     # to pay out the selected contributors
     selery.payout(recipients)
-    # Dump all objects for analysing
-    selery.dump(local_repo, projects, deps,
-                all_related_contributors, uniform_weights, recipients)
     # Done.
     print("=============================")
 

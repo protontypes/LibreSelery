@@ -362,6 +362,7 @@ class OpenSelery(object):
         if not self.config.simulation:
             transactionFilePath = os.path.join(self.config.result_dir, "transactions.txt")
             receiptFilePath = os.path.join(self.config.result_dir, "receipt.txt")
+            balanceBadgePath = os.path.join(self.config.result_dir, "balance_badge.json")
 
             # check if the public address is in the privat wallet
             if self.config.check_equal_privat_and_public_address:
@@ -380,6 +381,17 @@ class OpenSelery(object):
             
             amount,currency = self.coinConnector.balancecheck()
             self.log("Chech primary account wallet balance [%s] : [%s]" % (amount, currency))
+
+            # Create the balance badge to show on the README
+            balance_badge = {
+                "schemaVersion": 1,
+                "label": currency,
+                "message": amount,
+                "color": "orange"
+                }
+            print(balance_badge)
+            with open(balanceBadgePath, "w") as write_file:
+                json.dump(balance_badge, write_file)
 
             self.log("Trying to pay out donations to recipients")
             self.receiptStr = ""
@@ -406,11 +418,6 @@ class OpenSelery(object):
                 with open(simulatedreceiptFilePath, "a") as f:
                     f.write(str(contributor))
 
-    def dump(self, local_repo, projects, deps, all_related_contributors, weights, recipients):
-        for argument in locals():
-            pickle.dump(argument, open(
-                self.config.result_dir+'/'+argument+".p", "wb"))
-        self.log("All selery objects dumped")
 
     def _getFile(self, file):
         file_path = os.path.join(self.seleryDir, file)
