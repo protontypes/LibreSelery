@@ -27,7 +27,7 @@ jobs:
       # Check out the repo openselery is working on.
       - uses: actions/checkout@v1 
       - name: Pull openselery from dockerhub
-        run: docker pull openselery/openselery
+        run: docker pull protontypes/openselery
       - name: Create result and config folder
         run:  |
                mkdir -p $results_folder
@@ -102,7 +102,7 @@ jobs:
                 -v $PWD/:/home/selery/runningrepo/ 
                 -v $(realpath $results_folder):/home/selery/results/
                 -v $(realpath $config_folder):/home/selery/config/ 
-                openselery/openselery 
+                protontypes/openselery 
                 --directory=/home/selery/runningrepo/ --config=/home/selery/config/selery.yml  --results_dir=/home/selery/results/  --tooling=/home/selery/config/tooling_repos.yml
         # Upload the receipt file to github artifact.
       - uses: actions/upload-artifact@v1
@@ -115,6 +115,13 @@ jobs:
         with:
             repository: protontypes/seleryexample.wiki
             path: wiki
+      - run: |
+            cp ${results_folder}/balance_badge.json . 
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add balance_badge.json
+            git commit -m "generated"
+            git push
 
       - name: Check for payout receipt.txt
         run: | 
