@@ -38,7 +38,7 @@ class OpenSeleryConfig(object):
         "skip_email": True,
         "email_note": 'Fresh OpenCelery Donation',
         "btc_per_transaction": 0.000002,
-        "contributor_payout_count": 1,
+        "number_payout_contributors_per_run": 1,
         "total_payout_per_run": 0.000002,
         
 
@@ -80,8 +80,8 @@ class OpenSeleryConfig(object):
                     k, v1, t1, v2, t2))
 
         # special evaluations
-        if not self.total_payout_per_run / self.contributor_payout_count == self.btc_per_transaction:
-            raise ValueError("Payout values do not match")
+        if self.max_payout_per_run < self.btc_per_transaction * self.number_payout_contributors_per_run:
+            raise ValueError("The specified payout amount (self.btc_per_transaction * self.number_payout_contributors_per_run) exceeds the maximum payout (max_payout_per_run)")
         self.apply(yamlDict)
 
         # block url in note
@@ -351,7 +351,7 @@ class OpenSelery(object):
         self.log("Choosing recipients for payout")
 
         recipients = random.choices(
-            contributors, weights, k=self.config.contributor_payout_count)
+            contributors, weights, k=self.config.number_payout_contributors_per_run)
         for contributor in recipients:
             self.log(" -- '%s': '%s' [w: %s]" % (contributor.stats.author.html_url,
                                               contributor.stats.author.name, weights[contributors.index(contributor)]))

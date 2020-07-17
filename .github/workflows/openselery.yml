@@ -59,9 +59,9 @@ jobs:
                 # the amount of eth send per user
                 btc_per_transaction: 0.000002
                 # numbers of contributors payout per run
-                contributor_payout_count: 1
-                # the total amount of payout per run
-                total_payout_per_run: 0.000002
+                number_payout_contributors_per_run: 1
+                # the maximum amount of payout per run
+                max_payout_per_run: 0.000002
                 # message send with every coinbase email. Never send an URL.
                 email_note: "Fresh OpenSelery funding. Search for OpenSelery to get more information"
                 # weight set for all include contributors
