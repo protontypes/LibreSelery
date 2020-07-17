@@ -109,19 +109,6 @@ jobs:
         with:
           name: selery_dump
           path: ~/.openselery/results/
- 
-      - name: Checkout Wiki Repo
-        uses: actions/checkout@v2
-        with:
-            repository: protontypes/seleryexample.wiki
-            path: wiki
-      - run: |
-            cp ${results_folder}/balance_badge.json . 
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git add balance_badge.json
-            git commit -m "generated"
-            git push origin HEAD:master
 
       - name: Check for payout receipt.txt
         run: | 
