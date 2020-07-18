@@ -116,7 +116,7 @@ jobs:
  
       - name: Set env variables to new Github Workspace
         run:  |
-              echo "::set-env name=GITHUB_WORKSPACE::/home/runner/work/seleryexample/"
+              echo "::set-env name=GITHUB_WORKSPACE::/home/runner/work/openselery/"
  
       - name: Checkout Wiki Repo
         uses: actions/checkout@v2
@@ -141,7 +141,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
          github_token: ${{ secrets.PAT_LYON }}
-         repository: protontypes/seleryexample.wiki
+         repository: protontypes/openselery.wiki
          directory: wiki
         
 
