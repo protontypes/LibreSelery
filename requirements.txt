@@ -2,6 +2,6 @@ pygithub==1.51
 dnspython==2.0.0
 pyyaml==5.3.1
 coinbase==2.1.0
-gitpython
+gitpython==3.1.7
 pybraries
 urlextract
