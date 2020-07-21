@@ -1,5 +1,5 @@
 pygithub==1.51
-dnspython
+dnspython==2.0.0
 pyyaml
 coinbase
 gitpython
