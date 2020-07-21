@@ -1,6 +1,6 @@
 pygithub==1.51
 dnspython==2.0.0
-pyyaml
+pyyaml==5.3.1
 coinbase
 gitpython
 pybraries
