@@ -1,4 +1,4 @@
-pygithub
+pygithub==1.51
 dnspython
 pyyaml
 coinbase
