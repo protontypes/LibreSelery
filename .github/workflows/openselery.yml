@@ -26,7 +26,7 @@ jobs:
       #- name: Pull openselery from dockerhub
       #  run: docker pull protontypes/openselery
       - name: Save the repoistory name        
-      -  run: echo ::set-env name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
+        run: echo ::set-env name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
 
       - name: Build openselery from local file
         run: docker build -t openselery .
