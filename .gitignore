@@ -4,6 +4,7 @@ pythonlogs.txt
 results/
 .bash_history
 .python_history
+/.venv
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
