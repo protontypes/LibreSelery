@@ -349,6 +349,9 @@ class OpenSelery(object):
 
         # chose contributors for payout
         self.log("Choosing recipients for payout")
+        if len(contributors) < 1:
+            self.logError("Could not find any contributors to payoff")
+            raise Exception("Aborting")
 
         recipients = random.choices(
             contributors, weights, k=self.config.number_payout_contributors_per_run)
