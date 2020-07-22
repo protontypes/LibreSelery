@@ -20,20 +20,24 @@ jobs:
   openselery:
     name: openselery
     runs-on: ubuntu-latest
-    env: 
-            results_folder: ~/.openselery/results/
-            config_folder: ~/.openselery/config/
     steps:
       # Check out the repo openselery is working on.
       - uses: actions/checkout@v1 
-      - name: Pull openselery from dockerhub
-        run: docker pull protontypes/openselery
+      #- name: Pull openselery from dockerhub
+      #  run: docker pull protontypes/openselery
+      - name: Build openselery from local file
+        run: docker build -t openselery .
+      - name: Set env variables for all following jobs
+        run:  |
+              echo "::set-env name=results_folder::${HOME}/results_folder"
+              echo "::set-env name=config_folder::${HOME}/config_folder"
+              
       - name: Create result and config folder
         run:  |
-               mkdir -p $results_folder
-               mkdir -p $config_folder
+               mkdir -vp $results_folder
+               mkdir -vp $config_folder
       - name: Give everyone permission to write to this folder
-        run: chmod a+rw $results_folder
+        run: chmod a+rw $results_folder $config_folder
       - name: Create openselery configuation
         run: |
               if [ ! -f ${GITHUB_WORKSPACE/selery.yml} ]
@@ -81,10 +85,10 @@ jobs:
                 chmod 700 ${config_folder}/tooling_repos.yml
                 cat > ${config_folder}/tooling_repos.yml <<EOF
                 github:
-                #    - https://github.com/protontypes/openselery
+                - https://github.com/protontypes/openselery
                 #    - https://github.com/torvalds/linux
                 #    - https://github.com/python/cpython
-                - https://github.com/docker/docker-ce
+                #    - https://github.com/docker/docker-ce
               EOF
               cat ${config_folder}/tooling_repos.yml 
               else 
@@ -100,15 +104,46 @@ jobs:
                 --env COINBASE_TOKEN=${{ secrets.COINBASE_TOKEN }}
                 --env COINBASE_SECRET=${{ secrets.COINBASE_SECRET }}
                 -v $PWD/:/home/selery/runningrepo/ 
-                -v $(realpath $results_folder):/home/selery/results/
-                -v $(realpath $config_folder):/home/selery/config/ 
-                protontypes/openselery 
+                -v $results_folder:/home/selery/results/
+                -v $config_folder:/home/selery/config/ 
+                openselery 
                 --directory=/home/selery/runningrepo/ --config=/home/selery/config/selery.yml  --results_dir=/home/selery/results/  --tooling=/home/selery/config/tooling_repos.yml
         # Upload the receipt file to github artifact.
       - uses: actions/upload-artifact@v1
         with:
           name: selery_dump
-          path: ~/.openselery/results/
+          path: /home/runner/results_folder
+ 
+      - name: Set env variables to new Github Workspace
+        run:  |
+              echo "::set-env name=GITHUB_WORKSPACE::/home/runner/work/openselery/"
+ 
+      - name: Checkout Wiki Repo
+        uses: actions/checkout@v2
+        with:
+            repository: protontypes/openselery.wiki
+            path: wiki
+            
+      - name: Add Badge yaml
+        run: |
+         echo "Change dir to $GITHUB_WORKSPACE"
+         cd ${GITHUB_WORKSPACE}/wiki
+         mkdir -p openselery       
+         cp ${results_folder}/balance_badge.json ./openselery/
+         git config user.name github-actions
+         git config user.email github-actions@github.com
+         git status
+         git add . -A
+         git commit -m "Action generated"
+         pwd
+                
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+         github_token: ${{ secrets.PAT_LYON }}
+         repository: protontypes/openselery.wiki
+         directory: wiki
+        
 
       - name: Check for payout receipt.txt
         run: | 
