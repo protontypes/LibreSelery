@@ -40,7 +40,7 @@ jobs:
         run: chmod a+rw $results_folder $config_folder
       - name: Create openselery configuation
         run: |
-              if [ ! -f ${GITHUB_WORKSPACE/selery.yml} ]
+              if [ ! -f ${GITHUB_WORKSPACE}/selery.yml ]
               then
                 echo "No local config found. Create selery.yml"
                 touch $config_folder/selery.yml
@@ -74,7 +74,7 @@ jobs:
               cat $config_folder/selery.yml
               else 
                 echo "Use existing local selery.yml from directory: ${GITHUB_WORKSPACE}"
-                cat ${GITHUB_WORKSPACE/selery.yml}
+                cat ${GITHUB_WORKSPACE}/selery.yml
               fi
       - name: Add additional tooling list
         run: |
