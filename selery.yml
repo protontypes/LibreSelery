@@ -1,6 +1,6 @@
 # debug states
 ## simulation let you run without payout at the end
-simulation: True
+simulation: False
 
 # take into consideration
 ## include the target folders contributors
@@ -31,8 +31,8 @@ skip_email: False
 ## the amount of eth send per user
 btc_per_transaction: 0.000022
 ## numbers of contributors payout per run
-number_payout_contributors_per_run: 2
+number_payout_contributors_per_run: 1
 ## the maximum amount of payout per run
-max_payout_per_run: 0.000044
+max_payout_per_run: 0.000022
 ## message send with every coinbase email. Never send an URL.
 email_note: "Fresh OpenSelery Funding"

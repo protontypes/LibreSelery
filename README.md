@@ -100,7 +100,7 @@ env $(cat ~/.openselery/tokens.env) ~/openselery/run.sh <target_repository>
 sudo apt update && apt install git ruby ruby-dev ruby-bundler build-essentail curl python3-pip
 cd openselery
 bundle install 
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 2. Run OpenSelery
