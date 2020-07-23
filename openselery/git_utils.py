@@ -2,12 +2,11 @@ import git
 import re
 
 
-def find_release_contributor(repo_path, releases):
+def find_release_contributor(repo_path, release_counter):
     repo = git.Repo(repo_path)
     tags = repo.tags
 
     last_release_contributor_email = []
-    release_counter = releases
     for check_tag in reversed(tags):
         # TODO: re expressions should be in selery.yml
         # Matches for semantic versioning

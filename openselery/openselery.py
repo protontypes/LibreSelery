@@ -320,7 +320,8 @@ class OpenSelery(object):
         return  self.config.directory, generalProjects, generalDependencies, generalContributors
 
     def weight(self, contributor, local_repo, projects, deps):
-    
+        release_weights=[0] * len(contributor) 
+        github_contributors={}
         if self.config.consider_releases:
              # calc release weights
             self.log("Add additional weight to release contributors of last " +
@@ -330,9 +331,11 @@ class OpenSelery(object):
                 local_repo, self.config.releases_included)
             release_contributor = set(i.lower() for i in release_contributor)
             self.log("Found release contributor: "+str(len(release_contributor)))
-            release_weights = selery_utils.calculateContributorWeights(
-                release_contributor, self.config.release_weight)
-
+            for idx,user in enumerate(contributor):
+                if user.stats.author.email.lower() in release_contributor:
+                    release_weights[idx]=self.config.release_weight
+                    self.log("Github email address matches git email from last release: " +user.stats.author.name )
+            self.log("Release Weights;" +str(release_weights))
             # considers all release contributor equal
             release_contributor = set(release_contributor)
 
@@ -340,9 +343,14 @@ class OpenSelery(object):
         self.log("Start with unifrom porbability weights for contributors")
         uniform_weights = selery_utils.calculateContributorWeights(
             contributor, self.config.uniform_weight)
+        self.log("Uniform Weights;" +str(uniform_weights))
 
+        # sum up the two list with the same size
+        total_weights = [x + y for x, y in zip(uniform_weights, release_weights)]
+
+        self.log("Total Weights;" +str(total_weights))
         # read @user from commit
-        return uniform_weights
+        return total_weights
 
     def choose(self, contributors, repo_path, weights):
         recipients = []
