@@ -134,7 +134,7 @@ jobs:
       - name: Checkout Wiki Repo
         uses: actions/checkout@v2
         with:
-            repository: protontypes/seleryexample.wiki
+            repository: ${{ env.GITHUB_REPOSITORY_NEW }}.wiki
             path: wiki
             
       - name: Add Badge yaml
