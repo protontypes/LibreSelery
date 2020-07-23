@@ -23,13 +23,19 @@ jobs:
     steps:
       # Check out the repo openselery is working on.
       - uses: actions/checkout@v1 
+      - name: print Repository_name and folder
+        run: |
+              REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
+              echo ${HOME}/work/${REPOSITORY_NAME}/${REPOSITORY_NAME}
+              ls ${HOME}/work/${REPOSITORY_NAME}/${REPOSITORY_NAME}
+              echo "::set-env name=TARGET_PROJECT::${HOME}/work/${REPOSITORY_NAME}/${REPOSITORY_NAME}"
+        
       #- name: Pull openselery from dockerhub
       #  run: docker pull protontypes/openselery
-      - name: Save the repoistory name        
-        run: echo ::set-env name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
 
-      - name: Build openselery from local file
+      - name: Build openselery from repo dockerfile
         run: docker build -t openselery .
+
       - name: Set env variables for all following jobs
         run:  |
               echo "::set-env name=results_folder::${HOME}/results_folder"
@@ -43,7 +49,7 @@ jobs:
         run: chmod a+rw $results_folder $config_folder
       - name: Create openselery configuation
         run: |
-              if [ ! -f $GITHUB_REPOSITORY/${REPOSITORY_NAME}/selery.yml ]
+              if [ ! -f ${TARGET_PROJECT}/selery.yml ]
               then
                 echo "No local config found. Create selery.yml"
                 touch $config_folder/selery.yml
@@ -76,8 +82,9 @@ jobs:
               EOF
               cat $config_folder/selery.yml
               else 
-                echo "Use existing local selery.yml from directory: /$GITHUB_REPOSITORY/${REPOSITORY_NAME}"
-                cat ${GITHUB_REPOSITORY}/${REPOSITORY_NAME}/selery.yml
+                echo "Use existing local selery.yml from directory: ${TARGET_PROJECT}"
+                cat ${TARGET_PROJECT}/selery.yml
+                cp ${TARGET_PROJECT}/selery.yml $config_folder/selery.yml
               fi
       - name: Add additional tooling list
         run: |
@@ -109,22 +116,27 @@ jobs:
                 -v $PWD/:/home/selery/runningrepo/ 
                 -v $results_folder:/home/selery/results/
                 -v $config_folder:/home/selery/config/ 
-                openselery 
+                protontypes/openselery 
                 --directory=/home/selery/runningrepo/ --config=/home/selery/config/selery.yml  --results_dir=/home/selery/results/  --tooling=/home/selery/config/tooling_repos.yml
         # Upload the receipt file to github artifact.
       - uses: actions/upload-artifact@v1
         with:
           name: selery_dump
           path: /home/runner/results_folder
+
+      - name: Check for payout receipt.txt
+        run: | 
+              cat ${results_folder}/receipt.txt 
+              echo "Payout receipt found"
  
       - name: Set env variables to new Github Workspace
         run:  |
-              echo "::set-env name=GITHUB_WORKSPACE::/home/runner/work/openselery/"
+              echo "::set-env name=GITHUB_WORKSPACE::/home/runner/work/seleryexample/"
  
       - name: Checkout Wiki Repo
         uses: actions/checkout@v2
         with:
-            repository: protontypes/openselery.wiki
+            repository: protontypes/seleryexample.wiki
             path: wiki
             
       - name: Add Badge yaml
@@ -144,12 +156,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
          github_token: ${{ secrets.PAT_LYON }}
-         repository: protontypes/openselery.wiki
+         repository: protontypes/seleryexample.wiki
          directory: wiki
         
 
-      - name: Check for payout receipt.txt
-        run: | 
-              cat ${results_folder}/receipt.txt 
-              echo "Payout receipt found"
-              
