@@ -129,10 +129,6 @@ jobs:
               cat ${results_folder}/receipt.txt 
               echo "Payout receipt found"
  
-      - name: Set env variables to new Github Workspace
-        run:  |
-              echo "::set-env name=GITHUB_WORKSPACE::/home/runner/work/seleryexample/"
- 
       - name: Checkout Wiki Repo
         uses: actions/checkout@v2
         with:
@@ -141,8 +137,8 @@ jobs:
             
       - name: Add Badge yaml
         run: |
-         echo "Change dir to $GITHUB_WORKSPACE"
-         cd ${GITHUB_WORKSPACE}/wiki
+         echo "Change dir to ${HOME}/work"
+         cd ./wiki
          mkdir -p openselery       
          cp ${results_folder}/balance_badge.json ./openselery/
          git config user.name github-actions
@@ -156,7 +152,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
          github_token: ${{ secrets.PAT_LYON }}
-         repository: protontypes/seleryexample.wiki
+         repository: ${{ GITHUB_REPOSITORY}}.wiki
          directory: wiki
         
 
