@@ -3,21 +3,7 @@ import numpy as np
 import json
 import datetime
 
-def getOrUpdateDict(dict, key, defaultValue):
-  if not key in dict:
-    dict[key] = defaultValue
-
-  return dict[key]
-
-def groupBy(list, keyFun):
-  dict = {}
-
-  for elem in list:
-    key = keyFun(elem)
-    list = getOrUpdateDict(dict, key, [])
-    list.append(elem)
-
-  return dict
+from openselery.collection_utils import groupBy
 
 def transactionToYearMonthDay(transaction):
   creation_date = datetime.datetime.strptime(transaction["created_at"], '%Y-%m-%dT%H:%M:%SZ')
