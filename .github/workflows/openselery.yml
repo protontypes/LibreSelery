@@ -118,7 +118,7 @@ jobs:
                 -v $PWD/:/home/selery/runningrepo/ 
                 -v $results_folder:/home/selery/results/
                 -v $config_folder:/home/selery/config/ 
-                protontypes/openselery 
+                openselery 
                 --directory=/home/selery/runningrepo/ --config=/home/selery/config/selery.yml  --results_dir=/home/selery/results/  --tooling=/home/selery/config/tooling_repos.yml
         # Upload the receipt file to github artifact.
       - uses: actions/upload-artifact@v1
