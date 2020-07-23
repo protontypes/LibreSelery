@@ -39,27 +39,30 @@ def drawBarChart(title, xlabel, keys, values):
   diagram.set_xlabel(xlabel)
   diagram.set_title(title)
 
-# read transactions file
-transactions_file = open(r'./result/transactions.txt').read()
-transactions = json.loads(transactions_file)
+def visualizeTransactions(resultFolder):
+  # read transactions file
+  transactions_file = open(resultFolder + '/transactions.txt').read()
+  transactions = json.loads(transactions_file)
 
-# prepare transaction data
-data_by_day_last_month = groupBy(filter(lambda t: transactionIsEurSpent(t) and transactionIsLastMonth(t), transactions["data"]), transactionToYearMonthDay)
-data_by_year_month = groupBy(filter(transactionIsEurSpent, transactions["data"]), transactionToYearMonth)
-data_by_user = groupBy(filter(transactionIsEurSpent, transactions["data"]), transactionToUserEmail)
+  # prepare transaction data
+  data_by_day_last_month = groupBy(filter(lambda t: transactionIsEurSpent(t) and transactionIsLastMonth(t), transactions["data"]), transactionToYearMonthDay)
+  data_by_year_month = groupBy(filter(transactionIsEurSpent, transactions["data"]), transactionToYearMonth)
+  data_by_user = groupBy(filter(transactionIsEurSpent, transactions["data"]), transactionToUserEmail)
 
-eur_by_day_last_month = { k: -1 * sum(map(transactionToEur, v)) for k,v in data_by_day_last_month.items() }
-eur_by_year_month = { k: -1 * sum(map(transactionToEur, v)) for k,v in data_by_year_month.items() }
-eur_by_user = { k: -1 * sum(map(transactionToEur, v)) for k,v in data_by_user.items() }
+  eur_by_day_last_month = { k: -1 * sum(map(transactionToEur, v)) for k,v in data_by_day_last_month.items() }
+  eur_by_year_month = { k: -1 * sum(map(transactionToEur, v)) for k,v in data_by_year_month.items() }
+  eur_by_user = { k: -1 * sum(map(transactionToEur, v)) for k,v in data_by_user.items() }
 
-# draw diagrams
-plt.rcdefaults()
+  # draw diagrams
+  plt.rcdefaults()
 
-drawBarChart("EUR transactions per day in last month", "EUR", eur_by_day_last_month.keys(), eur_by_day_last_month.values())
-plt.savefig("transactions_per_day.png")
+  drawBarChart("EUR transactions per day in last month", "EUR", eur_by_day_last_month.keys(), eur_by_day_last_month.values())
+  plt.savefig(resultFolder + "/transactions_per_day.png")
 
-drawBarChart("EUR transactions per month", "EUR", eur_by_year_month.keys(), eur_by_year_month.values())
-plt.savefig("transactions_per_month.png")
+  drawBarChart("EUR transactions per month", "EUR", eur_by_year_month.keys(), eur_by_year_month.values())
+  plt.savefig(resultFolder + "/transactions_per_month.png")
 
-drawBarChart("EUR transactions per user", "EUR", eur_by_user.keys(), eur_by_user.values())
-plt.savefig("transactions_per_user.png")
+  drawBarChart("EUR transactions per user", "EUR", eur_by_user.keys(), eur_by_user.values())
+  plt.savefig(resultFolder + "/transactions_per_user.png")
+
+

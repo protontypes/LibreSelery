@@ -30,6 +30,10 @@ def main():
     # address containing virtual currency
     # to pay out the selected contributors
     selery.payout(recipients)
+    # visualize the generated transaction data
+    # generates images with charts/diagram in
+    # the results folder
+    selery.visualize()
     # Done.
     print("=============================")
 

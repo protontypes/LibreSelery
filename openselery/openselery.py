@@ -18,6 +18,7 @@ from openselery.librariesio_connector import LibrariesIOConnector
 from openselery.coinbase_connector import CoinbaseConnector
 from openselery import git_utils
 from openselery import selery_utils
+from openselery.visualization import visualizeTransactions
 
 class OpenSeleryConfig(object):
     __default_env_template__ = {
@@ -368,6 +369,12 @@ class OpenSelery(object):
                                               contributor.stats.author.name, weights[contributors.index(contributor)]))
             self.log("  > via project '%s'" % contributor.fromProject)
         return recipients
+
+    def visualize(self):
+      try:
+        visualizeTransactions(self.config.result_dir)
+      except Exception as e:
+        print("Error creating visualization", e)
 
     def payout(self, recipients):
         if not self.config.simulation:
