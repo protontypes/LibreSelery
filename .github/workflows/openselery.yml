@@ -29,6 +29,8 @@ jobs:
               echo ${HOME}/work/${REPOSITORY_NAME}/${REPOSITORY_NAME}
               ls ${HOME}/work/${REPOSITORY_NAME}/${REPOSITORY_NAME}
               echo "::set-env name=TARGET_PROJECT::${HOME}/work/${REPOSITORY_NAME}/${REPOSITORY_NAME}"
+              echo "::set-env name=GITHUB_REPOSITORY_NEW::$GITHUB_REPOSITORY"
+
         
       #- name: Pull openselery from dockerhub
       #  run: docker pull protontypes/openselery
@@ -152,7 +154,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
          github_token: ${{ secrets.PAT_LYON }}
-         repository: ${{ env.GITHUB_REPOSITORY }}.wiki
+         repository: ${{ env.GITHUB_REPOSITORY_NEW }}.wiki
          directory: wiki
         
 
