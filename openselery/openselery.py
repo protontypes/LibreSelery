@@ -400,18 +400,19 @@ class OpenSelery(object):
                 "message": amount,
                 "color": "orange"
                 }
-            print(balance_badge)
             with open(balanceBadgePath, "w") as write_file:
                 json.dump(balance_badge, write_file)
 
-            self.log("Trying to pay out donations to recipients")
+            self.log("Trying to pay out recipients")
             self.receiptStr = ""
             for contributor in recipients:
-                self.receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.btc_per_transaction,
+                if self.coinConnector.useremail() != contributor.stats.author.email:
+                    self.receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.btc_per_transaction,
                                                     self.config.skip_email, self.config.email_note)
-                
-                self.receiptStr = self.receiptStr + str(self.receipt)
-                self.log("Payout of [%s][%s] succeeded" % (self.receipt['amount']['amount'],self.receipt['amount']['currency']))
+                    self.receiptStr = self.receiptStr + str(self.receipt)
+                    self.log("Payout of [%s][%s] succeeded" % (self.receipt['amount']['amount'],self.receipt['amount']['currency']))
+                else:
+                    self.log("Skip payout since coinbase email is equal to contributor email")
                 
             with open(receiptFilePath, "a") as f:
                 f.write(str(self.receiptStr))

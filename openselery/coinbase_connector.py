@@ -28,3 +28,8 @@ class CoinbaseConnector(selery_utils.Connector):
         amount = self.account['native_balance']['amount']
         currency = self.account['native_balance']['currency']
         return amount, currency
+
+    def useremail(self):
+        user = self.client.get_current_user()
+        email = user['email']
+        return email 
