@@ -10,6 +10,7 @@
 
 * [Knowledge-Links](https://github.com/protontypes/openselery/wiki/Knowledge-Links)
 
+[![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 > Please keep in mind that OpenSelery is in an experimental state right now. The amount of funding should therefore be kept to a minimum.
 
 ## Features
@@ -23,10 +24,12 @@
 
 1. OpenSelery is configured based on the selery.yml file, so it runs as a CI-job in GitHub.
 2. Gathers contributor information about the target project via the Github and Libraries.io API
-3. Filters out contributors that have not made the email address visible in the Github profile.
+3. Filters out contributors that not made the email address visible in the Github profile.
 4. Creates a uniform weight distribution between all contributors. Custom distributions like release participation are under construction.
-5. Randomly chooses contributors based on the weights.
-6. Pays out Bitcoin to the chosen contributor email addresses via the Coinbase API. Contributor without a Coinbase account will get a email to claim the donation.
+5. Creates an activity weight between all contributors to reward activity.
+6. Sums the weights.
+7. Randomly chooses contributors based on the weights.
+8. Pays out Bitcoin to the chosen contributor email addresses via the Coinbase API. Contributor without a Coinbase account will get a email to claim the donation.
 
 ## Demo
 
