@@ -7,9 +7,6 @@
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions) ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/protontypes/openselery?logo=docker) [![Updates](https://pyup.io/repos/github/protontypes/openselery/shield.svg)](https://pyup.io/repos/github/protontypes/openselery/)         
 ![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/balance_badge.json&style=flat&logo=bitcoin)          
 [![Donate with bitcoin](https://en.cryptobadges.io/badge/small/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w)](https://en.cryptobadges.io/donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w)  
-
-* [Knowledge-Links](https://github.com/protontypes/openselery/wiki/Knowledge-Links)
-
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 > Please keep in mind that OpenSelery is in an experimental state right now. The amount of funding should therefore be kept to a minimum.
 
@@ -118,5 +115,8 @@ Use the [github template](https://github.com/protontypes/seleryexample) to creat
 
 ## Contribution
 Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the Github profile page are considered. We will never send a URL in the note.
+
+# Knowledge Base
+* [Knowledge-Links](https://github.com/protontypes/openselery/wiki/Knowledge-Links)
 
   *Artwork by Miriam Winter*
