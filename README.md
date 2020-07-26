@@ -32,7 +32,11 @@
 
 [![demo](https://asciinema.org/a/qT8m8Tbvt2Fwck077FLGVjMn1.svg)](https://asciinema.org/a/qT8m8Tbvt2Fwck077FLGVjMn1?autoplay=1)
 
-## Usage
+
+## Continuous Integration  
+Use the [github template](https://github.com/protontypes/seleryexample) to integrate OpenSelery into your in your project with a single github action file.
+
+## Command Line Usage 
 
 ### Create the access Tokens and Accounts
 
@@ -108,10 +112,7 @@ pip3 install -r requirements.txt
 ```bash
 TARGET_DIR=<target_repository> && env $(cat ~/.openselery/tokens.env) python3 selery.py --config $TARGET_DIR/selery.yml --directory $TARGET_DIR --result results
 ```
-    
-### Continuous Integration  
-Use the [github template](https://github.com/protontypes/seleryexample) to create a new selery in your project.
-
+   
 
 ## Contribution
 Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the Github profile page are considered. We will never send a URL in the note.
