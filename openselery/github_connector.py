@@ -30,8 +30,7 @@ class GithubConnector(selery_utils.Connector):
         project = self.github.get_repo(int(projectId))
         return project
 
-    def parseRemoteProjectId(self, url):
-
+    def parseRemoteToOwnerProjectName(self, url):
         # These urls need to be parsable:
         # https://github.com/protontypes/openselery
         # https://github.com/protontypes/openselery.git
@@ -43,7 +42,10 @@ class GithubConnector(selery_utils.Connector):
             raise ValueError("url cannot be parsed. (url: %s)" % (url))
 
         (owner, project_name) = matchObj.groups()
-        repo = self.github.get_repo(owner + '/' + project_name)
+        return owner + "/" + project_name
+
+    def parseRemoteProjectId(self, url):
+        repo = self.github.get_repo(self.parseRemoteToOwnerProjectName(url))
         return repo.id
 
     def grabRemoteProjectByUrl(self, projectUrl):

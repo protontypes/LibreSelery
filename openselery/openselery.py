@@ -415,7 +415,7 @@ class OpenSelery(object):
             for contributor in recipients:
                 if self.coinConnector.useremail() != contributor.stats.author.email:
                     receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.btc_per_transaction,
-                                                    self.config.skip_email, self.config.email_note)
+                                                    self.config.skip_email, self._getEmailNote())
                     self.receiptStr = self.receiptStr + str(receipt)
                     self.log("Payout of [%s][%s] succeeded" % (receipt['amount']['amount'],receipt['amount']['currency']))
                 else:
@@ -445,6 +445,20 @@ class OpenSelery(object):
             return file_path
         else:
             return None
+
+    def _getEmailNote(self):
+      repo_message = ""
+      try:
+         remote_url = git_utils.grabLocalProject(self.config.directory)
+         owner_project_name = self.githubConnector.parseRemoteToOwnerProjectName(remote_url)
+         repo_message = " to " + owner_project_name
+      except Exception as e:
+        print("Cannot detect remote url of git repo", e)
+
+      prefix = "Thank you for your contribution" + repo_message
+      postfix = "Find out more about OpenSelery at https://github.com/protontypes/openselery."
+      inner = ": " + self.config.email_note if self.config.email_note else ""
+      return prefix + inner + ". " + postfix
 
     def getConfig(self):
         return self.config
