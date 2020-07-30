@@ -30,8 +30,6 @@ def find_release_contributor(repo_path, release_counter):
 
 def grabLocalProject(repo_path, remoteName='origin'):
     repo = git.Repo(repo_path)
-    project = None
-    projectUrl = None
     for remote in repo.remotes:
         if remote.name == remoteName:
             return remote.url
