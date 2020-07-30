@@ -28,7 +28,7 @@ bitcoin_address: "3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w"
 check_equal_privat_and_public_address: True
 ## Skip email sended by coinbase
 skip_email: False
-## the amount of eth send per user
+## the amount of btc send per user
 btc_per_transaction: 0.000022
 ## numbers of contributors payout per run
 number_payout_contributors_per_run: 1
