@@ -414,10 +414,10 @@ class OpenSelery(object):
             self.receiptStr = ""
             for contributor in recipients:
                 if self.coinConnector.useremail() != contributor.stats.author.email:
-                    self.receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.btc_per_transaction,
+                    receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.btc_per_transaction,
                                                     self.config.skip_email, self.config.email_note)
-                    self.receiptStr = self.receiptStr + str(self.receipt)
-                    self.log("Payout of [%s][%s] succeeded" % (self.receipt['amount']['amount'],self.receipt['amount']['currency']))
+                    self.receiptStr = self.receiptStr + str(receipt)
+                    self.log("Payout of [%s][%s] succeeded" % (receipt['amount']['amount'],receipt['amount']['currency']))
                 else:
                     self.log("Skip payout since coinbase email is equal to contributor email")
                 
