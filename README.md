@@ -116,7 +116,7 @@ TARGET_DIR=<target_repository> && env $(cat ~/.openselery/tokens.env) python3 se
    
 
 ## Contribution
-Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the Github profile page are considered. We will never send a URL in the note.
+Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the Github profile page are considered.
 
 # Knowledge Base
 * [Knowledge-Links](https://github.com/protontypes/openselery/wiki/Knowledge-Links)
