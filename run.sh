@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Never print SECRETS or TOKENS.
 
 DOCKER_PATH_TARGET_DIR="/home/selery/runningrepo/"
