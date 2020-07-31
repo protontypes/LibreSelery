@@ -46,7 +46,16 @@ def _runCommand(args):
     print("=============================")
 
 def _initCommand(args):
-    print("INIT")
+    print("Initializing new OpenSelery project")
+
+    config = OpenSeleryConfig()
+
+    config.bitcoin_address = input("Enter your public bitcoin address: ")
+    if not config.bitcoin_address:
+      print("Invalid bitcoin address")
+      exit(-1)
+
+    config.writeYaml("./selery.yml")
 
 def _parseArgs():
     parser = argparse.ArgumentParser(description='openselery - Automated Funding')

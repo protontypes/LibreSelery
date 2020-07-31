@@ -9,6 +9,7 @@ class OpenSeleryConfig(object):
         "coinbase_token": 'COINBASE_TOKEN',
         "coinbase_secret": 'COINBASE_SECRET',
     }
+
     __default_config_template__ = {
         "simulation": True,
 
@@ -30,6 +31,7 @@ class OpenSeleryConfig(object):
         "uniform_weight": 10,
         "release_weight": 10
     }
+
     __secure_config_entries__ = ["libraries_api_key", "github_token", "coinbase_token", "coinbase_secret", "coinbase_secret"]
 
     def __init__(self, d={}):
@@ -69,6 +71,13 @@ class OpenSeleryConfig(object):
         if extractor.has_urls(self.email_note):
             raise ValueError("Using URLs in note not possible")
 
+
+    def writeYaml(self, path):
+      # TODO: fix order and add comments
+      yamlString = yaml.dump(self.__dict__)
+      file = open(path, 'w')
+      file.write(yamlString)
+      file.close()
 
     def __repr__(self):
         # make config safe for printing
