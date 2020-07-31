@@ -1,16 +1,10 @@
 import subprocess
-import argparse
 import os
 import re
 import json
 import yaml
 import random
-import sys
-import pprint
-import pdb
-import github
 import logging
-import pickle
 from urlextract import URLExtract
 
 from openselery.github_connector import GithubConnector
@@ -20,89 +14,9 @@ from openselery import git_utils
 from openselery import selery_utils
 from openselery.visualization import visualizeTransactions
 
-class OpenSeleryConfig(object):
-    __default_env_template__ = {
-        "libraries_api_key": 'LIBRARIES_API_KEY',
-        "github_token": 'GITHUB_TOKEN',
-        "coinbase_token": 'COINBASE_TOKEN',
-        "coinbase_secret": 'COINBASE_SECRET',
-    }
-    __default_config_template__ = {
-        "simulation": True,
-
-        "include_dependencies": False,
-        "include_self": True,
-        "include_tooling_and_runtime": False,
-
-        "bitcoin_address": '',
-        "check_equal_private_and_public_address": True,
-        "skip_email": True,
-        "email_note": 'Fresh OpenCelery Donation',
-        "btc_per_transaction": 0.000002,
-        "number_payout_contributors_per_run": 1,
-        "max_payout_per_run": 0.000002,
-        
-
-        "min_contributions": 1,
-        "consider_releases": False,
-        "releases_included": 1,
-        "uniform_weight": 10,
-        "release_weight": 10
-
-    }       
-    __secure_config_entries__ = ["libraries_api_key", "github_token", "coinbase_token", "coinbase_secret",
-                                 "coinbase_secret"]
-
-    def __init__(self, d={}):
-        super(OpenSeleryConfig, self).__init__()
-        self.apply(self.__default_config_template__)
-        self.apply(d)
-
-    def apply(self, d):
-        self.__dict__.update(d)
-
-    def applyEnv(self):
-        try:
-            environmentDict = {
-                k: os.environ[v] for k, v in self.__default_env_template__.items()}
-            self.apply(environmentDict)
-        except KeyError as e:
-            raise KeyError("Please provide environment variable %s" % e)
-
-
-    def applyYaml(self, path):
-        yamlDict = yaml.safe_load(open(path))
-        # ensure type of loaded config
-        for k, v in yamlDict.items():
-            t1, v1, t2, v2 = type(v), v, type(
-                getattr(self, k)), getattr(self, k)
-            if t1 != t2:
-                raise ValueError("Configuration parameter '%s' has failed type check! 's'<'%s'> should be 's'<'%s'>" % (
-                    k, v1, t1, v2, t2))
-
-        # special evaluations
-        if self.max_payout_per_run < self.btc_per_transaction * self.number_payout_contributors_per_run:
-            raise ValueError("The specified payout amount (self.btc_per_transaction * self.number_payout_contributors_per_run) exceeds the maximum payout (max_payout_per_run)")
-        self.apply(yamlDict)
-
-        # block url in note
-        extractor = URLExtract()
-        if extractor.has_urls(self.email_note):
-            raise ValueError("Using URLs in note not possible")
-
-
-    def __repr__(self):
-        # make config safe for printing
-        # secureEntries = {k: "X"*len(os.environ[v]) for k, v in self.__default_env_template__.items()}
-        secureEntries = {k: "X" * len(getattr(self, k))
-                         for k in self.__secure_config_entries__}
-        secureDict = dict(self.__dict__)
-        secureDict.update(secureEntries)
-        return str(" --\n%s\n --" % secureDict)
-
 
 class OpenSelery(object):
-    def __init__(self, silent=False):
+    def __init__(self, config, silent=False):
         super(OpenSelery, self).__init__()
         # set our openselery project dir, which is '../../this_script'
         self.seleryDir = os.path.dirname(
@@ -110,6 +24,7 @@ class OpenSelery(object):
         self.silent = silent
         self.librariesIoConnector = None
         self.githubConnector = None
+        self.config = config
         # start initialization of configs
         self.initialize()
 
@@ -124,23 +39,14 @@ class OpenSelery(object):
 
     def initialize(self):
         self.logNotify("Initializing OpenSelery")
-        
+
         # return openselery version
         selerypath = os.path.realpath(__file__)
         # return openselery version
-        self.log("OpenSelery HEAD sha [%s]" %
-                 git_utils.get_head_sha(selerypath))
-        self.log("OpenSelery last tag [%s]" %
-                 git_utils.get_lastest_tag(selerypath))
+        self.log("OpenSelery HEAD sha [%s]" % git_utils.get_head_sha(selerypath))
+        self.log("OpenSelery last tag [%s]" % git_utils.get_lastest_tag(selerypath))
 
-        # initialize config dict with default from template
         self.log("Preparing Configuration")
-        self.config = OpenSeleryConfig()
-        # parse args
-        self.log("Parsing arguments")
-        args = self.parseArgs()
-        # apply args dict to config
-        self.config.apply(vars(args).items())
         # apply yaml config to our configuration if possible
         self.log("Loading configuration [%s]" % self.config.config_path)
         self.loadYaml(self.config.config_path)
@@ -159,38 +65,22 @@ class OpenSelery(object):
                     self.log("Found bitcoin address [%s]" % self.config.bitcoin_address)
         else:
             self.log("Using bitcoin address from configuration file for validation check [%s]" % self.config.bitcoin_address)
-        # load tooling url
 
+        # load tooling url
         if self.config.include_tooling_and_runtime and self.config.tooling_path:
             with open(self.config.tooling_path) as f:
                 self.config.toolrepos = yaml.safe_load(f)
             if self.config.toolrepos is not None:
                 self.log("Tooling file loaded [%s]" % self.config.toolrepos)
-            else: 
+            else:
                 self.log("No tooling urls found")
         else:
             self.log("Tooling not included")
-            
 
         # load our environment variables
         self.loadEnv()
         self.logNotify("Initialized")
         self.log(str(self.getConfig()))
-        
-
-    def parseArgs(self):
-        parser = argparse.ArgumentParser(
-            description='openselery - Automated Funding')
-        parser.add_argument("-c", "--config", required=True, dest="config_path", type=str,
-                            help="Configuration file path")
-        parser.add_argument("-d", "--directory", required=True,
-                            type=str, help="Git directory to scan")
-        parser.add_argument("-r", "--results_dir", required=True,
-                            type=str, help="Result directory", dest="result_dir")
-        parser.add_argument("-t", "--tooling", required=False,
-                            type=str, help="Tooling file path", dest="tooling_path")
-        args = parser.parse_args()
-        return args
 
     def loadEnv(self):
         self._execCritical(lambda: self.config.applyEnv(), [])

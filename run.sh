@@ -17,6 +17,6 @@ docker run --rm -t \
 -v $(realpath $DOT_DIR/config):/home/selery/config \
 -u $(id -u $USER):$(id -g $USER) \
 openselery \
---config $DOCKER_PATH_TARGET_DIR/selery.yml --directory $DOCKER_PATH_TARGET_DIR/ --result /home/selery/results --tooling /home/config/tooling_repos.yml
+run --config $DOCKER_PATH_TARGET_DIR/selery.yml --directory $DOCKER_PATH_TARGET_DIR/ --result /home/selery/results --tooling /home/config/tooling_repos.yml
 
 

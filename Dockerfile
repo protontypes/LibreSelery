@@ -34,4 +34,4 @@ USER selery
 # Copy all
 COPY . .
 
-ENTRYPOINT ["python3","/home/selery/openselery/selery.py"]
+ENTRYPOINT ["python3","/home/selery/openselery/selery.py", "run"]
