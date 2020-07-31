@@ -24,8 +24,8 @@ release_weight: 70
 
 # payout configurations
 bitcoin_address: "3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w"
-## check the public address from FUNDING.yml vs the secret coinbase address
-check_equal_privat_and_public_address: True
+## check that the public bitcoin address matches the secret coinbase address
+check_equal_private_and_public_address: True
 ## Skip email sended by coinbase
 skip_email: False
 ## the amount of btc send per user

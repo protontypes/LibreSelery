@@ -35,7 +35,7 @@ class OpenSeleryConfig(object):
         "include_tooling_and_runtime": False,
 
         "bitcoin_address": '',
-        "check_equal_privat_and_public_address": True,
+        "check_equal_private_and_public_address": True,
         "skip_email": True,
         "email_note": 'Fresh OpenCelery Donation',
         "btc_per_transaction": 0.000002,
@@ -383,7 +383,7 @@ class OpenSelery(object):
             balanceBadgePath = os.path.join(self.config.result_dir, "balance_badge.json")
 
             # check if the public address is in the privat wallet
-            if self.config.check_equal_privat_and_public_address:
+            if self.config.check_equal_private_and_public_address:
                 if self.coinConnector.iswalletAddress(self.config.bitcoin_address):
                     self.log("Public and privat address match")
                 else:    
