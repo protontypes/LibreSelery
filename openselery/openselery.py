@@ -5,7 +5,7 @@ import json
 import yaml
 import random
 import logging
-import time
+import datetime
 from urlextract import URLExtract
 
 from openselery.github_connector import GithubConnector
@@ -308,7 +308,7 @@ class OpenSelery(object):
             # Create the native balance badge to show on the README
             native_balance_badge = {
                 "schemaVersion": 1,
-                "label": native_currency+"@"+time.ctime(),
+                "label": native_currency+" @ "+datetime.datetime.utcnow() ,
                 "message": native_amount,
                 "color": "orange"
                 }
