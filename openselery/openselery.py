@@ -295,7 +295,7 @@ class OpenSelery(object):
                 "schemaVersion": 1,
                 "label": currency,
                 "message": amount,
-                "color": "gold"
+                "color": "green"
                 }
 
             balanceBadgePath = os.path.join(self.config.result_dir, "balance_badge.json")
@@ -310,7 +310,7 @@ class OpenSelery(object):
                 "schemaVersion": 1,
                 "label": native_currency+" @ "+str(datetime.datetime.utcnow()) ,
                 "message": native_amount,
-                "color": "gold"
+                "color": "green"
                 }
 
             nativeBalanceBadgePath = os.path.join(self.config.result_dir, "native_balance_badge.json")
