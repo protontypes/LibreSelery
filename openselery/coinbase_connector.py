@@ -25,9 +25,14 @@ class CoinbaseConnector(selery_utils.Connector):
         return tx
 
     def balancecheck(self):
-        amount = self.account['native_balance']['amount']
-        currency = self.account['native_balance']['currency']
+        amount = self.account['balance']['amount']
+        currency = self.account['balance']['currency']
         return amount, currency
+
+    def native_balancecheck(self):
+        native_amount = self.account['native_balance']['amount']
+        native_currency = self.account['native_balance']['currency']
+        return native_amount, native_currency
 
     def useremail(self):
         user = self.client.get_current_user()

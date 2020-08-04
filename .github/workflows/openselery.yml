@@ -143,6 +143,7 @@ jobs:
          cd ./wiki
          mkdir -p openselery       
          cp ${results_folder}/balance_badge.json ./openselery/
+         cp ${results_folder}/native_balance_badge.json ./openselery/
          git config user.name github-actions
          git config user.email github-actions@github.com
          git status

@@ -5,6 +5,7 @@ import json
 import yaml
 import random
 import logging
+import time
 from urlextract import URLExtract
 
 from openselery.github_connector import GithubConnector
@@ -226,7 +227,7 @@ class OpenSelery(object):
                 if user.stats.author.email.lower() in release_contributor:
                     release_weights[idx]=self.config.release_weight
                     self.log("Github email address matches git email from last release: " +user.stats.author.name )
-            self.log("Release Weights;" +str(release_weights))
+            self.log("Release Weights:" +str(release_weights))
             # considers all release contributor equal
             release_contributor = set(release_contributor)
 
@@ -234,12 +235,12 @@ class OpenSelery(object):
         self.log("Start with unifrom porbability weights for contributors")
         uniform_weights = selery_utils.calculateContributorWeights(
             contributor, self.config.uniform_weight)
-        self.log("Uniform Weights;" +str(uniform_weights))
+        self.log("Uniform Weights:" +str(uniform_weights))
 
         # sum up the two list with the same size
         total_weights = [x + y for x, y in zip(uniform_weights, release_weights)]
 
-        self.log("Total Weights;" +str(total_weights))
+        self.log("Total Weights:" +str(total_weights))
         # read @user from commit
         return total_weights
 
@@ -270,7 +271,6 @@ class OpenSelery(object):
         if not self.config.simulation:
             transactionFilePath = os.path.join(self.config.result_dir, "transactions.txt")
             receiptFilePath = os.path.join(self.config.result_dir, "receipt.txt")
-            balanceBadgePath = os.path.join(self.config.result_dir, "balance_badge.json")
 
             # check if the public address is in the privat wallet
             if self.config.check_equal_private_and_public_address:
@@ -288,7 +288,7 @@ class OpenSelery(object):
                 f.write(str(transactions))
             
             amount,currency = self.coinConnector.balancecheck()
-            self.log("Chech primary account wallet balance [%s] : [%s]" % (amount, currency))
+            self.log("Chech account wallet balance [%s] : [%s]" % (amount, currency))
 
             # Create the balance badge to show on the README
             balance_badge = {
@@ -297,8 +297,25 @@ class OpenSelery(object):
                 "message": amount,
                 "color": "orange"
                 }
+
+            balanceBadgePath = os.path.join(self.config.result_dir, "balance_badge.json")
             with open(balanceBadgePath, "w") as write_file:
                 json.dump(balance_badge, write_file)
+
+            native_amount, native_currency = self.coinConnector.native_balancecheck()
+            self.log("Check native account wallet balance [%s] : [%s]" % (native_amount, native_currency)) 
+
+            # Create the native balance badge to show on the README
+            native_balance_badge = {
+                "schemaVersion": 1,
+                "label": native_currency+"@"+time.ctime(),
+                "message": native_amount,
+                "color": "orange"
+                }
+
+            nativeBalanceBadgePath = os.path.join(self.config.result_dir, "native_balance_badge.json")
+            with open(nativeBalanceBadgePath, "w") as write_file:
+                json.dump(native_balance_badge, write_file)
 
             self.log("Trying to pay out recipients")
             self.receiptStr = ""
