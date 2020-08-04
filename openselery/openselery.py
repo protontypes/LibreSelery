@@ -295,7 +295,7 @@ class OpenSelery(object):
                 "schemaVersion": 1,
                 "label": currency,
                 "message": amount,
-                "color": "orange"
+                "color": "gold"
                 }
 
             balanceBadgePath = os.path.join(self.config.result_dir, "balance_badge.json")
@@ -308,9 +308,9 @@ class OpenSelery(object):
             # Create the native balance badge to show on the README
             native_balance_badge = {
                 "schemaVersion": 1,
-                "label": native_currency+" @ "+datetime.datetime.utcnow() ,
+                "label": native_currency+" @ "+str(datetime.datetime.utcnow()) ,
                 "message": native_amount,
-                "color": "orange"
+                "color": "gold"
                 }
 
             nativeBalanceBadgePath = os.path.join(self.config.result_dir, "native_balance_badge.json")
