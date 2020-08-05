@@ -84,6 +84,10 @@ class GithubConnector(selery_utils.Connector):
         #    # location = contributor.location
         return cachedContributors
 
+    def grabUserNameByEmail(self, email):
+        user=self.github.search_users(str(email)+" in:email")
+        return email
+
     # def ScanCommits(git_folder,branch='master'):
     #    repo = Repo(git_folder)
     #    commit_msgs = []

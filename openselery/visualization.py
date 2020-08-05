@@ -4,6 +4,7 @@ import json
 import datetime
 
 from openselery.collection_utils import groupBy
+from openselery.github_connector import GithubConnector
 
 def transactionToYearMonthDay(transaction):
   creation_date = datetime.datetime.strptime(transaction["created_at"], '%Y-%m-%dT%H:%M:%SZ')
@@ -14,6 +15,7 @@ def transactionToYearMonth(transaction):
   return f'{creation_date.month}/{creation_date.year}'
 
 def transactionToUserEmail(transaction):
+  #user_name = GithubConnector.grabUserNameByEmail(transaction["to"]["email"])
   return transaction["to"]["email"]
 
 def transactionIsLastMonth(transaction):
