@@ -2,6 +2,7 @@ import os
 import tempfile
 os.environ['MPLCONFIGDIR'] = tempfile.mkdtemp()
 import matplotlib.pyplot as plt
+from matplotlib.ticker import ScalarFormatter 
 import numpy as np
 import json
 import datetime
@@ -37,14 +38,14 @@ def transactionToEur(transaction):
 def drawBarChart(title, xlabel, keys, values):
   plt.xscale('log')
   _, diagram = plt.subplots()
-  y_pos = np.arange(len(keys))
-  diagram.barh(y_pos, values, align='center')
+  y_pos = np.arange(len(keys))*4
+  diagram.barh(y_pos, values, align='center', log='true', in_layout='true', height = '1.0')
   diagram.set_yticks(y_pos)
   diagram.set_yticklabels(keys)
   diagram.invert_yaxis()  # labels read top-to-bottom
-  diagram.set_xlabel(xlabel, labelpad=40)
+  diagram.set_xlabel(xlabel)
   diagram.set_title(title)
-  diagram.autoscale()
+  diagram.xaxis.set_major_formatter(ScalarFormatter())
 
 def visualizeTransactions(resultFolder):
   # read transactions file
@@ -64,12 +65,12 @@ def visualizeTransactions(resultFolder):
   plt.rcdefaults()
 
   drawBarChart("EUR transactions per day in last month", "EUR", eur_by_day_last_month.keys(), eur_by_day_last_month.values())
-  plt.savefig(resultFolder + "/transactions_per_day.png")
+  plt.savefig(resultFolder + "/transactions_per_day.png", bbox_inches = "tight" )
 
   drawBarChart("EUR transactions per month", "EUR", eur_by_year_month.keys(), eur_by_year_month.values())
-  plt.savefig(resultFolder + "/transactions_per_month.png")
+  plt.savefig(resultFolder + "/transactions_per_month.png", bbox_inches = "tight")
 
   drawBarChart("EUR transactions per user", "EUR", eur_by_user.keys(), eur_by_user.values())
-  plt.savefig(resultFolder + "/transactions_per_user.png")
+  plt.savefig(resultFolder + "/transactions_per_user.png", bbox_inches = "tight")
 
 
