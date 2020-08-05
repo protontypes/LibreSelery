@@ -308,7 +308,7 @@ class OpenSelery(object):
             # Create the native balance badge to show on the README
             native_balance_badge = {
                 "schemaVersion": 1,
-                "label": native_currency+" @ "+str(datetime.datetime.utcnow()) ,
+                "label": native_currency+" @ "+datetime.datetime.utcnow().strftime('%B %d %Y - %H:%M:%S')+" UTC" ,
                 "message": native_amount,
                 "color": "green"
                 }
@@ -326,7 +326,7 @@ class OpenSelery(object):
                     self.receiptStr = self.receiptStr + str(receipt)
                     self.log("Payout of [%s][%s] succeeded" % (receipt['amount']['amount'],receipt['amount']['currency']))
                 else:
-                    self.log("Skip payout since coinbase email is equal to contributor email")
+                    self.logWarning("Skip payout since coinbase email is equal to contributor email")
                 
             with open(receiptFilePath, "a") as f:
                 f.write(str(self.receiptStr))
@@ -342,7 +342,7 @@ class OpenSelery(object):
                          (self.config.btc_per_transaction, contributor.stats.author.name))
 
                 with open(simulatedreceiptFilePath, "a") as f:
-                    f.write(str(contributor))
+                    f.write(str(recipients))
 
 
     def _getFile(self, file):

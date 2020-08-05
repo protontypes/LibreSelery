@@ -1,3 +1,6 @@
+import os    
+import tempfile
+os.environ['MPLCONFIGDIR'] = tempfile.mkdtemp()
 import matplotlib.pyplot as plt
 import numpy as np
 import json
@@ -32,14 +35,16 @@ def transactionToEur(transaction):
   return float(transaction["native_amount"]["amount"])
 
 def drawBarChart(title, xlabel, keys, values):
+  plt.xscale('log')
   _, diagram = plt.subplots()
   y_pos = np.arange(len(keys))
   diagram.barh(y_pos, values, align='center')
   diagram.set_yticks(y_pos)
   diagram.set_yticklabels(keys)
   diagram.invert_yaxis()  # labels read top-to-bottom
-  diagram.set_xlabel(xlabel)
+  diagram.set_xlabel(xlabel, labelpad=40)
   diagram.set_title(title)
+  diagram.autoscale()
 
 def visualizeTransactions(resultFolder):
   # read transactions file
