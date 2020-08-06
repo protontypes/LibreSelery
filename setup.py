@@ -1,17 +1,32 @@
-from distutils.core import setup
+#! /usr/bin/env python3
+from setuptools import setup
+### https://setuptools.readthedocs.io/en/latest/setuptools.html
 
+import os
+
+### read requirements file
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
-
-
-here = path.abspath(path.dirname(__file__))
-# Get the long description from the README file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+    
+    
+pwd = os.path.abspath(os.path.dirname(__file__))
+### Get the long description from the README file
+with open(os.path.join(pwd, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
-
+    
+### package definition
 setup(
     name='openselery',
-    packages=['openselery', ],
+    version='0.1',
+    description='A Software-Defined Funding Distribution',
+    url='https://github.com/kikass13/openselery',
     long_description=long_description,
-    install_requires=requirements
+    install_requires=requirements,
+
+    packages=['openselery',],
+    scripts=['scripts/selery',],
+
+    ### add additional files to $TARGET_DIR containing [$SOURCE_FILES]
+	data_files=[("openselery/ruby_extensions", ["openselery/ruby_extensions/scan.rb"])],
+
 )
