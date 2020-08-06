@@ -8,8 +8,6 @@ def runCli():
   args.func(args)
 
 def _runCommand(args):
-    print("=============================")
-
     # apply args dict to config
     config = OpenSeleryConfig()
     config.apply(vars(args).items())
@@ -37,13 +35,14 @@ def _runCommand(args):
     # let openselery use the given
     # address containing virtual currency
     # to pay out the selected contributors
-    selery.payout(recipients)
+    receipt, transaction = selery.payout(recipients)
     # visualize the generated transaction data
     # generates images with charts/diagram in
     # the results folder
-    selery.visualize()
+    selery.visualize(receipt, transaction)
+    ### finish openselery by checking processed information
+    selery.finish(receipt)
     # Done.
-    print("=============================")
 
 def _initCommand(args):
     print("Initializing new OpenSelery project")
@@ -67,7 +66,10 @@ def _parseArgs():
 
     # create the parser for the "run" command
     parser_run = subparsers.add_parser('run', help='run --help')
-    parser_run.add_argument("-c", "--config", required=True, dest="config_path", type=str, help="Configuration file path")
+    parser_run.add_argument("-C", "--config-dir", required=False, default="", dest="config_dir", type=str,
+                            help="Add all congifs from configuration directory")
+    parser_run.add_argument("-c", "--config", required=False, dest="config_paths", nargs='+', default=[],
+                            help="Add configuration file path")
     parser_run.add_argument("-d", "--directory", required=True, type=str, help="Git directory to scan")
     parser_run.add_argument("-r", "--results_dir", required=True, type=str, help="Result directory", dest="result_dir")
     parser_run.add_argument("-t", "--tooling", required=False, type=str, help="Tooling file path", dest="tooling_path")
