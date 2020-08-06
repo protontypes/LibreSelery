@@ -144,6 +144,9 @@ jobs:
          mkdir -p openselery       
          cp ${results_folder}/balance_badge.json ./openselery/
          cp ${results_folder}/native_balance_badge.json ./openselery/
+	 cp ${results_folder}/transactions_per_day.png ./openselery/
+         cp ${results_folder}/transactions_per_month.png ./openselery/
+         cp ${results_folder}/transactions_per_user.png ./openselery/
          git config user.name github-actions
          git config user.email github-actions@github.com
          git status
