@@ -39,7 +39,7 @@ def drawBarChart(title, xlabel, keys, values):
   plt.xscale('log')
   _, diagram = plt.subplots()
   y_pos = np.arange(len(keys))*4
-  diagram.barh(y_pos, values, align='center', log='true', in_layout='true', height = '1.0')
+  diagram.barh(y_pos, values, align='center', log='true', in_layout='true' )
   diagram.set_yticks(y_pos)
   diagram.set_yticklabels(keys)
   diagram.invert_yaxis()  # labels read top-to-bottom
