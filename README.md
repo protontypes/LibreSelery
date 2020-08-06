@@ -10,7 +10,7 @@
 
 ![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/balance_badge.json&style=flat&logo=bitcoin) ![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/native_balance_badge.json&style=flat&logo=bitcoin)          
 [![Donate with bitcoin](https://en.cryptobadges.io/badge/small/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w)](https://en.cryptobadges.io/donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w)
-[![Transaction History](https://badgen.net/badge/icon/Transaction%20History?icon=bitcoin&label)]([Transactions](https://github.com/protontypes/openselery/wiki/Transaction-History)
+[![Transaction History](https://badgen.net/badge/icon/Transaction%20History?icon=bitcoin&label)](https://github.com/protontypes/openselery/wiki/Transaction-History)
 > Please keep in mind that OpenSelery is in an experimental state right now. The amount of funding should therefore be kept to a minimum.
 
 ## Features
