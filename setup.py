@@ -25,7 +25,7 @@ setup(
     setup_requires=['setuptools-git-version'],
 
     description='A Software-Defined Funding Distribution',
-    url='https://github.com/kikass13/openselery',
+    url='https://github.com/protontypes/openselery',
     long_description=long_description,
     dependency_links = ['https://github.com/protontypes/coinbase-python/tarball/master#egg=coinbase']
 
