@@ -213,7 +213,6 @@ class OpenSelery(object):
 
     def weight(self, contributor, local_repo, projects, deps):
         release_weights=[0] * len(contributor) 
-        github_contributors={}
         if self.config.consider_releases:
              # calc release weights
             self.log("Add additional weight to release contributors of last " +
@@ -253,8 +252,20 @@ class OpenSelery(object):
             self.logError("Could not find any contributors to payoff")
             raise Exception("Aborting")
 
-        recipients = random.choices(
-            contributors, weights, k=self.config.number_payout_contributors_per_run)
+        if random_split:
+            self.log("Creating random split based on weights")
+            recipients = random.choices(
+                contributors, weights, k=self.config.number_payout_contributors_per_run)
+
+        elif full_split:
+            self.log("Creating full split based on weights")
+            recipients = contributor 
+            contributor_payout_split = (contributor, weights, self.config.max_payout_per_run)
+
+        else:
+            self.logError("No split method configured")
+            raise Exception("Aborting")
+
         for contributor in recipients:
             self.log(" -- '%s': '%s' [w: %s]" % (contributor.stats.author.html_url,
                                               contributor.stats.author.name, weights[contributors.index(contributor)]))
