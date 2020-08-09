@@ -114,11 +114,12 @@ class OpenSelery(object):
     def gather(self):
         generalContributors = []
         generalProjects = []
-        generalDependencies = []
+        relatedDependencies = []
+        rootContributors = []
         self.log("Gathering project information")
         print("=======================================================")
         if self.config.include_self:
-            self.logWarning("Including local project '%s'" %
+            self.logWarning("Including root project '%s'" %
                             self.config.directory)
 
             # find official repositories
@@ -132,6 +133,18 @@ class OpenSelery(object):
 
             # safe dependency information
             generalProjects.append(localProject)
+
+            for p in generalProjects:
+                # grab contributors
+                depContributors = self.githubConnector.grabRemoteProjectContributors(
+                    p)
+                # filter contributors
+                depContributors = selery_utils.validateContributors(
+                    depContributors, self.config.min_contributions)
+                # safe contributor information
+                rootContributors.extend(depContributors)
+
+
 
         if self.config.include_dependencies:
             self.log("Searching for dependencies of project '%s' " %
@@ -175,10 +188,11 @@ class OpenSelery(object):
                                 libIoRepository.github_id)
 
                             # safe project / dependency information
-                            generalProjects.append(gitproject)
-                            generalDependencies.extend(libIoDependencies)
+                            relatedDependencies.append(gitproject)
 
         if self.config.include_tooling_and_runtime and self.config.tooling_path:
+            self.log("Searching for tooling of project '%s' " %
+                     self.config.directory)
             for toolurl in self.config.toolrepos['github']:
                 toolingProject = self.githubConnector.grabRemoteProjectByUrl(
                     toolurl)
@@ -186,20 +200,22 @@ class OpenSelery(object):
                 self.log(" -- %s" % toolingProject.html_url)
 
                 # safe tooling information
-                generalProjects.append(toolingProject)
+                relatedTooling.append(toolingProject)
 
-        self.log("Gathering contributor information")
+            self.log("Gathering toolchain contributor information")
         # scan for project contributors
-        for p in generalProjects:
-            # grab contributors
-            depContributors = self.githubConnector.grabRemoteProjectContributors(
+            for p in relatedTooling:
+                # grab contributors
+                toolingContributors = self.githubConnector.grabRemoteProjectContributors(
                 p)
-            # filter contributors
-            depContributors = selery_utils.validateContributors(
-                depContributors, self.config.min_contributions)
-            randomDebContributors = random.choices(depContributors, k=4)
+                # filter contributors
+                toolingContributors = selery_utils.validateContributors(
+                    toolingContributors, self.config.min_contributions)
             # safe contributor information
-            generalContributors.extend(randomDebContributors)
+                totalToolingContributors.extend(depContributors)
+
+
+
         print("=======================================================")
 
         self.logNotify("Gathered valid directory: %s" %
@@ -207,10 +223,10 @@ class OpenSelery(object):
         self.logNotify("Gathered '%s' valid repositories" %
                        len(generalProjects))
         self.logNotify("Gathered '%s' valid dependencies" %
-                       len(generalDependencies))
+                       len(relatedDependencies))
         self.logNotify("Gathered '%s' valid contributors" %
-                       len(generalContributors))
-        return  self.config.directory, generalProjects, generalDependencies, generalContributors
+                       len(rootContributors))
+        return  self.config.directory, generalProjects, relatedDependencies, rootContributors
 
     def weight(self, contributor, local_repo, projects, deps):
         release_weights=[0] * len(contributor) 
@@ -226,7 +242,7 @@ class OpenSelery(object):
             for idx,user in enumerate(contributor):
                 if user.stats.author.email.lower() in release_contributor:
                     release_weights[idx]=self.config.release_weight
-                    self.log("Github email address matches git email from last release: " +user.stats.author.name )
+                    self.log("Github email address matches git email from last release: " +user.stats.author.login )
             self.log("Release Weights:" +str(release_weights))
             # considers all release contributor equal
             release_contributor = set(release_contributor)
@@ -270,7 +286,7 @@ class OpenSelery(object):
 
         for recipient in recipients:
             self.log(" -- '%s': '%s' [w: %s]" % (recipient.stats.author.html_url,
-                                              recipient.stats.author.name, weights[contributors.index(recipient)]))
+                                              recipient.stats.author.login, weights[contributors.index(recipient)]))
             self.log("  > via project '%s'" % recipient.fromProject)
             self.log(" -- Payout split '%s'" % contributor_payout_split[contributors.index(recipient)])
 
@@ -355,7 +371,7 @@ class OpenSelery(object):
                     "Configuration 'simulation' is active, so NO transaction will be executed")
             for contributor in recipients:
                 self.log(" -- would have been a payout of '%.10f' bitcoin to '%s'" %
-                         (self.config.btc_per_transaction, contributor.stats.author.name))
+                         (self.config.btc_per_transaction, contributor.stats.author.login))
 
                 with open(simulatedreceiptFilePath, "a") as f:
                     f.write(str(recipients))
