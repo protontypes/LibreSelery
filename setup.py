@@ -27,8 +27,10 @@ setup(
     description='A Software-Defined Funding Distribution',
     url='https://github.com/kikass13/openselery',
     long_description=long_description,
-    install_requires=requirements,
+    dependency_links = ['https://github.com/protontypes/coinbase-python/tarball/master#egg=coinbase']
 
+    install_requires=requirements,
+    
     packages=['openselery',],
     scripts=['scripts/selery',],
 
