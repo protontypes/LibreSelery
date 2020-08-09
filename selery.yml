@@ -1,6 +1,6 @@
 # debug states
 ## simulation let you run without payout at the end
-simulation: False
+simulation: True
 
 # take into consideration
 ## include the target folders contributors
@@ -21,6 +21,10 @@ consider_releases: True
 releases_included: 3
 ## release weights
 release_weight: 70
+## random weighted split with equal payout per contributor
+random_split: False
+## weighted split over all contributors
+full_split: True
 
 # payout configurations
 bitcoin_address: "3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w"

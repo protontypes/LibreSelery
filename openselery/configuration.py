@@ -25,6 +25,9 @@ class OpenSeleryConfig(object):
         "number_payout_contributors_per_run": 1,
         "max_payout_per_run": 0.000002,
 
+        "random_split": False,
+        "full_split": False,
+
         "min_contributions": 1,
         "consider_releases": False,
         "releases_included": 1,

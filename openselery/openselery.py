@@ -185,7 +185,7 @@ class OpenSelery(object):
                 self.log(" -- %s" % toolingProject)
                 self.log(" -- %s" % toolingProject.html_url)
 
-                # safe dependency information
+                # safe tooling information
                 generalProjects.append(toolingProject)
 
         self.log("Gathering contributor information")
@@ -197,8 +197,9 @@ class OpenSelery(object):
             # filter contributors
             depContributors = selery_utils.validateContributors(
                 depContributors, self.config.min_contributions)
+            randomDebContributors = random.choices(depContributors, k=4)
             # safe contributor information
-            generalContributors.extend(depContributors)
+            generalContributors.extend(randomDebContributors)
         print("=======================================================")
 
         self.logNotify("Gathered valid directory: %s" %
@@ -252,24 +253,27 @@ class OpenSelery(object):
             self.logError("Could not find any contributors to payoff")
             raise Exception("Aborting")
 
-        if random_split:
+        if self.config.random_split:
             self.log("Creating random split based on weights")
             recipients = random.choices(
                 contributors, weights, k=self.config.number_payout_contributors_per_run)
+            contributor_payout_split = [self.config.max_payout_per_run]*len(contributor_payout_split)
 
-        elif full_split:
+        elif self.config.full_split:
             self.log("Creating full split based on weights")
-            recipients = contributor 
-            contributor_payout_split = (contributor, weights, self.config.max_payout_per_run)
+            recipients = contributors 
+            contributor_payout_split = selery_utils.weighted_split(contributors, weights, self.config.max_payout_per_run)
 
         else:
             self.logError("No split method configured")
             raise Exception("Aborting")
 
-        for contributor in recipients:
-            self.log(" -- '%s': '%s' [w: %s]" % (contributor.stats.author.html_url,
-                                              contributor.stats.author.name, weights[contributors.index(contributor)]))
-            self.log("  > via project '%s'" % contributor.fromProject)
+        for recipient in recipients:
+            self.log(" -- '%s': '%s' [w: %s]" % (recipient.stats.author.html_url,
+                                              recipient.stats.author.name, weights[contributors.index(recipient)]))
+            self.log("  > via project '%s'" % recipient.fromProject)
+            self.log(" -- Payout split '%s'" % contributor_payout_split[contributors.index(recipient)])
+
         return recipients
 
     def visualize(self):
@@ -328,6 +332,7 @@ class OpenSelery(object):
             with open(nativeBalanceBadgePath, "w") as write_file:
                 json.dump(native_balance_badge, write_file)
 
+            # Payout via the Coinbase API
             self.log("Trying to pay out recipients")
             self.receiptStr = ""
             for contributor in recipients:
