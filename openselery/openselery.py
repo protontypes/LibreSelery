@@ -112,10 +112,13 @@ class OpenSelery(object):
                 self.config.coinbase_token, self.config.coinbase_secret)
 
     def gather(self):
-        generalContributors = []
+
         generalProjects = []
-        relatedDependencies = []
-        rootContributors = []
+        generalContributors = []
+
+        dependencyProjects = []
+        dependencyContributors = []
+
         self.log("Gathering project information")
         print("=======================================================")
         if self.config.include_self:
@@ -136,13 +139,13 @@ class OpenSelery(object):
 
             for p in generalProjects:
                 # grab contributors
-                depContributors = self.githubConnector.grabRemoteProjectContributors(
+                generalContributor = self.githubConnector.grabRemoteProjectContributors(
                     p)
                 # filter contributors
-                depContributors = selery_utils.validateContributors(
-                    depContributors, self.config.min_contributions)
+                generalContributor = selery_utils.validateContributors(
+                    generalContributor, self.config.min_contributions)
                 # safe contributor information
-                rootContributors.extend(depContributors)
+                generalContributors.extend(generalContributor)
 
 
 
@@ -188,7 +191,18 @@ class OpenSelery(object):
                                 libIoRepository.github_id)
 
                             # safe project / dependency information
-                            relatedDependencies.append(gitproject)
+                            dependencyProjects.append(gitproject)
+
+            for p in dependencyProjects:
+                # grab contributors
+                depContributors = self.githubConnector.grabRemoteProjectContributors(
+                p)
+                # filter contributors
+                depContributors = selery_utils.validateContributors(
+                    depContributors, self.config.min_contributions)
+            # safe contributor information
+                dependencyContributors.extend(depContributors)
+
 
         if self.config.include_tooling_and_runtime and self.config.tooling_path:
             self.log("Searching for tooling of project '%s' " %
@@ -203,7 +217,8 @@ class OpenSelery(object):
                 relatedTooling.append(toolingProject)
 
             self.log("Gathering toolchain contributor information")
-        # scan for project contributors
+
+            # scan for project contributors
             for p in relatedTooling:
                 # grab contributors
                 toolingContributors = self.githubConnector.grabRemoteProjectContributors(
@@ -211,8 +226,8 @@ class OpenSelery(object):
                 # filter contributors
                 toolingContributors = selery_utils.validateContributors(
                     toolingContributors, self.config.min_contributions)
-            # safe contributor information
-                totalToolingContributors.extend(depContributors)
+                # safe contributor information
+                totalToolingContributors.extend(toolingContributors)
 
 
 
@@ -223,13 +238,21 @@ class OpenSelery(object):
         self.logNotify("Gathered '%s' valid repositories" %
                        len(generalProjects))
         self.logNotify("Gathered '%s' valid dependencies" %
-                       len(relatedDependencies))
+                       len(dependencyProjects))
         self.logNotify("Gathered '%s' valid contributors" %
-                       len(rootContributors))
-        return  self.config.directory, generalProjects, relatedDependencies, rootContributors
+                       len(generalContributors))
+        return  self.config.directory, generalProjects, dependencyProjects, generalContributors
 
-    def weight(self, contributor, local_repo, projects, deps):
-        release_weights=[0] * len(contributor) 
+    def weight(self, generalContributors, local_repo, projects, deps):
+
+        # create uniform weights
+        self.log("Start with unifrom porbability weights for contributors")
+        uniform_weights = selery_utils.calculateContributorWeights(
+           generalContributors, self.config.uniform_weight)
+        self.log("Uniform Weights:" +str(uniform_weights))
+
+        # create release weights
+        release_weights=[0]*len(generalContributors) 
         if self.config.consider_releases:
              # calc release weights
             self.log("Add additional weight to release contributors of last " +
@@ -239,19 +262,14 @@ class OpenSelery(object):
                 local_repo, self.config.releases_included)
             release_contributor = set(i.lower() for i in release_contributor)
             self.log("Found release contributor: "+str(len(release_contributor)))
-            for idx,user in enumerate(contributor):
+            print(generalContributors)
+            for idx,user in enumerate(generalContributors):
                 if user.stats.author.email.lower() in release_contributor:
                     release_weights[idx]=self.config.release_weight
                     self.log("Github email address matches git email from last release: " +user.stats.author.login )
             self.log("Release Weights:" +str(release_weights))
             # considers all release contributor equal
             release_contributor = set(release_contributor)
-
-        # create uniform probability
-        self.log("Start with unifrom porbability weights for contributors")
-        uniform_weights = selery_utils.calculateContributorWeights(
-            contributor, self.config.uniform_weight)
-        self.log("Uniform Weights:" +str(uniform_weights))
 
         # sum up the two list with the same size
         total_weights = [x + y for x, y in zip(uniform_weights, release_weights)]
