@@ -8,9 +8,11 @@ include_self: True
 ## include the dependencies of the target folder
 include_dependencies: True 
 ## include the tooling and runtime from file
-include_tooling_and_runtime: True
+include_tooling_and_runtime: False
 ## minimum contributions made to be considered
 min_contributions: 1
+## number of randomly selected dependency contributors
+included_dependency_contributor: 2
 
 # weight configuations
 ## base weight for all included contributors

@@ -122,18 +122,17 @@ class OpenSelery(object):
         toolingProjects = []
         toolingContributors = []
 
-        self.log("Gathering project information")
+        projectUrl = git_utils.grabLocalProject(
+           self.config.directory)
+
+        localProject = self.githubConnector.grabRemoteProjectByUrl(projectUrl)
+        self.log("Gathering project information of '%s' at  local folder '%s" % (projectUrl, self.config.directory))
         print("=======================================================")
         if self.config.include_self:
-            self.logWarning("Including root project '%s'" %
-                            self.config.directory)
-
             # find official repositories
-            projectUrl = git_utils.grabLocalProject(
-                self.config.directory)
+            self.log("Including contributors of root project '%s'" %
+                            localProject.full_name)
 
-            localProject = self.githubConnector.grabRemoteProjectByUrl(projectUrl)
-            self.log(" -- %s" % localProject)
             self.log(" -- %s" % localProject.html_url)
             #print(" -- %s" % [c.author.email for c in localContributors])
 
@@ -154,7 +153,7 @@ class OpenSelery(object):
 
         if self.config.include_dependencies:
             self.log("Searching for dependencies of project '%s' " %
-                     self.config.directory)
+                    localProject.full_name)
             # scan for dependencies repositories
             rubyScanScriptPath = os.path.join(
                 self.seleryDir, "ruby", "scan.rb")
@@ -210,7 +209,7 @@ class OpenSelery(object):
         if self.config.include_tooling_and_runtime and self.config.tooling_path:
             # tooling projects will be treated as dependency projects 
             self.log("Searching for tooling of project '%s' " %
-                     self.config.directory)
+                     localProject.full_name)
             for toolurl in self.config.toolrepos['github']:
                 toolingProject = self.githubConnector.grabRemoteProjectByUrl(
                     toolurl)
@@ -239,27 +238,26 @@ class OpenSelery(object):
 
         self.logNotify("Gathered valid directory: %s" %
                        self.config.directory)
-        self.logNotify("Gathered '%s' valid repositories" %
+        self.logNotify("Gathered '%s' valid main repositories" %
                        len(mainProjects))
-        self.logNotify("Gathered '%s' valid contributors" %
+        self.logNotify("Gathered '%s' valid main contributors" %
                        len(mainContributors))
 
-        self.logNotify("Gathered '%s' valid dependencies" %
+        self.logNotify("Gathered '%s' valid dependency repositories" %
                        len(dependencyProjects))
-        self.logNotify("Gathered '%s' valid dependencies" %
+        self.logNotify("Gathered '%s' valid dependency contributors" %
                        len(dependencyContributors))
-
-        self.logNotify("Gathered '%s' valid dependencies" %
-                       len(toolingProjects))
-        self.logNotify("Gathered '%s' valid dependencies" %
-                       len(toolingContributors))
-
 
         return  mainProjects, mainContributors, dependencyProjects, dependencyContributors 
 
     def weight(self, mainProjects, mainContributors, dependencyProjects, dependencyContributors):
 
-        # create uniform weights
+        if len(dependencyContributors):
+            randomDependencyContributors = random.choices(
+                dependencyContributors, k=self.config.included_dependency_contributor)
+            mainContributors.extend(randomDependencyContributors)
+
+        # create uniform weights for all main contributors
         self.log("Start with unifrom porbability weights for contributors")
         uniform_weights = selery_utils.calculateContributorWeights(
            mainContributors, self.config.uniform_weight)
@@ -268,7 +266,7 @@ class OpenSelery(object):
         # create release weights
         release_weights=[0]*len(mainContributors) 
         if self.config.consider_releases:
-             # calc release weights
+            # calc release weights
             self.log("Add additional weight to release contributors of last " +
                     str(self.config.releases_included)+" releases")
             # Create a unique list of all release contributor
@@ -279,21 +277,21 @@ class OpenSelery(object):
             for idx,user in enumerate(mainContributors):
                 if user.stats.author.email.lower() in release_contributor:
                     release_weights[idx]=self.config.release_weight
-                    self.log("Github email address matches git email from last release: " +user.stats.author.login )
+                    self.log("Github email address matches git email from last release of user: " +user.stats.author.login )
             self.log("Release Weights:" +str(release_weights))
             # considers all release contributor equal
             release_contributor = set(release_contributor)
 
         # sum up the two list with the same size
-        main_weights = [x + y for x, y in zip(uniform_weights, release_weights)]
+        combined_weights = [x + y for x, y in zip(uniform_weights, release_weights)]
 
-        self.log("Total Weights:" +str(main_weights))
+        self.log("Total Weights:" +str(combined_weights))
         # read @user from commit
-        return main_weights
+        return combined_weights, mainContributors
 
-    def choose(self, contributors, weights):
+    def split(self, contributors, weights):
         recipients = []
-
+        
         # chose contributors for payout
         self.log("Choosing recipients for payout")
         if len(contributors) < 1:
@@ -319,7 +317,7 @@ class OpenSelery(object):
             self.log(" -- '%s': '%s' [w: %s]" % (recipient.stats.author.html_url,
                                               recipient.stats.author.login, weights[contributors.index(recipient)]))
             self.log("  > via project '%s'" % recipient.fromProject)
-            self.log(" -- Payout split '%s'" % contributor_payout_split[contributors.index(recipient)])
+            self.log(" -- Payout split '%.10f'" % contributor_payout_split[contributors.index(recipient)])
 
         return recipients
 

@@ -16,6 +16,7 @@ class OpenSeleryConfig(object):
         "include_dependencies": False,
         "include_self": True,
         "include_tooling_and_runtime": False,
+        "included_dependency_contributor": 0,
 
         "bitcoin_address": '',
         "check_equal_private_and_public_address": True,

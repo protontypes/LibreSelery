@@ -27,11 +27,11 @@ def _runCommand(args):
     mainProjects, mainContributors, dependencyProjects, dependencyContributors = selery.gather()
     # please modify the weights
     # calculation to your need
-    main_weights = selery.weight(mainProjects, mainContributors, dependencyProjects, dependencyContributors)
-    # choose some contributors
-    # who should receive donations
-    recipients = selery.choose(
-        mainContributors, main_weights)
+    combined_weights, combined_contributors = selery.weight(mainProjects, mainContributors, dependencyProjects, dependencyContributors)
+    # split between contributors
+    # who should receive payout
+    recipients = selery.split(
+        combined_contributors, combined_weights)
     # let openselery use the given
     # address containing virtual currency
     # to pay out the selected contributors
