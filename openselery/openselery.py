@@ -113,11 +113,14 @@ class OpenSelery(object):
 
     def gather(self):
 
-        generalProjects = []
-        generalContributors = []
+        mainProjects = []
+        mainContributors = []
 
         dependencyProjects = []
         dependencyContributors = []
+
+        toolingProjects = []
+        toolingContributors = []
 
         self.log("Gathering project information")
         print("=======================================================")
@@ -135,17 +138,17 @@ class OpenSelery(object):
             #print(" -- %s" % [c.author.email for c in localContributors])
 
             # safe dependency information
-            generalProjects.append(localProject)
+            mainProjects.append(localProject)
 
-            for p in generalProjects:
+            for p in mainProjects:
                 # grab contributors
-                generalContributor = self.githubConnector.grabRemoteProjectContributors(
+                mainContributor = self.githubConnector.grabRemoteProjectContributors(
                     p)
                 # filter contributors
-                generalContributor = selery_utils.validateContributors(
-                    generalContributor, self.config.min_contributions)
+                mainContributor = selery_utils.validateContributors(
+                    mainContributor, self.config.min_contributions)
                 # safe contributor information
-                generalContributors.extend(generalContributor)
+                mainContributors.extend(mainContributor)
 
 
 
@@ -205,6 +208,7 @@ class OpenSelery(object):
 
 
         if self.config.include_tooling_and_runtime and self.config.tooling_path:
+            # tooling projects will be treated as dependency projects 
             self.log("Searching for tooling of project '%s' " %
                      self.config.directory)
             for toolurl in self.config.toolrepos['github']:
@@ -214,20 +218,20 @@ class OpenSelery(object):
                 self.log(" -- %s" % toolingProject.html_url)
 
                 # safe tooling information
-                relatedTooling.append(toolingProject)
+                dependencyProjects.append(toolingProject)
 
             self.log("Gathering toolchain contributor information")
 
             # scan for project contributors
-            for p in relatedTooling:
+            for p in toolingProjects:
                 # grab contributors
-                toolingContributors = self.githubConnector.grabRemoteProjectContributors(
+                toolingContributor = self.githubConnector.grabRemoteProjectContributors(
                 p)
                 # filter contributors
-                toolingContributors = selery_utils.validateContributors(
-                    toolingContributors, self.config.min_contributions)
+                toolingContributor = selery_utils.validateContributors(
+                    toolingContributor, self.config.min_contributions)
                 # safe contributor information
-                totalToolingContributors.extend(toolingContributors)
+                dependencyContributors.extend(toolingContributor)
 
 
 
@@ -236,34 +240,43 @@ class OpenSelery(object):
         self.logNotify("Gathered valid directory: %s" %
                        self.config.directory)
         self.logNotify("Gathered '%s' valid repositories" %
-                       len(generalProjects))
+                       len(mainProjects))
+        self.logNotify("Gathered '%s' valid contributors" %
+                       len(mainContributors))
+
         self.logNotify("Gathered '%s' valid dependencies" %
                        len(dependencyProjects))
-        self.logNotify("Gathered '%s' valid contributors" %
-                       len(generalContributors))
-        return  self.config.directory, generalProjects, dependencyProjects, generalContributors
+        self.logNotify("Gathered '%s' valid dependencies" %
+                       len(dependencyContributors))
 
-    def weight(self, generalContributors, local_repo, projects, deps):
+        self.logNotify("Gathered '%s' valid dependencies" %
+                       len(toolingProjects))
+        self.logNotify("Gathered '%s' valid dependencies" %
+                       len(toolingContributors))
+
+
+        return  mainProjects, mainContributors, dependencyProjects, dependencyContributors 
+
+    def weight(self, mainProjects, mainContributors, dependencyProjects, dependencyContributors):
 
         # create uniform weights
         self.log("Start with unifrom porbability weights for contributors")
         uniform_weights = selery_utils.calculateContributorWeights(
-           generalContributors, self.config.uniform_weight)
+           mainContributors, self.config.uniform_weight)
         self.log("Uniform Weights:" +str(uniform_weights))
 
         # create release weights
-        release_weights=[0]*len(generalContributors) 
+        release_weights=[0]*len(mainContributors) 
         if self.config.consider_releases:
              # calc release weights
             self.log("Add additional weight to release contributors of last " +
                     str(self.config.releases_included)+" releases")
             # Create a unique list of all release contributor
             release_contributor = git_utils.find_release_contributor(
-                local_repo, self.config.releases_included)
+                self.config.directory, self.config.releases_included)
             release_contributor = set(i.lower() for i in release_contributor)
             self.log("Found release contributor: "+str(len(release_contributor)))
-            print(generalContributors)
-            for idx,user in enumerate(generalContributors):
+            for idx,user in enumerate(mainContributors):
                 if user.stats.author.email.lower() in release_contributor:
                     release_weights[idx]=self.config.release_weight
                     self.log("Github email address matches git email from last release: " +user.stats.author.login )
@@ -272,13 +285,13 @@ class OpenSelery(object):
             release_contributor = set(release_contributor)
 
         # sum up the two list with the same size
-        total_weights = [x + y for x, y in zip(uniform_weights, release_weights)]
+        main_weights = [x + y for x, y in zip(uniform_weights, release_weights)]
 
-        self.log("Total Weights:" +str(total_weights))
+        self.log("Total Weights:" +str(main_weights))
         # read @user from commit
-        return total_weights
+        return main_weights
 
-    def choose(self, contributors, repo_path, weights):
+    def choose(self, contributors, weights):
         recipients = []
 
         # chose contributors for payout

@@ -24,16 +24,14 @@ def _runCommand(args):
     # let openselery gather data
     # of all involved projects,
     # dependencies and contributors
-    local_repo, projects, deps, all_related_contributors = selery.gather()
+    mainProjects, mainContributors, dependencyProjects, dependencyContributors = selery.gather()
     # please modify the weights
     # calculation to your need
-    uniform_weights = selery.weight(all_related_contributors,
-                                    local_repo, projects, deps)
-    # let openselery roll the dice
-    # and choose some lucky contributors
+    main_weights = selery.weight(mainProjects, mainContributors, dependencyProjects, dependencyContributors)
+    # choose some contributors
     # who should receive donations
     recipients = selery.choose(
-        all_related_contributors, local_repo, uniform_weights)
+        mainContributors, main_weights)
     # let openselery use the given
     # address containing virtual currency
     # to pay out the selected contributors
