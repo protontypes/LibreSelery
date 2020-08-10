@@ -277,7 +277,7 @@ class OpenSelery(object):
             for idx,user in enumerate(mainContributors):
                 if user.stats.author.email.lower() in release_contributor:
                     release_weights[idx]=self.config.release_weight
-                    self.log("Github email address matches git email from last release of user: " +user.stats.author.login )
+                    self.log("Github email matches git commit email of release of contributor: " +user.stats.author.login )
             self.log("Release Weights:" +str(release_weights))
             # considers all release contributor equal
             release_contributor = set(release_contributor)
@@ -298,13 +298,13 @@ class OpenSelery(object):
             self.logError("Could not find any contributors to payoff")
             raise Exception("Aborting")
 
-        if self.config.random_split:
+        if self.config.random_split and not self.config.full_split:
             self.log("Creating random split based on weights")
             recipients = random.choices(
                 contributors, weights, k=self.config.number_payout_contributors_per_run)
-            contributor_payout_split = [self.config.max_payout_per_run]*len(contributor_payout_split)
+            contributor_payout_split = [self.config.max_payout_per_run]*len(contributors)
 
-        elif self.config.full_split:
+        elif self.config.full_split and not self.config.random_split :
             self.log("Creating full split based on weights")
             recipients = contributors 
             contributor_payout_split = selery_utils.weighted_split(contributors, weights, self.config.max_payout_per_run)
@@ -319,7 +319,7 @@ class OpenSelery(object):
             self.log("  > via project '%s'" % recipient.fromProject)
             self.log(" -- Payout split '%.10f'" % contributor_payout_split[contributors.index(recipient)])
 
-        return recipients
+        return recipients, contributor_payout_split
 
     def visualize(self):
       try:
@@ -327,7 +327,7 @@ class OpenSelery(object):
       except Exception as e:
         print("Error creating visualization", e)
 
-    def payout(self, recipients):
+    def payout(self, recipients, contributor_payout_split):
         if not self.config.simulation:
             transactionFilePath = os.path.join(self.config.result_dir, "transactions.txt")
             receiptFilePath = os.path.join(self.config.result_dir, "receipt.txt")
@@ -378,7 +378,7 @@ class OpenSelery(object):
                 json.dump(native_balance_badge, write_file)
 
             # Payout via the Coinbase API
-            self.log("Trying to pay out recipients")
+            self.log("Trying to payout recipients")
             self.receiptStr = ""
             for contributor in recipients:
                 if self.coinConnector.useremail() != contributor.stats.author.email:
@@ -398,9 +398,9 @@ class OpenSelery(object):
 
             self.logWarning(
                     "Configuration 'simulation' is active, so NO transaction will be executed")
-            for contributor in recipients:
+            for idx,contributor in enumerate(recipients):
                 self.log(" -- would have been a payout of '%.10f' bitcoin to '%s'" %
-                         (self.config.btc_per_transaction, contributor.stats.author.login))
+                         (contributor_payout_split[idx], contributor.stats.author.login))
 
                 with open(simulatedreceiptFilePath, "a") as f:
                     f.write(str(recipients))

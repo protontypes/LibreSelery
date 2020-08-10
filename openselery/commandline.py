@@ -30,12 +30,12 @@ def _runCommand(args):
     combined_weights, combined_contributors = selery.weight(mainProjects, mainContributors, dependencyProjects, dependencyContributors)
     # split between contributors
     # who should receive payout
-    recipients = selery.split(
+    recipients, contributor_payout_split = selery.split(
         combined_contributors, combined_weights)
     # let openselery use the given
     # address containing virtual currency
     # to pay out the selected contributors
-    selery.payout(recipients)
+    selery.payout(recipients, contributor_payout_split)
     # visualize the generated transaction data
     # generates images with charts/diagram in
     # the results folder

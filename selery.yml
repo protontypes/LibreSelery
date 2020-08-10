@@ -23,22 +23,22 @@ consider_releases: True
 releases_included: 3
 ## release weights
 release_weight: 70
-## random weighted split with equal payout per contributor
-random_split: False
 ## weighted split over all contributors
-full_split: True
+full_split: False
+## random weighted split with equal payout per contributor
+random_split: True
+## the amount of btc send per user at random_split
+btc_per_transaction: 0.000002
+## numbers of contributors payout per run at random split
+number_payout_contributors_per_run: 5
 
+## the maximum amount of payout per run that is considered for random and full split
+max_payout_per_run: 0.000022
 # payout configurations
 bitcoin_address: "3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w"
 ## check that the public bitcoin address matches the secret coinbase address
 check_equal_private_and_public_address: True
 ## Skip email sended by coinbase
 skip_email: False
-## the amount of btc send per user
-btc_per_transaction: 0.000022
-## numbers of contributors payout per run
-number_payout_contributors_per_run: 1
-## the maximum amount of payout per run
-max_payout_per_run: 0.000022
 ## message send with every coinbase email. Never send an URL.
 email_note: "Fresh OpenSelery Funding"
