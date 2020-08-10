@@ -27,9 +27,19 @@ setup(
     description='A Software-Defined Funding Distribution',
     url='https://github.com/protontypes/openselery',
     long_description=long_description,
-    dependency_links = ['https://github.com/protontypes/coinbase-python/tarball/master#egg=coinbase']
+    dependency_links = ['https://github.com/protontypes/coinbase-python/tarball/master#egg=coinbase'],
 
-    install_requires=requirements,
+    install_requires=[
+        'pygithub==1.52',
+        'dnspython==2.0.0',
+        'pyyaml==5.3.1',
+        'coinbase',
+        'gitpython==3.1.7',
+        'pybraries==0.2.2',
+        'urlextract==1.0.0',
+        'matplotlib==3.3.0',
+        'numpy==1.19.1'
+        ],
     
     packages=['openselery',],
     scripts=['scripts/selery',],
