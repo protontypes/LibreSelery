@@ -302,7 +302,7 @@ class OpenSelery(object):
             self.log("Creating random split based on weights")
             recipients = random.choices(
                 contributors, weights, k=self.config.number_payout_contributors_per_run)
-            contributor_payout_split = [self.config.max_payout_per_run]*len(contributors)
+            contributor_payout_split = [self.config.btc_per_transaction]*len(contributors)
 
         elif self.config.full_split and not self.config.random_split :
             self.log("Creating full split based on weights")
@@ -317,7 +317,7 @@ class OpenSelery(object):
             self.log(" -- '%s': '%s' [w: %s]" % (recipient.stats.author.html_url,
                                               recipient.stats.author.login, weights[contributors.index(recipient)]))
             self.log("  > via project '%s'" % recipient.fromProject)
-            self.log(" -- Payout split '%.10f'" % contributor_payout_split[contributors.index(recipient)])
+            self.log(" -- Payout split '%.6f'" % contributor_payout_split[contributors.index(recipient)])
 
         return recipients, contributor_payout_split
 
@@ -380,10 +380,9 @@ class OpenSelery(object):
             # Payout via the Coinbase API
             self.log("Trying to payout recipients")
             self.receiptStr = ""
-            for contributor in recipients:
+            for idx, contributor in enumerate(recipients):
                 if self.coinConnector.useremail() != contributor.stats.author.email:
-                    receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.btc_per_transaction,
-                                                    self.config.skip_email, self._getEmailNote())
+                    receipt = self.coinConnector.payout(contributor.stats.author.email, '{0:.6f}'.format(contributor_payout_split[idx]).rstrip("0"), self.config.skip_email, self._getEmailNote())
                     self.receiptStr = self.receiptStr + str(receipt)
                     self.log("Payout of [%s][%s] succeeded" % (receipt['amount']['amount'],receipt['amount']['currency']))
                 else:
@@ -399,8 +398,8 @@ class OpenSelery(object):
             self.logWarning(
                     "Configuration 'simulation' is active, so NO transaction will be executed")
             for idx,contributor in enumerate(recipients):
-                self.log(" -- would have been a payout of '%.10f' bitcoin to '%s'" %
-                         (contributor_payout_split[idx], contributor.stats.author.login))
+                self.log(" -- would have been a payout of '%s' bitcoin to '%s'" %
+                         ('{0:.6f}'.format(contributor_payout_split[idx]).rstrip("0"), contributor.stats.author.login))
 
                 with open(simulatedreceiptFilePath, "a") as f:
                     f.write(str(recipients))
