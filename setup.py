@@ -4,11 +4,6 @@ from setuptools import setup
 
 import os
 
-### read requirements file
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
-    
-    
 pwd = os.path.abspath(os.path.dirname(__file__))
 ### Get the long description from the README file
 with open(os.path.join(pwd, 'README.md'), encoding='utf-8') as f:
