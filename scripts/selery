@@ -2,8 +2,9 @@
 
 from openselery.commandline import runCli
 
+
 def main():
-  runCli()
+	runCli()
 
 if __name__ == "__main__":
     main()
