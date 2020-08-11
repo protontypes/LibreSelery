@@ -49,6 +49,13 @@ jobs:
                mkdir -vp $config_folder
       - name: Give everyone permission to write to this folder
         run: chmod a+rw $results_folder $config_folder
+
+      - name: Pass openselery configuation
+        run:  |
+               echo "Use selery.yml from target project directory: ${TARGET_PROJECT}"
+               cat ${TARGET_PROJECT}/selery.yml
+               cp ${TARGET_PROJECT}/selery.yml $config_folder/selery.yml
+      
       # Run Openselery on the current folder.
       - name: Run openselery on sources
         run:  > 
