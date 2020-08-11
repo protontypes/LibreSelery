@@ -8,17 +8,22 @@ import logging
 import datetime
 from urlextract import URLExtract
 
+
+
 from openselery.github_connector import GithubConnector
 from openselery.librariesio_connector import LibrariesIOConnector
 from openselery.coinbase_connector import CoinbaseConnector
 from openselery import git_utils
 from openselery import selery_utils
+from openselery import os_utils
 from openselery.visualization import visualizeTransactions
+
 
 
 class OpenSelery(object):
     def __init__(self, config, silent=False):
         super(OpenSelery, self).__init__()
+        print("=======================================================")
         # set our openselery project dir, which is '../../this_script'
         self.seleryDir = os.path.dirname(
             os.path.dirname(os.path.abspath(__file__)))
@@ -30,27 +35,40 @@ class OpenSelery(object):
         self.initialize()
 
     def __del__(self):
-        self.logNotify(
-            "Feel free to visit us @ https://github.com/protontypes/openselery")
-        if hasattr(self, 'receiptStr') and self.receiptStr != "":
+        self.logNotify("Feel free to visit us @ https://github.com/protontypes/openselery")
+        print("=======================================================")
+
+    def finish(self, receiptFilePath):
+        success = True
+        if receiptFilePath:
             self.logNotify("Done")
         else:
-            self.logNotify("receipt missing")
-            self.logNotify("Failed!")
+            self.logWarning("Receipt missing")
+            self.logWarning("Failed!")
+            success = False
+        return success
 
     def initialize(self):
         self.logNotify("Initializing OpenSelery")
 
-        # return openselery version
-        selerypath = os.path.realpath(__file__)
-        # return openselery version
-        self.log("OpenSelery HEAD sha [%s]" % git_utils.get_head_sha(selerypath))
-        self.log("OpenSelery last tag [%s]" % git_utils.get_lastest_tag(selerypath))
+        self.seleryPackageInfo = os_utils.getPackageInfo("openselery")
+        self.log("OpenSelery version [%s]" % self.seleryPackageInfo["version"])
 
         self.log("Preparing Configuration")
-        # apply yaml config to our configuration if possible
-        self.log("Loading configuration [%s]" % self.config.config_path)
-        self.loadYaml(self.config.config_path)
+        ### find all configs in potentially given configdir
+        foundConfigs = []
+        if(self.config.config_dir):
+            for root, dirs, files in os.walk(self.config.config_dir):
+                for f in files:
+                    ext = os.path.splitext(f)[1]
+                    if ext == ".yml" or ext == ".yaml":
+                        foundConfigs.append(os.path.join(root, f))
+        ### group all found configs together with individually given configuration paths from user on top
+        self.config.config_paths = foundConfigs + self.config.config_paths
+        ### apply yaml config to our configuration if possible
+        self.log("Loading configurations" % self.config.config_paths)
+        [print(" -- %s" % path) for path in self.config.config_paths]
+        [self.loadYaml(path) for path in self.config.config_paths]
         # load our readme file
         extractor = URLExtract()
         fundingPath = self._getFile("README.md")
@@ -93,7 +111,7 @@ class OpenSelery(object):
         try:
             r = lambdaStatement(*args)
         except Exception as e:
-            self.logError(e)
+            self.logError(str(e))
             raise e if not canFail else e
         return r
 
@@ -155,8 +173,7 @@ class OpenSelery(object):
             self.log("Searching for dependencies of project '%s' " %
                     localProject.full_name)
             # scan for dependencies repositories
-            rubyScanScriptPath = os.path.join(
-                self.seleryDir, "ruby", "scan.rb")
+            rubyScanScriptPath = os.path.join(self.seleryDir, "openselery", "ruby_extensions", "scan.rb")
             process = subprocess.run(["ruby", rubyScanScriptPath, "--project=%s" % self.config.directory],
                                      stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
             # exec and evaluate stdout
@@ -197,9 +214,8 @@ class OpenSelery(object):
 
             for p in dependencyProjects:
                 # grab contributors
-                depContributors = self.githubConnector.grabRemoteProjectContributors(
-                p)
-                # filter contributors
+                depContributors = self.githubConnector.grabRemoteProjectContributors(p)
+                # filter contributors based min contribution
                 depContributors = selery_utils.validateContributors(
                     depContributors, self.config.min_contributions)
             # safe contributor information
@@ -298,19 +314,19 @@ class OpenSelery(object):
             self.logError("Could not find any contributors to payoff")
             raise Exception("Aborting")
 
-        if self.config.random_split and not self.config.full_split:
+        if self.config.split_mode == "random_split":
             self.log("Creating random split based on weights")
             recipients = random.choices(
                 contributors, weights, k=self.config.number_payout_contributors_per_run)
             contributor_payout_split = [self.config.btc_per_transaction]*len(contributors)
 
-        elif self.config.full_split and not self.config.random_split :
+        elif self.config.split_mode == "full_split":
             self.log("Creating full split based on weights")
             recipients = contributors 
             contributor_payout_split = selery_utils.weighted_split(contributors, weights, self.config.max_payout_per_run)
 
         else:
-            self.logError("No split method configured")
+            self.logError("Split mode configuration unknown")
             raise Exception("Aborting")
 
         for recipient in recipients:
@@ -321,13 +337,18 @@ class OpenSelery(object):
 
         return recipients, contributor_payout_split
 
-    def visualize(self):
-      try:
-        visualizeTransactions(self.config.result_dir)
-      except Exception as e:
-        print("Error creating visualization", e)
+    def visualize(self, receiptFilePath, transactionFilePath):
+        if transactionFilePath:
+            self.log("Creating visualizations for past transactions [%s]" % transactionFilePath)
+            try:
+                visualizeTransactions(self.config.result_dir, transactionFilePath)
+            except Exception as e:
+                self.logError("Error creating visualization: %s" % e)
 
     def payout(self, recipients, contributor_payout_split):
+        transactionFilePath = None
+        receiptFilePath = None
+
         if not self.config.simulation:
             transactionFilePath = os.path.join(self.config.result_dir, "transactions.txt")
             receiptFilePath = os.path.join(self.config.result_dir, "receipt.txt")
@@ -391,8 +412,9 @@ class OpenSelery(object):
             with open(receiptFilePath, "a") as f:
                 f.write(str(self.receiptStr))
 
-        if self.config.simulation:
-            simulatedreceiptFilePath = os.path.join(
+        else:
+            ### simulate a receipt
+            receiptFilePath = os.path.join(
                     self.config.result_dir, "simulated_receipt.txt")
 
             self.logWarning(
@@ -401,8 +423,9 @@ class OpenSelery(object):
                 self.log(" -- would have been a payout of '%s' bitcoin to '%s'" %
                          ('{0:.6f}'.format(contributor_payout_split[idx]).rstrip("0"), contributor.stats.author.login))
 
-                with open(simulatedreceiptFilePath, "a") as f:
+                with open(receiptFilePath, "a") as f:
                     f.write(str(recipients))
+        return receiptFilePath, transactionFilePath
 
 
     def _getFile(self, file):
@@ -444,8 +467,7 @@ class OpenSelery(object):
 
     def _log(self, sym, msg):
         if not self.silent:
-            match = re.search(
-                r'([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)', msg)
+            match = re.search(r'([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)', msg)
             if match is not None:
                 print("Do not print privat email data")
             else:

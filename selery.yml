@@ -23,13 +23,13 @@ consider_releases: True
 releases_included: 3
 ## release weights
 release_weight: 70
-## weighted split over all contributors
-full_split: False
-## random weighted split with equal payout per contributor
-random_split: True
+## split mode
+## full_split: weighted split over all contributors
+## random_split: random weighted split with equal payout per contributor
+split_mode: "full_split"
 ## the amount of btc send per user at random_split
 btc_per_transaction: 0.000002
-## numbers of contributors payout per run at random split
+## numbers of total contributors payout per run at random split
 number_payout_contributors_per_run: 5
 
 ## the maximum amount of payout per run that is considered for random and full split

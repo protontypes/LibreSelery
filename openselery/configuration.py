@@ -26,8 +26,7 @@ class OpenSeleryConfig(object):
         "number_payout_contributors_per_run": 1,
         "max_payout_per_run": 0.000002,
 
-        "random_split": False,
-        "full_split": False,
+        "split_mode": 'full_split',
 
         "min_contributions": 1,
         "consider_releases": False,
@@ -59,8 +58,11 @@ class OpenSeleryConfig(object):
         yamlDict = yaml.safe_load(open(path))
         # ensure type of loaded config
         for k, v in yamlDict.items():
-            t1, v1, t2, v2 = type(v), v, type(
-                getattr(self, k)), getattr(self, k)
+            ### check if key actually exists inside of our config 
+            if k not in self.__dict__:
+                raise AttributeError("Error in config: '%s'\n'%s' object has no attribute '%s'" % (path, self.__class__.__name__, k))
+            ### prepare type check
+            t1, v1, t2, v2 = type(v), v, type(getattr(self, k)), getattr(self, k)
             if t1 != t2:
                 raise ValueError("Configuration parameter '%s' has failed type check! 's'<'%s'> should be 's'<'%s'>" % (
                     k, v1, t1, v2, t2))
