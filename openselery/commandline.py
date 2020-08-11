@@ -1,4 +1,5 @@
 import argparse
+import sys
 
 from openselery.configuration import OpenSeleryConfig
 from openselery import openselery
@@ -67,7 +68,7 @@ def _parseArgs():
     # create the parser for the "run" command
     parser_run = subparsers.add_parser('run', help='run --help')
     parser_run.add_argument("-C", "--config-dir", required=False, default="", dest="config_dir", type=str,
-                            help="Add all congifs from configuration directory")
+                            help="Add all configs from configuration directory")
     parser_run.add_argument("-c", "--config", required=False, dest="config_paths", nargs='+', default=[],
                             help="Add configuration file path")
     parser_run.add_argument("-d", "--directory", required=True, type=str, help="Git directory to scan")
@@ -76,4 +77,7 @@ def _parseArgs():
     parser_run.set_defaults(func = _runCommand)
 
     args = parser.parse_args()
+    if not len(sys.argv) > 1:
+      parser.print_help()
+      sys.exit()
     return args

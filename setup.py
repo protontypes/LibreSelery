@@ -12,16 +12,13 @@ with open(os.path.join(pwd, 'README.md'), encoding='utf-8') as f:
 ### package definition
 setup(
     name='openselery',
-    #version='0.1',
-    ### use 
-    ### https://github.com/pyfidelity/setuptools-git-version
-    ### instead of normal version :)
-    version_format='{tag}.dev{commitcount}+{gitsha}',
+    version_format='{tag}.dev{commitcount}',
     setup_requires=['setuptools-git-version'],
 
     description='A Software-Defined Funding Distribution',
     url='https://github.com/protontypes/openselery',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     dependency_links = ['https://github.com/protontypes/coinbase-python/tarball/master#egg=coinbase'],
 
     install_requires=[
