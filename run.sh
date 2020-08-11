@@ -33,4 +33,3 @@ docker run --rm -t \
     --result /home/selery/results \
     --tooling /home/config/tooling_repos.yml
 
-

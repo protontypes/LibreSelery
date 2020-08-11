@@ -79,3 +79,11 @@ def calculateContributorWeights(contributors,uniform_weight):
     # * successful pull requests
     weights = [uniform_weight for i in range(len(contributors))]
     return weights
+
+def weighted_split(contributors, weights, total_payout_amount):
+    contributor_payout_split= []
+    totalized_weights=sum(weights)
+    for idx, contributor in enumerate(contributors):
+       individual_split_amount = total_payout_amount*(weights[idx]/totalized_weights)
+       contributor_payout_split.append(individual_split_amount)
+    return contributor_payout_split

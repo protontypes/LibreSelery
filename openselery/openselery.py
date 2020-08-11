@@ -130,30 +130,48 @@ class OpenSelery(object):
                 self.config.coinbase_token, self.config.coinbase_secret)
 
     def gather(self):
-        generalContributors = []
-        generalProjects = []
-        generalDependencies = []
-        self.log("Gathering project information")
+
+        mainProjects = []
+        mainContributors = []
+
+        dependencyProjects = []
+        dependencyContributors = []
+
+        toolingProjects = []
+        toolingContributors = []
+
+        projectUrl = git_utils.grabLocalProject(
+           self.config.directory)
+
+        localProject = self.githubConnector.grabRemoteProjectByUrl(projectUrl)
+        self.log("Gathering project information of '%s' at  local folder '%s" % (projectUrl, self.config.directory))
         print("=======================================================")
         if self.config.include_self:
-            self.logWarning("Including local project '%s'" %
-                            self.config.directory)
-
             # find official repositories
-            projectUrl = git_utils.grabLocalProject(
-                self.config.directory)
+            self.log("Including contributors of root project '%s'" %
+                            localProject.full_name)
 
-            localProject = self.githubConnector.grabRemoteProjectByUrl(projectUrl)
-            self.log(" -- %s" % localProject)
             self.log(" -- %s" % localProject.html_url)
             #print(" -- %s" % [c.author.email for c in localContributors])
 
             # safe dependency information
-            generalProjects.append(localProject)
+            mainProjects.append(localProject)
+
+            for p in mainProjects:
+                # grab contributors
+                mainContributor = self.githubConnector.grabRemoteProjectContributors(
+                    p)
+                # filter contributors
+                mainContributor = selery_utils.validateContributors(
+                    mainContributor, self.config.min_contributions)
+                # safe contributor information
+                mainContributors.extend(mainContributor)
+
+
 
         if self.config.include_dependencies:
             self.log("Searching for dependencies of project '%s' " %
-                     self.config.directory)
+                    localProject.full_name)
             # scan for dependencies repositories
             rubyScanScriptPath = os.path.join(self.seleryDir, "openselery", "ruby_extensions", "scan.rb")
             process = subprocess.run(["ruby", rubyScanScriptPath, "--project=%s" % self.config.directory],
@@ -192,91 +210,132 @@ class OpenSelery(object):
                                 libIoRepository.github_id)
 
                             # safe project / dependency information
-                            generalProjects.append(gitproject)
-                            generalDependencies.extend(libIoDependencies)
+                            dependencyProjects.append(gitproject)
+
+            for p in dependencyProjects:
+                # grab contributors
+                depContributors = self.githubConnector.grabRemoteProjectContributors(p)
+                # filter contributors based min contribution
+                depContributors = selery_utils.validateContributors(
+                    depContributors, self.config.min_contributions)
+            # safe contributor information
+                dependencyContributors.extend(depContributors)
+
 
         if self.config.include_tooling_and_runtime and self.config.tooling_path:
+            # tooling projects will be treated as dependency projects 
+            self.log("Searching for tooling of project '%s' " %
+                     localProject.full_name)
             for toolurl in self.config.toolrepos['github']:
                 toolingProject = self.githubConnector.grabRemoteProjectByUrl(
                     toolurl)
                 self.log(" -- %s" % toolingProject)
                 self.log(" -- %s" % toolingProject.html_url)
 
-                # safe dependency information
-                generalProjects.append(toolingProject)
+                # safe tooling information
+                dependencyProjects.append(toolingProject)
 
-        self.log("Gathering contributor information")
-        # scan for project contributors
-        for p in generalProjects:
-            # grab contributors
-            depContributors = self.githubConnector.grabRemoteProjectContributors(
+            self.log("Gathering toolchain contributor information")
+
+            # scan for project contributors
+            for p in toolingProjects:
+                # grab contributors
+                toolingContributor = self.githubConnector.grabRemoteProjectContributors(
                 p)
-            # filter contributors
-            depContributors = selery_utils.validateContributors(
-                depContributors, self.config.min_contributions)
-            # safe contributor information
-            generalContributors.extend(depContributors)
+                # filter contributors
+                toolingContributor = selery_utils.validateContributors(
+                    toolingContributor, self.config.min_contributions)
+                # safe contributor information
+                dependencyContributors.extend(toolingContributor)
+
+
+
         print("=======================================================")
 
         self.logNotify("Gathered valid directory: %s" %
                        self.config.directory)
-        self.logNotify("Gathered '%s' valid repositories" %
-                       len(generalProjects))
-        self.logNotify("Gathered '%s' valid dependencies" %
-                       len(generalDependencies))
-        self.logNotify("Gathered '%s' valid contributors" %
-                       len(generalContributors))
-        return  self.config.directory, generalProjects, generalDependencies, generalContributors
+        self.logNotify("Gathered '%s' valid main repositories" %
+                       len(mainProjects))
+        self.logNotify("Gathered '%s' valid main contributors" %
+                       len(mainContributors))
 
-    def weight(self, contributor, local_repo, projects, deps):
-        release_weights=[0] * len(contributor) 
-        github_contributors={}
+        self.logNotify("Gathered '%s' valid dependency repositories" %
+                       len(dependencyProjects))
+        self.logNotify("Gathered '%s' valid dependency contributors" %
+                       len(dependencyContributors))
+
+        return  mainProjects, mainContributors, dependencyProjects, dependencyContributors 
+
+    def weight(self, mainProjects, mainContributors, dependencyProjects, dependencyContributors):
+
+        if len(dependencyContributors):
+            randomDependencyContributors = random.choices(
+                dependencyContributors, k=self.config.included_dependency_contributor)
+            mainContributors.extend(randomDependencyContributors)
+
+        # create uniform weights for all main contributors
+        self.log("Start with unifrom porbability weights for contributors")
+        uniform_weights = selery_utils.calculateContributorWeights(
+           mainContributors, self.config.uniform_weight)
+        self.log("Uniform Weights:" +str(uniform_weights))
+
+        # create release weights
+        release_weights=[0]*len(mainContributors) 
         if self.config.consider_releases:
-             # calc release weights
+            # calc release weights
             self.log("Add additional weight to release contributors of last " +
                     str(self.config.releases_included)+" releases")
             # Create a unique list of all release contributor
             release_contributor = git_utils.find_release_contributor(
-                local_repo, self.config.releases_included)
+                self.config.directory, self.config.releases_included)
             release_contributor = set(i.lower() for i in release_contributor)
             self.log("Found release contributor: "+str(len(release_contributor)))
-            for idx,user in enumerate(contributor):
+            for idx,user in enumerate(mainContributors):
                 if user.stats.author.email.lower() in release_contributor:
                     release_weights[idx]=self.config.release_weight
-                    self.log("Github email address matches git email from last release: " +user.stats.author.name )
+                    self.log("Github email matches git commit email of release of contributor: " +user.stats.author.login )
             self.log("Release Weights:" +str(release_weights))
             # considers all release contributor equal
             release_contributor = set(release_contributor)
 
-        # create uniform probability
-        self.log("Start with unifrom probability weights for contributors")
-        uniform_weights = selery_utils.calculateContributorWeights(
-            contributor, self.config.uniform_weight)
-        self.log("Uniform Weights:" +str(uniform_weights))
-
         # sum up the two list with the same size
-        total_weights = [x + y for x, y in zip(uniform_weights, release_weights)]
+        combined_weights = [x + y for x, y in zip(uniform_weights, release_weights)]
 
-        self.log("Total Weights:" +str(total_weights))
+        self.log("Total Weights:" +str(combined_weights))
         # read @user from commit
-        return total_weights
+        return combined_weights, mainContributors
 
-    def choose(self, contributors, repo_path, weights):
+    def split(self, contributors, weights):
         recipients = []
-
+        
         # chose contributors for payout
         self.log("Choosing recipients for payout")
         if len(contributors) < 1:
             self.logError("Could not find any contributors to payoff")
             raise Exception("Aborting")
 
-        recipients = random.choices(
-            contributors, weights, k=self.config.number_payout_contributors_per_run)
-        for contributor in recipients:
-            self.log(" -- '%s': '%s' [w: %s]" % (contributor.stats.author.html_url,
-                                              contributor.stats.author.name, weights[contributors.index(contributor)]))
-            self.log("  > via project '%s'" % contributor.fromProject)
-        return recipients
+        if self.config.split_mode == "random_split":
+            self.log("Creating random split based on weights")
+            recipients = random.choices(
+                contributors, weights, k=self.config.number_payout_contributors_per_run)
+            contributor_payout_split = [self.config.btc_per_transaction]*len(contributors)
+
+        elif self.config.split_mode == "full_split":
+            self.log("Creating full split based on weights")
+            recipients = contributors 
+            contributor_payout_split = selery_utils.weighted_split(contributors, weights, self.config.max_payout_per_run)
+
+        else:
+            self.logError("Split mode configuration unknown")
+            raise Exception("Aborting")
+
+        for recipient in recipients:
+            self.log(" -- '%s': '%s' [w: %s]" % (recipient.stats.author.html_url,
+                                              recipient.stats.author.login, weights[contributors.index(recipient)]))
+            self.log("  > via project '%s'" % recipient.fromProject)
+            self.log(" -- Payout split '%.6f'" % contributor_payout_split[contributors.index(recipient)])
+
+        return recipients, contributor_payout_split
 
     def visualize(self, receiptFilePath, transactionFilePath):
         if transactionFilePath:
@@ -286,7 +345,7 @@ class OpenSelery(object):
             except Exception as e:
                 self.logError("Error creating visualization: %s" % e)
 
-    def payout(self, recipients):
+    def payout(self, recipients, contributor_payout_split):
         transactionFilePath = None
         receiptFilePath = None
 
@@ -339,12 +398,12 @@ class OpenSelery(object):
             with open(nativeBalanceBadgePath, "w") as write_file:
                 json.dump(native_balance_badge, write_file)
 
-            self.log("Trying to pay out recipients")
+            # Payout via the Coinbase API
+            self.log("Trying to payout recipients")
             self.receiptStr = ""
-            for contributor in recipients:
+            for idx, contributor in enumerate(recipients):
                 if self.coinConnector.useremail() != contributor.stats.author.email:
-                    receipt = self.coinConnector.payout(contributor.stats.author.email, self.config.btc_per_transaction,
-                                                    self.config.skip_email, self._getEmailNote())
+                    receipt = self.coinConnector.payout(contributor.stats.author.email, '{0:.6f}'.format(contributor_payout_split[idx]).rstrip("0"), self.config.skip_email, self._getEmailNote())
                     self.receiptStr = self.receiptStr + str(receipt)
                     self.log("Payout of [%s][%s] succeeded" % (receipt['amount']['amount'],receipt['amount']['currency']))
                 else:
@@ -360,9 +419,9 @@ class OpenSelery(object):
 
             self.logWarning(
                     "Configuration 'simulation' is active, so NO transaction will be executed")
-            for contributor in recipients:
-                self.log(" -- would have been a payout of '%.10f' bitcoin to '%s'" %
-                         (self.config.btc_per_transaction, contributor.stats.author.name))
+            for idx,contributor in enumerate(recipients):
+                self.log(" -- would have been a payout of '%s' bitcoin to '%s'" %
+                         ('{0:.6f}'.format(contributor_payout_split[idx]).rstrip("0"), contributor.stats.author.login))
 
                 with open(receiptFilePath, "a") as f:
                     f.write(str(recipients))
