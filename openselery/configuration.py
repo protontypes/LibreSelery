@@ -16,6 +16,7 @@ class OpenSeleryConfig(object):
         "include_dependencies": False,
         "include_self": True,
         "include_tooling_and_runtime": False,
+        "included_dependency_contributor": 0,
 
         "bitcoin_address": '',
         "check_equal_private_and_public_address": True,
@@ -24,6 +25,8 @@ class OpenSeleryConfig(object):
         "btc_per_transaction": 0.000002,
         "number_payout_contributors_per_run": 1,
         "max_payout_per_run": 0.000002,
+
+        "split_mode": 'full_split',
 
         "min_contributions": 1,
         "consider_releases": False,

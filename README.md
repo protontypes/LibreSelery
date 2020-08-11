@@ -1,4 +1,4 @@
-<img align="middle" src="./docs/design/OpenSelery-04.png" width="400"> 
+<img align="middle" src="./docs/OpenSelery-04.png" width="400"> 
 
 ### Continuous and Transparent Developer Payout
 

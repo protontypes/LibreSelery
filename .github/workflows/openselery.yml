@@ -49,64 +49,13 @@ jobs:
                mkdir -vp $config_folder
       - name: Give everyone permission to write to this folder
         run: chmod a+rw $results_folder $config_folder
-      - name: Create openselery configuation
-        run: |
-              if [ ! -f ${TARGET_PROJECT}/selery.yml ]
-              then
-                echo "No local config found. Create selery.yml"
-                touch $config_folder/selery.yml
-                chmod 700 $config_folder/selery.yml
-                cat > $config_folder/selery.yml <<EOF
-                # simulation let you run without payout at the end  
-                simulation: False
-                # include the target folders contributors
-                include_self: True
-                # include the dependencies of the target folder
-                include_dependencies: False
-                # include the tooling and runtime from the file
-                include_tooling_and_runtime: True
-                # minimum contributions made to be considered
-                min_contributions: 1
-                # check that the public bitcoin address matches the secret coinbase address
-                check_equal_private_and_public_address: True
-                # Skip email sended by coinbase
-                skip_email: False
-                # the amount of eth send per user
-                btc_per_transaction: 0.000002
-                # numbers of contributors payout per run
-                number_payout_contributors_per_run: 1
-                # the maximum amount of payout per run
-                max_payout_per_run: 0.000002
-                # message send with every coinbase email. Never send an URL.
-                email_note: "Fresh OpenSelery funding. Search for OpenSelery to get more information"
-                # weight set for all include contributors
-                uniform_weight: 1
-              EOF
-              cat $config_folder/selery.yml
-              else 
-                echo "Use existing local selery.yml from directory: ${TARGET_PROJECT}"
-                cat ${TARGET_PROJECT}/selery.yml
-                cp ${TARGET_PROJECT}/selery.yml $config_folder/selery.yml
-              fi
-      - name: Add additional tooling list
-        run: |
-              if [ ! -f ${config_folder}/tooling_repos.yml ]
-              then
-                echo "No local config found. Create selery.yml"
-                touch ${config_folder}/tooling_repos.yml
-                chmod 700 ${config_folder}/tooling_repos.yml
-                cat > ${config_folder}/tooling_repos.yml <<EOF
-                github:
-                - https://github.com/protontypes/openselery
-                #    - https://github.com/torvalds/linux
-                #    - https://github.com/python/cpython
-                #    - https://github.com/docker/docker-ce
-              EOF
-              cat ${config_folder}/tooling_repos.yml 
-              else 
-                  echo "Use existing local selery.yml"
-                  cat ${config_folder}/tooling_repos.yml  
-              fi 
+
+      - name: Pass openselery configuation
+        run:  |
+               echo "Use selery.yml from target project directory: ${TARGET_PROJECT}"
+               cat ${TARGET_PROJECT}/selery.yml
+               cp ${TARGET_PROJECT}/selery.yml $config_folder/selery.yml
+      
       # Run Openselery on the current folder.
       - name: Run openselery on sources
         run:  > 
