@@ -6,9 +6,9 @@ import yaml
 import random
 import logging
 import datetime
+
 from urlextract import URLExtract
-
-
+from qrcode import QRCode
 
 from openselery.github_connector import GithubConnector
 from openselery.librariesio_connector import LibrariesIOConnector
@@ -17,7 +17,6 @@ from openselery import git_utils
 from openselery import selery_utils
 from openselery import os_utils
 from openselery.visualization import visualizeTransactions
-
 
 
 class OpenSelery(object):
@@ -55,7 +54,7 @@ class OpenSelery(object):
         self.log("OpenSelery version [%s]" % self.seleryPackageInfo["version"])
 
         self.log("Preparing Configuration")
-        ### find all configs in potentially given configdir
+        # find all configs in potentially given config directory
         foundConfigs = []
         if(self.config.config_dir):
             for root, dirs, files in os.walk(self.config.config_dir):
@@ -63,13 +62,15 @@ class OpenSelery(object):
                     ext = os.path.splitext(f)[1]
                     if ext == ".yml" or ext == ".yaml":
                         foundConfigs.append(os.path.join(root, f))
-        ### group all found configs together with individually given configuration paths from user on top
+        # group all found configs together with individually given configuration paths from user on top
         self.config.config_paths = foundConfigs + self.config.config_paths
-        ### apply yaml config to our configuration if possible
+        # apply yaml config to our configuration if possible
         self.log("Loading configurations" % self.config.config_paths)
         [print(" -- %s" % path) for path in self.config.config_paths]
         [self.loadYaml(path) for path in self.config.config_paths]
-        # load our readme file
+
+        # load the README file and check if wallet address for donation matches the configured wallet address. Before payout this address is also matched against the address of the coinbase user
+
         extractor = URLExtract()
         fundingPath = self._getFile("README.md")
         if fundingPath is not None:
@@ -77,13 +78,22 @@ class OpenSelery(object):
             mdfile = open('README.md', 'r')
             mdstring = mdfile.read()
             urls = extractor.find_urls(mdstring)
-            badge_string = "https://en.cryptobadges.io/donate/"
+            badge_string = "https://badgen.net/badge/OpenSelery-Donation/"
             for url in urls:
                 if badge_string in url:
                     self.config.bitcoin_address=url.split(badge_string, 1)[1]
                     self.log("Found bitcoin address [%s]" % self.config.bitcoin_address)
         else:
             self.log("Using bitcoin address from configuration file for validation check [%s]" % self.config.bitcoin_address)
+
+
+        # Create a new QR code based on the configured wallet address 
+        wallet_qrcode = QRCode(error_correction=1)
+        wallet_qrcode.add_data(self.config.bitcoin_address)
+        wallet_qrcode.best_fit()
+        wallet_qrcode.makeImpl(False,6)
+        wallet_image = wallet_qrcode.make_image() 
+        wallet_image.save(os.path.join(self.config.result_dir,"wallet_qrcode.png"))
 
         # load tooling url
         if self.config.include_tooling_and_runtime and self.config.tooling_path:
@@ -145,6 +155,8 @@ class OpenSelery(object):
 
         localProject = self.githubConnector.grabRemoteProjectByUrl(projectUrl)
         self.log("Gathering project information of '%s' at  local folder '%s" % (projectUrl, self.config.directory))
+
+
         print("=======================================================")
         if self.config.include_self:
             # find official repositories
