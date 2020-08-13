@@ -7,7 +7,7 @@ simulation: False
 include_self: True
 ## include the dependencies of the target folder
 include_dependencies: True 
-## include the tooling and runtime from file
+## include the tooling and runtime from file tooling_repos.yml
 include_tooling_and_runtime: False
 ## minimum contributions made to be considered
 min_contributions: 1
