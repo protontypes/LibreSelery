@@ -407,7 +407,7 @@ class OpenSelery(object):
             # Create the balance badge to show on the README
             balance_badge = {
                 "schemaVersion": 1,
-                "label": currency,
+                "label": currency+" - "+datetime.datetime.utcnow().strftime('%-m %d %Y - %H:%M:%S')+" UTC" ,
                 "message": amount,
                 "color": "green"
                 }
@@ -420,7 +420,7 @@ class OpenSelery(object):
             # Create the native balance badge to show on the README
             native_balance_badge = {
                 "schemaVersion": 1,
-                "label": native_currency+" @ "+datetime.datetime.utcnow().strftime('%B %d %Y - %H:%M:%S')+" UTC" ,
+                "label": native_currency+" - "+datetime.datetime.utcnow().strftime('%-m %d %Y - %H:%M:%S')+" UTC" ,
                 "message": native_amount,
                 "color": "green"
                 }
