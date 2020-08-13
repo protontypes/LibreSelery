@@ -50,7 +50,7 @@ def drawBarChart(title, xlabel, keys, values):
 def visualizeTransactions(resultDir, transactionFilePath):
     if transactionFilePath:
         # read transactions file
-        transactions_file = open(os.path.join(resultDir, transactionFilePath)).read()
+        transactions_file = open(transactionFilePath).read()
         transactions = json.loads(transactions_file)
 
         # prepare transaction data
