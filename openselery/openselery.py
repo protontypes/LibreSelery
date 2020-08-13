@@ -431,8 +431,7 @@ class OpenSelery(object):
 
         else:
             ### simulate a receipt
-            receiptFilePath = os.path.join(
-                    self.config.result_dir, "simulated_receipt.txt")
+            receiptFilePath = os.path.join(self.config.result_dir, "simulated_receipt.txt")
 
             self.logWarning(
                     "Configuration 'simulation' is active, so NO transaction will be executed")
@@ -440,9 +439,8 @@ class OpenSelery(object):
                 self.log(" -- would have been a payout of '%s' bitcoin to '%s'" %
                          ('{0:.6f}'.format(contributor_payout_split[idx]).rstrip("0"), contributor.stats.author.login))
 
-                with open(receiptFilePath, "a") as f:
-                    f.write(str(recipients))
-
+            with open(receiptFilePath, "a") as f:
+                f.write(str(recipients))
 
         return receiptFilePath, transactionFilePath
 
