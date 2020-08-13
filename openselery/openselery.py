@@ -88,6 +88,7 @@ class OpenSelery(object):
 
 
         # Create a new QR code based on the configured wallet address 
+        self.log("Creating QR Code PNG Image for Funders")
         wallet_qrcode = QRCode(error_correction=1)
         wallet_qrcode.add_data(self.config.bitcoin_address)
         wallet_qrcode.best_fit()
@@ -281,6 +282,7 @@ class OpenSelery(object):
     def weight(self, mainProjects, mainContributors, dependencyProjects, dependencyContributors):
 
         if len(dependencyContributors):
+            self.log("Add %s dependency contributor to main contributor by random choice." % self.config.included_dependency_contributor)
             randomDependencyContributors = random.choices(
                 dependencyContributors, k=self.config.included_dependency_contributor)
             mainContributors.extend(randomDependencyContributors)
@@ -306,14 +308,14 @@ class OpenSelery(object):
                 if user.stats.author.email.lower() in release_contributor:
                     release_weights[idx]=self.config.release_weight
                     self.log("Github email matches git commit email of release of contributor: " +user.stats.author.login )
-            self.log("Release Weights:" +str(release_weights))
+            self.log("Release Weights: " +str(release_weights))
             # considers all release contributor equal
             release_contributor = set(release_contributor)
 
         # sum up the two list with the same size
         combined_weights = [x + y for x, y in zip(uniform_weights, release_weights)]
 
-        self.log("Total Weights:" +str(combined_weights))
+        self.log("Combined Weights: " +str(combined_weights))
         # read @user from commit
         return combined_weights, mainContributors
 
@@ -380,35 +382,6 @@ class OpenSelery(object):
             with open(transactionFilePath, "w") as f:
                 f.write(str(transactions))
             
-            amount,currency = self.coinConnector.balancecheck()
-            self.log("Chech account wallet balance [%s] : [%s]" % (amount, currency))
-
-            # Create the balance badge to show on the README
-            balance_badge = {
-                "schemaVersion": 1,
-                "label": currency,
-                "message": amount,
-                "color": "green"
-                }
-
-            balanceBadgePath = os.path.join(self.config.result_dir, "balance_badge.json")
-            with open(balanceBadgePath, "w") as write_file:
-                json.dump(balance_badge, write_file)
-
-            native_amount, native_currency = self.coinConnector.native_balancecheck()
-            self.log("Check native account wallet balance [%s] : [%s]" % (native_amount, native_currency)) 
-
-            # Create the native balance badge to show on the README
-            native_balance_badge = {
-                "schemaVersion": 1,
-                "label": native_currency+" @ "+datetime.datetime.utcnow().strftime('%B %d %Y - %H:%M:%S')+" UTC" ,
-                "message": native_amount,
-                "color": "green"
-                }
-
-            nativeBalanceBadgePath = os.path.join(self.config.result_dir, "native_balance_badge.json")
-            with open(nativeBalanceBadgePath, "w") as write_file:
-                json.dump(native_balance_badge, write_file)
 
             # Payout via the Coinbase API
             self.log("Trying to payout recipients")
@@ -424,6 +397,38 @@ class OpenSelery(object):
             with open(receiptFilePath, "a") as f:
                 f.write(str(self.receiptStr))
 
+            amount,currency = self.coinConnector.balancecheck()
+            self.log("Chech account wallet balance [%s] : [%s]" % (amount, currency))
+
+            native_amount, native_currency = self.coinConnector.native_balancecheck()
+            self.log("Check native account wallet balance [%s] : [%s]" % (native_amount, native_currency)) 
+
+            self.log("Creating static badges of the wallet amount in BTC and EUR")
+            # Create the balance badge to show on the README
+            balance_badge = {
+                "schemaVersion": 1,
+                "label": currency,
+                "message": amount,
+                "color": "green"
+                }
+
+            balanceBadgePath = os.path.join(self.config.result_dir, "balance_badge.json")
+
+            with open(balanceBadgePath, "w") as write_file:
+                json.dump(balance_badge, write_file)
+
+            # Create the native balance badge to show on the README
+            native_balance_badge = {
+                "schemaVersion": 1,
+                "label": native_currency+" @ "+datetime.datetime.utcnow().strftime('%B %d %Y - %H:%M:%S')+" UTC" ,
+                "message": native_amount,
+                "color": "green"
+                }
+
+            nativeBalanceBadgePath = os.path.join(self.config.result_dir, "native_balance_badge.json")
+            with open(nativeBalanceBadgePath, "w") as write_file:
+                json.dump(native_balance_badge, write_file)
+
         else:
             ### simulate a receipt
             receiptFilePath = os.path.join(
@@ -437,6 +442,8 @@ class OpenSelery(object):
 
                 with open(receiptFilePath, "a") as f:
                     f.write(str(recipients))
+
+
         return receiptFilePath, transactionFilePath
 
 
