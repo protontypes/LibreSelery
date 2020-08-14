@@ -32,6 +32,9 @@
 7. Randomly chooses contributors based on the weights.
 8. Pays out Bitcoin to the chosen contributor email addresses via the Coinbase API. Contributor without a Coinbase account will get a email to claim the donation.
 
+
+<img src="docs/selery_workflow.png" width="400">
+
 ## Demo
 
 [![demo](https://asciinema.org/a/qT8m8Tbvt2Fwck077FLGVjMn1.svg)](https://asciinema.org/a/qT8m8Tbvt2Fwck077FLGVjMn1?autoplay=1)
