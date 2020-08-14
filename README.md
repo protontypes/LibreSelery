@@ -120,6 +120,15 @@ pip3 install -r requirements.txt
 TARGET_DIR=<target_repository> && env $(cat ~/.openselery/tokens.env) python3 selery.py --config $TARGET_DIR/selery.yml --directory $TARGET_DIR --result results
 ```
    
+## API Integration
+OpenSelery supports multiple APIs and assets and will support further in the future:
+- [x] Github API
+- [ ] Gitlab API
+- [x] Coinbase
+- [ ] Uphold
+- [x] Bitcoin
+- [ ] Ethereum
+- [ ] Basic Attention Tokens
 
 ## Contribution
 Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the Github profile page are considered.
