@@ -1,16 +1,16 @@
-
 def getOrUpdateDict(dict, key, defaultValue):
-  if not key in dict:
-    dict[key] = defaultValue
+    if not key in dict:
+        dict[key] = defaultValue
 
-  return dict[key]
+    return dict[key]
+
 
 def groupBy(list, keyFun):
-  dict = {}
+    dict = {}
 
-  for elem in list:
-    key = keyFun(elem)
-    list = getOrUpdateDict(dict, key, [])
-    list.append(elem)
+    for elem in list:
+        key = keyFun(elem)
+        list = getOrUpdateDict(dict, key, [])
+        list.append(elem)
 
-  return dict
+    return dict
