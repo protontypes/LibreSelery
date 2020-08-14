@@ -12,8 +12,9 @@ from github import Github
 from shutil import rmtree
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--clonefolder", required=True, type=str,
-                    help="Folder to clone into")
+parser.add_argument(
+    "--clonefolder", required=True, type=str, help="Folder to clone into"
+)
 
 args = parser.parse_args()
 clone_folder = args.clonefolder
@@ -22,7 +23,7 @@ run_path = os.path.dirname(os.path.realpath(__file__))
 
 # Load parameters from environment variables
 
-github_token = os.environ['GITHUB_TOKEN']
+github_token = os.environ["GITHUB_TOKEN"]
 
 try:
     db_conn = sqlite3.connect("/home/selery/db/gitclones.sqlite3")
@@ -40,7 +41,7 @@ def saveJsonIntoDB(url, dependencies):
     sqlite_select_query = """SELECT url from dependencies WHERE url = ?"""
     db_cursor.execute(sqlite_select_query, (url,))
     repo = db_cursor.fetchall()
-    if(repo):
+    if repo:
         print(url + "already exists!")
         return
     # save dependencies into db
@@ -60,21 +61,23 @@ min_stars = 100
 upper_bound_stars = 2000
 max_stars = random.randint(min_stars, upper_bound_stars)
 repositories = g.search_repositories(
-    query='stars:'+str(min_stars)+'..'+str(max_stars))
+    query="stars:" + str(min_stars) + ".." + str(max_stars)
+)
 
 for repo in repositories:
     if repo.size > 100000:
-        print("Skipped "+repo.clone_url)
+        print("Skipped " + repo.clone_url)
         continue
-    print("Clone repo "+repo.clone_url)
-    Repo.clone_from(repo.clone_url, clone_folder+"/"+repo.name)
+    print("Clone repo " + repo.clone_url)
+    Repo.clone_from(repo.clone_url, clone_folder + "/" + repo.name)
     print("scan with bibliothecary..")
     status = subprocess.call(
-        'ruby '+run_path+'/../scripts/scan.rb --project='+clone_folder, shell=True)
+        "ruby " + run_path + "/../scripts/scan.rb --project=" + clone_folder, shell=True
+    )
     dependencies_json = None
     if status == 0:
-        with open('dependencies.json') as f:
-            dependencies_json = f.read().replace('\n', '')
+        with open("dependencies.json") as f:
+            dependencies_json = f.read().replace("\n", "")
     # print(dependencies_json)
     saveJsonIntoDB(repo.clone_url, dependencies_json)
 

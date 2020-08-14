@@ -37,7 +37,8 @@ class GithubConnector(selery_utils.Connector):
         # git@github.com:protontypes/protontypes.git
 
         matchObj = re.match(
-            r"^(?:git@|https://)[^/:]+[/:]([^/]+)/([^/]+?)(?:\.git)?$", url)
+            r"^(?:git@|https://)[^/:]+[/:]([^/]+)/([^/]+?)(?:\.git)?$", url
+        )
         if not matchObj:
             raise ValueError("url cannot be parsed. (url: %s)" % (url))
 
@@ -65,8 +66,7 @@ class GithubConnector(selery_utils.Connector):
                 attempts += 1
                 time.sleep(5.0)
         if attempts >= max_attempts:
-            raise KeyError(
-                "Not able to connect to Github with current credentials")
+            raise KeyError("Not able to connect to Github with current credentials")
 
         # cash collect all contributors by iterating over them
         for c in contributors:
@@ -85,7 +85,7 @@ class GithubConnector(selery_utils.Connector):
         return cachedContributors
 
     def grabUserNameByEmail(self, email):
-        user=self.github.search_users(str(email)+" in:email")
+        user = self.github.search_users(str(email) + " in:email")
         return email
 
     # def ScanCommits(git_folder,branch='master'):
