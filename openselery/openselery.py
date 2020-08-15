@@ -231,13 +231,10 @@ class OpenSelery(object):
                         )
                         libIoDependencies = self.librariesIoConnector.findProjectDependencies(
                             libIoProject)
-                       # print("  > %s" %
-                       #       [dep.project_name for dep in libIoDependencies])
-                            libIoProject
-                        )
-                        print(
-                            "  > %s" % [dep.project_name for dep in libIoDependencies]
-                        )
+                        #print("  > %s" %
+                        #      [dep.project_name for dep in libIoDependencies])
+                        #    libIoProject
+                        #)
 
                         if libIoRepository:
                             gitproject = self.githubConnector.grabRemoteProject(
