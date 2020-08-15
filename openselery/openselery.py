@@ -88,7 +88,7 @@ class OpenSelery(object):
 
 
         # Create a new QR code based on the configured wallet address 
-        self.log("Creating QR Code PNG Image for Funders")
+        self.log("Creating QR code PNG image for funders")
         wallet_qrcode = QRCode(error_correction=1)
         wallet_qrcode.add_data(self.config.bitcoin_address)
         wallet_qrcode.best_fit()
@@ -215,8 +215,8 @@ class OpenSelery(object):
                             libIoProject)
                         libIoDependencies = self.librariesIoConnector.findProjectDependencies(
                             libIoProject)
-                        print("  > %s" %
-                              [dep.project_name for dep in libIoDependencies])
+                       # print("  > %s" %
+                       #       [dep.project_name for dep in libIoDependencies])
 
                         if libIoRepository:
                             gitproject = self.githubConnector.grabRemoteProject(
@@ -288,7 +288,7 @@ class OpenSelery(object):
             mainContributors.extend(randomDependencyContributors)
 
         # create uniform weights for all main contributors
-        self.log("Start with unifrom porbability weights for contributors")
+        self.log("Create uniform weights for contributors")
         uniform_weights = selery_utils.calculateContributorWeights(
            mainContributors, self.config.uniform_weight)
         self.log("Uniform Weights:" +str(uniform_weights))

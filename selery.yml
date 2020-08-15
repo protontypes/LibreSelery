@@ -1,5 +1,6 @@
-# debug states
-## simulation let you run without payout at the end
+# Configuration file for OpenSelery distribution
+## debug states
+## simulation let you run OpenSelery without payout and coinbase tokens
 simulation: False
 
 # take into consideration
