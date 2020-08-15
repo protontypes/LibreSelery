@@ -10,7 +10,7 @@ class Project(object):
         self.__dict__.update(d)
         # special vars
         self.platform = platform
-        self.owner = self.repository_url.split('/')[-2]
+        self.owner = self.repository_url.split("/")[-2]
 
     def __repr__(self):
         return "%s: '%s' [%s]" % (self.name, self.repository_url, self.owner)
@@ -39,6 +39,7 @@ class LibrariesIOConnector(selery_utils.Connector):
         # there is no proper api for this stupid wrapper and so we do this here
         # to check for access to the library
         from pybraries.search import Search
+
         search = Search()
         info = search.platforms()
         if not info:
@@ -46,12 +47,14 @@ class LibrariesIOConnector(selery_utils.Connector):
 
     def findProject(self, platform, depName):
         from pybraries.search import Search
+
         project = None
         search = Search()
         results = search.project_search(
-            filters={"keywords": depName, "manager": platform})
+            filters={"keywords": depName, "manager": platform}
+        )
         # only choose first search result
-        if(results):
+        if results:
             d = results[0]
             project = Project(platform, d)
         return project
@@ -59,31 +62,35 @@ class LibrariesIOConnector(selery_utils.Connector):
     def findRepository(self, project):
         repository = None
         from pybraries.search import Search
+
         search = Search()
         # Disable stdout
-        sys.stdout = open(os.devnull, 'w')
+        sys.stdout = open(os.devnull, "w")
         # search for repository data
         repositoryData = search.repository(
-            host="github", owner=project.owner, repo=project.name)
+            host="github", owner=project.owner, repo=project.name
+        )
         # Restore stdout
         sys.stdout = sys.__stdout__
-        if(repositoryData):
+        if repositoryData:
             repository = Repository(repositoryData)
         return repository
 
     def findProjectDependencies(self, project):
         dependencies = []
         from pybraries.search import Search
+
         search = Search()
         # Disable stdout
-        sys.stdout = open(os.devnull, 'w')
+        sys.stdout = open(os.devnull, "w")
         # search for repository deps
         repositoryData = search.repository_dependencies(
-            host="github", owner=project.owner, repo=project.name)
+            host="github", owner=project.owner, repo=project.name
+        )
         # Restore stdout
         sys.stdout = sys.__stdout__
-        if(repositoryData):
+        if repositoryData:
             depData = repositoryData["dependencies"]
-            if(depData):
+            if depData:
                 dependencies = [Dependency(dep) for dep in depData]
         return dependencies
