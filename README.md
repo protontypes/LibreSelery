@@ -2,7 +2,7 @@
 
 ### Automated Contribution Financing 
 
-> OpenSelery is a decentralized framework for funding distribution in free software development. It offers transparent and adaptable funding of contributors on Github hosted project and it's dependencies integrated into Github Action.
+> OpenSelery is a decentralized framework for funding distribution in free software development. It offers transparent, automated and adaptable funding of contributors integrated into Github Action.
 
 [![](https://img.shields.io/gitter/room/protontypes/openselery)](https://gitter.im/protontypes/openselery)        
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions?query=workflow%3Aopenselery)![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/protontypes/openselery?logo=docker)         
@@ -76,27 +76,32 @@ cd openselery
 ./build.sh
 ```
 
-2. Create a dedicated Coinbase account with limited amounts. OpenSelery needs of API tokens from [Github](https://github.com/settings/tokens) and [Libraries.io](https://libraries.io/api) in simulation mode.
+2. Create a dedicated Coinbase account with limited amounts. OpenSelery needs API tokens from [Github](https://github.com/settings/tokens) and [Libraries.io](https://libraries.io/api) in simulation mode. Find our more about how to create Github tokens [here](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
 
-3. Copy a [selery.yml](https://github.com/protontypes/seleryexample) into your <target_project>. Set 'simulation: False' in your selery.yml 
-
-4. Adjust and test different configuration in simulation mode on your project.
-
-5. Buy some cryptocurrency. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transferring money into the coinbase account.
-
-6. Configure the [access control settings](https://github.com/protontypes/openselery/wiki/Coinbase-Settings) of the automated Coinbase wallet.  
-
-7. Never transfer or store large values with automated cryptocurrency wallets. Use [recurring automated buys](https://blog.coinbase.com/easier-recurring-buys-and-sells-on-coinbase-9a3cd7ea934e) to recharge you wallet on a regular base to avoid financial and security risks. Coinbase does not charge for transferring cryptocurrency from one Coinbase wallet to another
-
-8. Create a read only token file for your user, where you store API keys and secrets:
-
+3. Clone your target repository:
 ```bash
-mkdir ~/.openselery/
-touch ~/.openselery/tokens.env
-chmod 400 ~/.openselery/tokens.env
+git clone <target_repository>
 ```
 
-8. Add your API keys and secrets to the newly created file (`~/.openselery/tokens.env`). **Never store these tokens in a public repository**.
+4. Copy a [selery.yml](https://github.com/protontypes/seleryexample) into your <target_repository>.  Set 'simulation: False' in your selery.yml 
+
+5. Adjust and test different configuration in simulation mode on your repository project.
+
+6. Buy some cryptocurrency. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transferring money into the coinbase account.
+
+7. Configure the [access control settings](https://github.com/protontypes/openselery/wiki/Coinbase-Settings) of the automated Coinbase wallet.  
+
+8. Never transfer or store large values with automated cryptocurrency wallets. Use [recurring automated buys](https://blog.coinbase.com/easier-recurring-buys-and-sells-on-coinbase-9a3cd7ea934e) to recharge you wallet on a regular base to avoid financial and security risks. Coinbase does not charge for transferring cryptocurrency from one Coinbase wallet to another.
+
+9. Create a read only token file for your user, where you store API keys and secrets:
+
+```bash
+mkdir -p ~/.openselery/secrets ~/.openselery/results
+touch ~/.openselery/secrets/tokens.env
+chmod 400 ~/.openselery/secrets/tokens.env
+```
+
+10. Add your API keys and secrets to the newly created file (`~/.openselery/tokens.env`). **Never store these tokens in a public repository**.
 
 ```bash
 COINBASE_TOKEN=XXXXXXXXXXXXXXXX
@@ -105,27 +110,26 @@ GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-9. Send cryptocurrency to weighted random product contributors with a valid visible email address on GitHub:
+11. Send cryptocurrency to weighted random product contributors with a valid visible email address on GitHub:
 
 ```bash
-TARGET_DIR=<target_repository> && env $(cat ~/.openselery/tokens.env | xargs) ./run.sh $TARGET_DIR
+env $(cat ~/.openselery/secrets/tokens.env | xargs) ./run.sh <target_repository>
 ```
 
-#### Run natively on Debian / Ubuntu
+#### Run directly on your host machine
 
-1. Install Dependencies
+1. Install the dependencies on your machine.
 
 ```bash
-sudo apt update && apt install git ruby ruby-dev ruby-bundler build-essentail curl python3-pip
-cd openselery
-bundle install 
-python3 setup.py install 
+sudo apt update && sudo apt install git ruby ruby-dev ruby-bundler build-essentail curl python3-pip
+sudo bundle install 
+sudo python3 setup.py install 
 ```
 
-2. Run OpenSelery
+2. Run OpenSelery on your target project.
 
 ```bash
-TARGET_DIR=<target_repository> && env $(cat ~/.openselery/tokens.env) python3 selery.py --config $TARGET_DIR/selery.yml --directory $TARGET_DIR --result results
+env $(cat ~/.openselery/secrets/tokens.env) selery run -d ~/<target_repository> -r ~/.openselery/results/
 ```
 
 
@@ -142,11 +146,13 @@ OpenSelery is going to supports multiple APIs and assets in the near future:
 
 
 
-## Funding of OpenSelery
+## Supporting of OpenSelery
+
+### Donations
 
 Certainly we are funded by OpenSelery over direct donations via our [`QR code`](https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/wallet_qrcode.png) . The usage and development of OpenSelery will always be free and without any charges. If you want to support us by using OpenSelery you need to add us to the [`tooling_repos.yml`](https://github.com/protontypes/seleryexample/blob/master/selery.yml). 
 
-## Contributions
+### Contributions
 
 Contributors on the master branch will get emails with cryptocurrency from Coinbase. Only git profiles with emails on the Github profile page are considered.
 Find out more in the [Contribution Guide](https://github.com/protontypes/openselery/wiki/Contribution-Guide).
@@ -156,7 +162,6 @@ Find out more in the [Contribution Guide](https://github.com/protontypes/opensel
 <p align="center">
   <img src="docs/selery_workflow.png" width="500">
 </p>
-
 
 
 *Artwork by Miriam Winter and [undraw](https://undraw.co/)*
