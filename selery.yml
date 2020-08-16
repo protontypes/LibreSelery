@@ -7,7 +7,7 @@ simulation: False
 ## include the target folders contributors
 include_self: True
 ## include the dependencies of the target folder
-include_dependencies: True 
+include_dependencies: True
 ## include the tooling and runtime from file tooling_repos.yml
 include_tooling_and_runtime: False
 ## minimum contributions made to be considered
@@ -19,7 +19,7 @@ included_dependency_contributor: 2
 ## base weight for all included contributors
 uniform_weight: 30
 # use release tags to increased the weight of the last release contributors
-consider_releases: True 
+consider_releases: True
 ## last releases additionaly weighted.
 releases_included: 3
 ## release weights
