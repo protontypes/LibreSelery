@@ -92,7 +92,7 @@ LIBRARIES_API_KEY=<your_libaries_io_tokens>
 git clone <target_repository>
 ```
 
-5. Copy a [selery.yml](https://github.com/protontypes/seleryexample) into your <target_repository>.  Set 'simulation: False' in your selery.yml to enable payouts with OpenSelery.
+5. Copy a [selery.yml](https://github.com/protontypes/seleryexample) into your <target_repository>.  Set `simulation: False` in your selery.yml to enable payouts with OpenSelery.
 
 6. Adjust and test different configuration in simulation mode on your repository project.
 
