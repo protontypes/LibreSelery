@@ -27,7 +27,7 @@
 * The minimal changes of your Github project shown in the [`seleryexample`](https://github.com/protontypes/seleryexample) to adapt OpenSelery. 
 * Automated user information about deposited funding transmitted to the Github user email address including a note.
 * Simple simulation on your project to investigate distribution on past git history without the Coinbase tokens. 
-* Add additional projects you like to fund to the  [`tooling_repos.yml`](https://github.com/protontypes/seleryexample/blob/master/selery.yml)
+* Add additional projects you like to fund to the  [`tooling_repos.yml`](https://github.com/protontypes/seleryexample/blob/master/selery.yml).
 
 
 
