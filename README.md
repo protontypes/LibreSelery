@@ -73,7 +73,7 @@ mkdir -p ~/.openselery/secrets ~/.openselery/results
 touch ~/.openselery/secrets/tokens.env
 chmod 400 ~/.openselery/secrets/tokens.env
 ```
-3. OpenSelery needs API tokens from [Github](https://github.com/settings/tokens) and [Libraries.io](https://libraries.io/api) in simulation mode. Find our more about how to create Github tokens [here](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Fill the coinbase tokens with XXXXX to just get started. 
+3. OpenSelery needs API tokens from [Github](https://github.com/settings/tokens) and [Libraries.io](https://libraries.io/api) in simulation mode. The scope of your Github token should not include additional permission than default minimal scope. Find our more about how to create Github tokens [here](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Fill the coinbase tokens with XXXXX to just get started. 
 ```bash
 COINBASE_TOKEN=XXXXXXXXXXXXXXXX
 COINBASE_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
