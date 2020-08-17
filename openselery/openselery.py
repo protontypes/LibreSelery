@@ -94,7 +94,7 @@ class OpenSelery(object):
                 % self.config.bitcoin_address
             )
 
-        # Create a new QR code based on the configured wallet address 
+        # Create a new QR code based on the configured wallet address
         self.log("Creating QR code PNG image for funders")
         wallet_qrcode = QRCode(error_correction=1)
         wallet_qrcode.add_data(self.config.bitcoin_address)
@@ -135,13 +135,13 @@ class OpenSelery(object):
 
     def connect(self):
         # establish connection to restapi services
-        
+
         self.log("Establishing Github connection")
         self.githubConnector = self._execCritical(
             lambda x: GithubConnector(x), [self.config.github_token]
         )
         self.logNotify("Github connection established")
-        
+
         if self.config.include_dependencies:
             self.log("Establishing LibrariesIO connection")
             self.librariesIoConnector = self._execCritical(
@@ -240,11 +240,12 @@ class OpenSelery(object):
                             libIoProject
                         )
                         libIoDependencies = self.librariesIoConnector.findProjectDependencies(
-                            libIoProject)
-                        #print("  > %s" %
+                            libIoProject
+                        )
+                        # print("  > %s" %
                         #      [dep.project_name for dep in libIoDependencies])
                         #    libIoProject
-                        #)
+                        # )
 
                         if libIoRepository:
                             gitproject = self.githubConnector.grabRemoteProject(
