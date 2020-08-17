@@ -112,7 +112,7 @@ env $(cat ~/.openselery/secrets/tokens.env | xargs) ./run.sh <target_repository>
 ```bash
 sudo apt update && sudo apt install git ruby ruby-dev curl python3-pip
 python3 setup.py install --user
-``
+```
 
 2. Ensure that `$HOME/.local/bin` is in `$PATH`. Check the output of `echo $PATH`. If it does not contain `.local/bin` add the following line to your dotfile for example `~/.bashrc`.  
 
