@@ -2,7 +2,7 @@
 
 ### Automated Contribution Financing 
 
-> OpenSelery is a decentralized framework for funding distribution in free software development. It offers transparent, automated and adaptable funding of contributors integrated into Github Action.
+> OpenSelery is a decentralized framework for funding distribution in free software development. It offers transparent, automated and adaptable funding of contributors integrated into Github Action by the [actionselery](https://github.com/protontypes/seleryaction) template. 
 
 [![](https://img.shields.io/gitter/room/protontypes/openselery)](https://gitter.im/protontypes/openselery)        
 [![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions?query=workflow%3Aopenselery)![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/protontypes/openselery?logo=docker)         
@@ -19,27 +19,16 @@
 ## Features
 
 * **Transparent payout** of Github project contributors with every push you make to your master branch 
-
 * Minimal changes of your Github project shown in the [`seleryexample`](https://github.com/protontypes/seleryexample) to adapt OpenSelery with just a view steps. 
-
 * Detailed [`transaction history`](https://github.com/protontypes/openselery/wiki/Transaction-History) regenerated with every run of OpenSelery in your Github Wiki.
-
 * **User defined payout configuration** by the [`selery.yml`](https://github.com/protontypes/openselery/blob/master/selery.yml).
-
 * Dependency scanning for most languages to **even include developers of your dependencies** by the [`Libraries.io`](https://libraries.io/).
-
 * Distribution of money is done via Coinbase. Further payment methods like Paypal or Uphold will soon been supported. 
-
 * Investors can see transparent payout logs in the [`public Github Action`](https://github.com/protontypes/openselery/actions?query=workflow%3Aopenselery).
-
 * Self generated [`QR code`](https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/wallet_qrcode.png) for secure investment into your project host in the Wiki of your project. Wallet address is been double checked against the configured Coinbase wallet and address shown in the README badge.
-
 * Automated user information about deposited funding transmitted to the Github user email address including a note.
-
 * Simple simulation on your project to investigate distribution on past git history without the Coinbase tokens. 
-
 * Add additional projects you like to fund to the  [`tooling_repos.yml`](https://github.com/protontypes/seleryexample/blob/master/selery.yml)
-
 
 
 ## How it works
@@ -52,7 +41,6 @@
 6. Sums the weights together to the combined weight used for different split modes.
 7. Splits the funding between contributers based on the chosen mode. 
 8. Pays out Cryptocurrency to the chosen contributor email addresses via the Coinbase API. Contributors without a Coinbase account will get a email to claim the donation.
-
    
 
 ## Demo
