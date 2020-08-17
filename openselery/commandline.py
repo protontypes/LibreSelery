@@ -121,3 +121,7 @@ def _parseArgs():
         parser.print_help()
         sys.exit()
     return args
+
+
+if __name__ == "__main__":
+    runCli()

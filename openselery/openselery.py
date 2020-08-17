@@ -52,7 +52,11 @@ class OpenSelery(object):
         self.logNotify("Initializing OpenSelery")
 
         self.seleryPackageInfo = os_utils.getPackageInfo("openselery")
-        self.log("OpenSelery version [%s]" % self.seleryPackageInfo["version"])
+        if self.seleryPackageInfo:
+            self.log("OpenSelery version [%s]" % self.seleryPackageInfo["version"])
+        else:
+            # when project is executed locally without installation, seleryPackageInfo is empty
+            self.log("OpenSelery version [undefined]")
 
         self.log("Preparing Configuration")
         # find all configs in potentially given config directory

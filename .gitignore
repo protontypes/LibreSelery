@@ -118,4 +118,7 @@ dmypy.json
 # pycharm
 .idea/
 
+# ctags
+TAGS
+
 # End of https://www.gitignore.io/api/python
