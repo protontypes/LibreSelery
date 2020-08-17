@@ -12,7 +12,7 @@
 [![Donate with bitcoin](https://badgen.net/badge/Donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w/orange?icon=bitcoin)](https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/wallet_qrcode.png)
 [![Transaction History](https://badgen.net/badge/icon/Transaction%20History?icon=bitcoin&label)](https://github.com/protontypes/openselery/wiki/Transaction-History)
 
-*OpenSelery is a competently new funding model and in experimental state. The amount of funding on your wallet should therefore be limited.*
+*OpenSelery is a new funding model for digital open projects and in experimental state. The amount of funding on your wallet should therefore be limited.*
 
 
 
