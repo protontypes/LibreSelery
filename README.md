@@ -79,16 +79,20 @@ cd openselery
 ./build.sh
 ```
 2. Create a token file for your user, where you store API keys and secrets:
+
 ```bash
 mkdir -p ~/.openselery/secrets ~/.openselery/results
 touch ~/.openselery/secrets/tokens.env
 ```
+
 3. OpenSelery just needs API tokens from [Github](https://github.com/settings/tokens) in `simulation = True` and `include_dependencies = False`. The scope of your Github token should not include additional permission than default minimal scope. Find our more about how to create Github tokens [here](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Fill the Coinbase and [Libraries.io](https://libraries.io/api) tokens with XXXXX to just get started without creating an actual accounts for this APIs. 
+
 ```bash
 COINBASE_TOKEN=XXXXXXXXXXXXXXXX
 COINBASE_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 GITHUB_TOKEN=<your_github_tokens>
 LIBRARIES_API_KEY=<your_libaries_io_tokens>
+```
 
 5. Make the token file read only:
 ```
