@@ -18,7 +18,8 @@
 
 ## Features
 
-* Transparent payout of Github project contributors with detailed [`transaction history`](https://github.com/protontypes/openselery/wiki/Transaction-History).
+* Transparent payout of Github project contributors with every push you make to your master branch 
+* Detailed [`transaction history`](https://github.com/protontypes/openselery/wiki/Transaction-History) regenerated with every run of OpenSelery in your Github Wiki.
 * User defined payout configuration by the [`selery.yml`](https://github.com/protontypes/openselery/blob/master/selery.yml).
 * Dependency scanning for most languages to even include developers of your dependencies by the [`Libraries.io`](https://libraries.io/).
 * Distribution of money is done via Coinbase. Further payment methods like Paypal or Uphold will soon been supported. 
