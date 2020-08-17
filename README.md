@@ -86,7 +86,7 @@ git clone <target_repository>
 ```
 5. Copy a [selery.yml](https://github.com/protontypes/seleryexample) into your <target_repository>.  Set `simulation: False` in your selery.yml to enable payouts with OpenSelery.
 6. Adjust and test different configuration in simulation mode on your repository project.
-7. Create a dedicated Coinbase account with limited amounts.
+7. Create a dedicated Coinbase account with limited amounts. Coinbase does not support sending email to yourself thats why you should use a dedicated email address when you are owner of the coinbase account and contributor of the project. Otherwise OpenSelery will skip this payouts.
 8. Buy some cryptocurrency. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transferring money into the coinbase account.
 9. Configure the [access control settings](https://github.com/protontypes/openselery/wiki/Coinbase-Settings) of the automated Coinbase wallet.  
 10. Never transfer or store large values with automated cryptocurrency wallets. Use [recurring automated buys](https://blog.coinbase.com/easier-recurring-buys-and-sells-on-coinbase-9a3cd7ea934e) to recharge you wallet on a regular base to avoid financial and security risks. Coinbase does not charge for transferring cryptocurrency from one Coinbase wallet to another.
