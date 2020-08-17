@@ -131,20 +131,26 @@ class OpenSelery(object):
 
     def connect(self):
         # establish connection to restapi services
-        self.log("Establishing LibrariesIO connection")
-        self.librariesIoConnector = self._execCritical(
-            lambda x: LibrariesIOConnector(x), [self.config.libraries_api_key]
-        )
-        self.logNotify("LibrariesIO connection established")
+        
         self.log("Establishing Github connection")
         self.githubConnector = self._execCritical(
             lambda x: GithubConnector(x), [self.config.github_token]
         )
         self.logNotify("Github connection established")
+        
+        if self.config.include_dependencies:
+            self.log("Establishing LibrariesIO connection")
+            self.librariesIoConnector = self._execCritical(
+                lambda x: LibrariesIOConnector(x), [self.config.libraries_api_key]
+            )
+            self.logNotify("LibrariesIO connection established")
+
         if not self.config.simulation:
+            self.log("Establishing Coinbase connection")
             self.coinConnector = CoinbaseConnector(
                 self.config.coinbase_token, self.config.coinbase_secret
             )
+            self.logNotify("Coinbase connection established")
 
     def gather(self):
 
