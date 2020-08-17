@@ -33,6 +33,7 @@ setup(
         "matplotlib==3.3.0",
         "numpy==1.19.1",
         "qrcode",
+        "wheel",
     ],
     packages=["openselery",],
     scripts=["scripts/selery",],
