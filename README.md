@@ -59,7 +59,7 @@ Use the [Template](https://github.com/protontypes/seleryexample) to integrate Op
 
 ### Run with Docker
 
-1. Install [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/):
+1. Install [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/):
 ```bash
 cd ~
 git clone https://github.com/protontypes/openselery.git
