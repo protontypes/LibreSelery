@@ -103,7 +103,6 @@ jobs:
          git status
          git add . -A
          git commit -m "Action generated"
-         pwd
                 
       - name: Push changes
         uses: ad-m/github-push-action@master

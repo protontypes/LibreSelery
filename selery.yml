@@ -1,7 +1,7 @@
 # Configuration file for OpenSelery distribution
 ## debug states
 ## simulation let you run OpenSelery without payout and coinbase tokens
-simulation: True
+simulation: False
 
 # take into consideration
 ## include the target folders contributors
@@ -34,7 +34,7 @@ btc_per_transaction: 0.000002
 number_payout_contributors_per_run: 5
 
 ## the maximum amount of payout per run that is considered for random and full split
-max_payout_per_run: 0.001000
+max_payout_per_run: 0.002000
 # payout configurations
 bitcoin_address: "3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w"
 ## check that the public bitcoin address matches the secret coinbase address
