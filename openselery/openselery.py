@@ -74,8 +74,10 @@ class OpenSelery(object):
         [print(" -- %s" % path) for path in self.config.config_paths]
         [self.loadYaml(path) for path in self.config.config_paths]
 
-        # load the README file and check if wallet address for donation matches the configured wallet address. Before payout this address is also matched against the address of the coinbase user
+        # finalize our configuration settings
+        self.config.finalize()
 
+        # load the README file and check if wallet address for donation matches the configured wallet address. Before payout this address is also matched against the address of the coinbase user
         extractor = URLExtract()
         fundingPath = self._getFile("README.md")
         if fundingPath is not None:
@@ -116,6 +118,7 @@ class OpenSelery(object):
 
         # load our environment variables
         self.loadEnv()
+
         self.logNotify("Initialized")
         self.log(str(self.getConfig()))
 
