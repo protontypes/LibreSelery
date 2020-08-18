@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.dates as mdates
 import json
 import datetime
+from statistics import mean
 
 from openselery.collection_utils import groupBy
 from openselery.github_connector import GithubConnector
@@ -78,17 +79,19 @@ def transactionToBtc(transaction):
 
 
 def drawBarChart(title, xlabel, keys, values):
-    plt.xscale("log")
+    #plt.xscale("log")
     _, diagram = plt.subplots()
-    y_pos = np.arange(len(keys)) * 4
-    diagram.barh(y_pos, values, align="center", log="true", in_layout="true")
+    y_pos = np.arange(len(keys))
+    diagram.barh(y_pos, values, align="center", in_layout="true")
     diagram.set_yticks(y_pos)
     diagram.set_yticklabels(keys)
     diagram.invert_yaxis()  # labels read top-to-bottom
     diagram.set_xlabel(xlabel)
     diagram.set_title(title)
     diagram.xaxis.set_major_formatter(ScalarFormatter())
+    plt.xlim(0,mean(values))
 
+    
 
 def drawTimeSeries(title, ylabel, keys, values):
     months = mdates.MonthLocator()
@@ -171,13 +174,14 @@ def visualizeTransactions(resultDir, transactionFilePath):
 
         # draw diagrams
         plt.rcdefaults()
-
+        
         drawBarChart(
-            "EUR transactions per day in last month",
+            "EUR transactions per day over the last month",
             "EUR",
             eur_by_day_last_month.keys(),
             eur_by_day_last_month.values(),
         )
+        
         plt.savefig(
             os.path.join(resultDir, "transactions_per_day.png"), bbox_inches="tight"
         )
