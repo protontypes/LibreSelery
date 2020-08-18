@@ -44,7 +44,18 @@ class OpenSeleryConfig(object):
     def apply(self, d):
         self.__dict__.update(d)
 
-    def checkConfig(self, d, path=""):
+    def finalize(self):
+        ### should be called after a configuration was applied 
+        ### will check if all necessary configuration options are set and all types are matched
+        for k,t in self.__default_config_template__.items():
+            v = self.__dict__.get(k, None)
+            if v == None:
+                raise AttributeError("Error when finalizing config: Attribute '%s' missing" % (k))
+            if t != type(v):
+                raise ValueError("Error when finalizing config: Attribute '%s' has wrong type" % (k))
+
+    def validateConfig(self, d, path=""):
+        ### will check a given dictionary config for non relevant keys or wrong value types
         for k, v in d.items():
             type_ = self.__default_config_template__.get(k, None)
             ### check if config entry (key) is actually valid 
@@ -69,7 +80,7 @@ class OpenSeleryConfig(object):
     def applyYaml(self, path):
         yamlDict = yaml.safe_load(open(path))
         ### ensure validity of provided yaml
-        if self.checkConfig(yamlDict, path=path):
+        if self.validateConfig(yamlDict, path=path):
             ### apply config because it is valid
             self.apply(yamlDict) 
 
