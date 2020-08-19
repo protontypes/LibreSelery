@@ -121,4 +121,7 @@ dmypy.json
 # ctags
 TAGS
 
+# OpenSelery specific 
+.openselery/
+tokens.env
 # End of https://www.gitignore.io/api/python
