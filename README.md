@@ -53,7 +53,7 @@
 
 ## Integrated into Github
 
-Use the [Template](https://github.com/protontypes/seleryexample) to integrate OpenSelery into any Github project. 
+Use the [template](https://github.com/protontypes/seleryexample) to integrate OpenSelery into any Github project. 
 *Running OpenSelery with Github Action is the most simple way for newcomer and people without a Linux shell.*
 
 
