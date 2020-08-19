@@ -103,11 +103,12 @@ jobs:
          git status
          git add . -A
          git commit -m "Action generated"
-                
+      
+      ## You will need a privat access token since the GITHUB_TOKEN is not allowed to push to the wiki
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-         github_token: ${{ secrets.PAT_LYON }}
+         github_token: ${{ secrets.PAT_SELERY }}
          repository: ${{ env.GITHUB_REPOSITORY_NEW }}.wiki
          directory: wiki
         
