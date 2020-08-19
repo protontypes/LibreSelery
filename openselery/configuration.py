@@ -29,10 +29,9 @@ class OpenSeleryConfig(object):
         "split_mode": str,
 
         "min_contributions": int,
-        "consider_releases": bool,
-        "releases_included": int,
         "uniform_weight": int,
-        "release_weight": int
+        "weighted_git_commits_weight": int,
+        "weighted_git_commits_until": str
     }
 
     __secure_config_entries__ = ["libraries_api_key", "github_token", "coinbase_token", "coinbase_secret", "coinbase_secret"]
@@ -105,8 +104,9 @@ class OpenSeleryConfig(object):
         # make config safe for printing
         # secureEntries = {k: "X"*len(os.environ[v]) for k, v in self.__default_env_template__.items()}
         secureEntries = {
-            k: "X" * len(getattr(self, k)) for k in self.__secure_config_entries__
+            k: "X" * len(getattr(self, k)) for k in self.__secure_config_entries__ if hasattr(self, k)
         }
         secureDict = dict(self.__dict__)
         secureDict.update(secureEntries)
         return str(" --\n%s\n --" % secureDict)
+
