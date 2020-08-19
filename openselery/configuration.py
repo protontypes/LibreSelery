@@ -105,7 +105,7 @@ class OpenSeleryConfig(object):
         # make config safe for printing
         # secureEntries = {k: "X"*len(os.environ[v]) for k, v in self.__default_env_template__.items()}
         secureEntries = {
-            k: "X" * len(getattr(self, k)) for k in self.__secure_config_entries__
+            k: "X" * len(getattr(self, k)) for k in self.__secure_config_entries__ if hasattr(self, k)
         }
         secureDict = dict(self.__dict__)
         secureDict.update(secureEntries)
