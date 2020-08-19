@@ -79,7 +79,7 @@ COINBASE_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 GITHUB_TOKEN=<your_github_tokens>
 LIBRARIES_API_KEY=<your_libaries_io_tokens>
 ```
-4. Clone your target repository:
+4. Clone your target repository or download any open source project from Github to invest into the contributor:
 ```bash
 git clone <target_repository>
 ```
