@@ -43,10 +43,10 @@
 
    
 
-
+<a href="https://asciinema.org/a/353518">
 <p align="center">
-  <img src="https://asciinema.org/a/353518.svg" width="500"  href="https://asciinema.org/a/353518">
-</p>
+  <img src="https://asciinema.org/a/353518.svg" width="500">
+</p></a>
 
 
 
