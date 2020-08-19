@@ -374,7 +374,7 @@ class OpenSelery(object):
         # chose contributors for payout
         self.log("Choosing recipients for payout")
         if len(contributors) < 1:
-            self.logError("Could not find any contributors to payoff")
+            self.logError("Could not find any contributors to payout")
             raise Exception("Aborting")
 
         if self.config.split_mode == "random_split":
