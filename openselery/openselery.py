@@ -52,7 +52,11 @@ class OpenSelery(object):
         self.logNotify("Initializing OpenSelery")
 
         self.seleryPackageInfo = os_utils.getPackageInfo("openselery")
-        self.log("OpenSelery version [%s]" % self.seleryPackageInfo["version"])
+        if self.seleryPackageInfo:
+            self.log("OpenSelery version [%s]" % self.seleryPackageInfo["version"])
+        else:
+            # when project is executed locally without installation, seleryPackageInfo is empty
+            self.log("OpenSelery version [undefined]")
 
         self.log("Preparing Configuration")
         # find all configs in potentially given config directory
@@ -70,8 +74,10 @@ class OpenSelery(object):
         [print(" -- %s" % path) for path in self.config.config_paths]
         [self.loadYaml(path) for path in self.config.config_paths]
 
-        # load the README file and check if wallet address for donation matches the configured wallet address. Before payout this address is also matched against the address of the coinbase user
+        # finalize our configuration settings
+        self.config.finalize()
 
+        # load the README file and check if wallet address for donation matches the configured wallet address. Before payout this address is also matched against the address of the coinbase user
         extractor = URLExtract()
         fundingPath = self._getFile("README.md")
         if fundingPath is not None:
@@ -90,7 +96,7 @@ class OpenSelery(object):
                 % self.config.bitcoin_address
             )
 
-        # Create a new QR code based on the configured wallet address 
+        # Create a new QR code based on the configured wallet address
         self.log("Creating QR code PNG image for funders")
         wallet_qrcode = QRCode(error_correction=1)
         wallet_qrcode.add_data(self.config.bitcoin_address)
@@ -112,6 +118,7 @@ class OpenSelery(object):
 
         # load our environment variables
         self.loadEnv()
+
         self.logNotify("Initialized")
         self.log(str(self.getConfig()))
 
@@ -131,20 +138,26 @@ class OpenSelery(object):
 
     def connect(self):
         # establish connection to restapi services
-        self.log("Establishing LibrariesIO connection")
-        self.librariesIoConnector = self._execCritical(
-            lambda x: LibrariesIOConnector(x), [self.config.libraries_api_key]
-        )
-        self.logNotify("LibrariesIO connection established")
+
         self.log("Establishing Github connection")
         self.githubConnector = self._execCritical(
             lambda x: GithubConnector(x), [self.config.github_token]
         )
         self.logNotify("Github connection established")
+
+        if self.config.include_dependencies:
+            self.log("Establishing LibrariesIO connection")
+            self.librariesIoConnector = self._execCritical(
+                lambda x: LibrariesIOConnector(x), [self.config.libraries_api_key]
+            )
+            self.logNotify("LibrariesIO connection established")
+
         if not self.config.simulation:
+            self.log("Establishing Coinbase connection")
             self.coinConnector = CoinbaseConnector(
                 self.config.coinbase_token, self.config.coinbase_secret
             )
+            self.logNotify("Coinbase connection established")
 
     def gather(self):
 
@@ -230,11 +243,12 @@ class OpenSelery(object):
                             libIoProject
                         )
                         libIoDependencies = self.librariesIoConnector.findProjectDependencies(
-                            libIoProject)
-                        #print("  > %s" %
+                            libIoProject
+                        )
+                        # print("  > %s" %
                         #      [dep.project_name for dep in libIoDependencies])
                         #    libIoProject
-                        #)
+                        # )
 
                         if libIoRepository:
                             gitproject = self.githubConnector.grabRemoteProject(
