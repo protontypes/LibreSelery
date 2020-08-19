@@ -357,7 +357,7 @@ class OpenSelery(object):
                 if user.stats.author.email.lower() in weighted_contributor:
                     commit_weights[idx] = self.config.weighted_git_commits_weight
                     self.log(
-                        "Github email matches git commit email of release of contributor: "
+                        "Github email matches git commit email of contributor: "
                         + user.stats.author.login
                     )
             self.log("Release Weights: " + str(commit_weights))

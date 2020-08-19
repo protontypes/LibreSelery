@@ -1,7 +1,7 @@
 # Configuration file for OpenSelery distribution
 ## debug states
 ## simulation let you run OpenSelery without payout and coinbase tokens
-simulation: False
+simulation: True
 
 # take into consideration
 ## include the target folders contributors
