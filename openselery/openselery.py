@@ -507,7 +507,7 @@ class OpenSelery(object):
 
 
             self.log("Creating Donation Website")
-            donation_website = "<p align=\"center\"><b>Donate to this address recharge the OpenSelery wallet of OpenSelery:</b><br><b></b><br><b>BTC address:</b><br><b>\"+self.config.bitcoin_address+\"</b><br><img src=\"../openselery/wallet_qrcode.png\"></p>"
+            donation_website = """<p align="center"><b>Donate to this address recharge the OpenSelery wallet of OpenSelery:</b><br><b></b><br><b>BTC address:</b><br><b>"+self.config.bitcoin_address+"</b><br><img src="../openselery/wallet_qrcode.png"></p>"""
 
             donationPagePath = os.path.join(
                 self.config.result_dir, "donation.md"
