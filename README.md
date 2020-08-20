@@ -2,7 +2,7 @@
 
 ### Automated Contribution Financing
 
-*OpenSelery is a decentralized framework for funding distribution in free software development. It offers transparent, automated and adaptable funding of contributors integrated into Github Action by the [actionselery](https://github.com/protontypes/seleryaction) template.*
+*OpenSelery is a decentralized framework for funding distribution in free software development. It offers transparent, automated and adaptable funding of contributors integrated into Github Action by the [seleryaction](https://github.com/protontypes/seleryaction) template.*
 
 [![](https://img.shields.io/gitter/room/protontypes/openselery)](https://gitter.im/protontypes/openselery)[![](https://img.shields.io/docker/cloud/build/protontypes/openselery?logo=docker)](https://hub.docker.com/r/openselery/openselery)[![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)   
 
