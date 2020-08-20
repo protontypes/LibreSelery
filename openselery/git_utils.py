@@ -8,15 +8,21 @@ def find_involved_commits(repo_path, endIdentifier):
     endCommit = endIdentifier.git_find(repo)
 
     if endCommit:
-        return find_commits_between_commits(repo_path, repo.commit("HEAD"), endIdentifier.git_find(repo))
+        return find_commits_between_commits(
+            repo_path, repo.commit("HEAD"), endIdentifier.git_find(repo)
+        )
 
     return []
 
+
 def find_commits_between_commits(repo_path, start, end):
     repo = git.Repo(repo_path)
-    commits = repo.git.rev_list("--ancestry-path", end.hexsha + ".." + start.hexsha).split(os.linesep)
+    commits = repo.git.rev_list(
+        "--ancestry-path", end.hexsha + ".." + start.hexsha
+    ).split(os.linesep)
 
     return list(map(lambda c: repo.commit(c), commits))
+
 
 def grabLocalProject(repo_path, remoteName="origin"):
     repo = git.Repo(repo_path)

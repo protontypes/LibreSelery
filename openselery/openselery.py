@@ -338,12 +338,19 @@ class OpenSelery(object):
 
         # create commit weights
         commit_weights = [0] * len(mainContributors)
-        commit_identifier = CommitIdentifierFromString(self.config.weighted_git_commits_until)
+        commit_identifier = CommitIdentifierFromString(
+            self.config.weighted_git_commits_until
+        )
         if not commit_identifier:
-            self.logError("Invalid commit identifier in 'weighted_git_commits_until': " + self.config.weighted_git_commits_until)
+            self.logError(
+                "Invalid commit identifier in 'weighted_git_commits_until': "
+                + self.config.weighted_git_commits_until
+            )
             raise Exception("Invalid commit identifier in 'weighted_git_commits_until'")
 
-        weighted_commits = git_utils.find_involved_commits(self.config.directory, commit_identifier)
+        weighted_commits = git_utils.find_involved_commits(
+            self.config.directory, commit_identifier
+        )
         if weighted_commits:
             # calc release weights
             self.log(
@@ -505,18 +512,13 @@ class OpenSelery(object):
             with open(balanceBadgePath, "w") as write_file:
                 json.dump(balance_badge, write_file)
 
-
             self.log("Creating Donation Website")
             donation_website = """<p align="center"><b>Donate to this address recharge the OpenSelery wallet of OpenSelery:</b><br><b></b><br><b>BTC address:</b><br><b>"+self.config.bitcoin_address+"</b><br><img src="../openselery/wallet_qrcode.png"></p>"""
 
-            donationPagePath = os.path.join(
-                self.config.result_dir, "donation.md"
-            )
+            donationPagePath = os.path.join(self.config.result_dir, "donation.md")
 
             with open(donationPagePath, "w") as write_file:
                 json.dump(donation_website, write_file)
-
-
 
             # Create the native balance badge to show on the README
             native_balance_badge = {
