@@ -33,7 +33,7 @@
 1. OpenSelery is configured based on the selery.yml file and runs completely decentralized as a Github Action.
 2. Triggers with every push on the master branch.
 3. Gathers contributor information about the target project via the Github and Libraries.io API.
-4. Filters out contributors with hidden email address in the Github profile.
+4. Filters out contributors with hidden email address in the Github profile and below the mininum contribution limit. 
 5. Creates user defined funding distribution weights based on different projects contribution assessment: Minimum Contribution, activity, solved issues, ...
 6. Sums the weights together to the combined weight used for different split modes.
 7. Splits the funding between contributers based on the chosen mode.
