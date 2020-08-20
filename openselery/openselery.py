@@ -512,18 +512,6 @@ class OpenSelery(object):
             with open(balanceBadgePath, "w") as write_file:
                 json.dump(balance_badge, write_file)
 
-            self.log("Creating Donation Website")
-            donation_website = 
-                "<p align='center'><b>Donate to this address recharge the OpenSelery wallet of OpenSelery:</b><br><b></b><br><b>BTC address:</b><br><b>"
-                + self.config.bitcoin_address
-                + "</b><br><img src='../openselery/wallet_qrcode.png'></p>"
-            
-
-            donationPagePath = os.path.join(self.config.result_dir, "Donation.md")
-
-            with open(donationPagePath, "w") as write_file:
-                json.dump(donation_website, write_file)
-
             # Create the native balance badge to show on the README
             native_balance_badge = {
                 "schemaVersion": 1,
@@ -540,6 +528,18 @@ class OpenSelery(object):
             )
             with open(nativeBalanceBadgePath, "w") as write_file:
                 json.dump(native_balance_badge, write_file)
+
+            self.log("Creating Donation Website")
+            donation_website = (
+                "<p align='center'><b>Donate to this address recharge the OpenSelery wallet of OpenSelery:</b><br><b></b><br><b>BTC address:</b><br><b>"
+                + self.config.bitcoin_address
+                + "</b><br><img src='../openselery/wallet_qrcode.png'></p>"
+            )
+
+            donationPagePath = os.path.join(self.config.result_dir, "Donation.md")
+
+            with open(donationPagePath, "w") as write_file:
+                print(donation_website, file=write_file)
 
         else:
             ### simulate a receipt
