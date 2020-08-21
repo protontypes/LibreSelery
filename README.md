@@ -19,10 +19,10 @@ It is triggered with every push to you master branch and distributes donations b
 The project donations splits can be weighted by the following options: 
 * Uniform Weight: Everyone who contributed a minimum number of commits to the master branch is considered.
 * Activity Weight: Everyone who contributed in the last X commits 
-* Issue Contribution: Everybody who created, commented or closed on an Issue that is closed since Y days and has minimum commits
-* (More weights are discussed)      
+* Service Weight: Everybody who created, commented or closed on an issue that is closed since Y days and has minimum commits
+* Further weights are in consideration      
 
-The total amount of donations per push on the master is distributed based on the sum of weights and mailed via the Coinbase API to the public email address on Github. We don't want to send emails to the git commit email addresses to not spam people. 
+The total amount of donations per push on the master branch is distributed based on the sum of weights and mailed via the Coinbase API to the public email address on Github. We don't want to send emails to the git commit email addresses to not spam people. 
 With our dependency scanning option you can even chose a user defined number of random contributors from your dependency tree and include them to your donation distribution. 
 
 ## How it works
