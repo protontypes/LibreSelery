@@ -18,12 +18,15 @@ included_dependency_contributor: 2
 # weight configuations
 ## base weight for all included contributors
 uniform_weight: 30
-# use release tags to increased the weight of the last release contributors
-consider_releases: True
-## last releases additionaly weighted.
-releases_included: 3
-## release weights
-release_weight: 70
+## give weight to the last x git commits
+weighted_git_commits_until: 'tag_regex:v[0-9]+\.[0-9]+\.[0-9]+' # until last tag matching the regex
+# weighted_git_commits_until: "commit:HEAD~1" # last commit
+# weighted_git_commits_until: "commit:<sha>" # specific commit
+# weighted_git_commits_until: "commit:<branch>" # certain branch
+# weighted_git_commits_until: none # whole history
+## weight for weighted git commits
+weighted_git_commits_weight: 70
+
 ## split mode
 ## full_split: weighted split over all contributors
 ## random_split: random weighted split with equal payout per contributor

@@ -17,6 +17,7 @@ from openselery import git_utils
 from openselery import selery_utils
 from openselery import os_utils
 from openselery.visualization import visualizeTransactions
+from openselery.commit_identifier import CommitIdentifierFromString
 
 
 class OpenSelery(object):
@@ -335,34 +336,41 @@ class OpenSelery(object):
         )
         self.log("Uniform Weights:" + str(uniform_weights))
 
-        # create release weights
-        release_weights = [0] * len(mainContributors)
-        if self.config.consider_releases:
+        # create commit weights
+        commit_weights = [0] * len(mainContributors)
+        commit_identifier = CommitIdentifierFromString(
+            self.config.weighted_git_commits_until
+        )
+        if not commit_identifier:
+            self.logError(
+                "Invalid commit identifier in 'weighted_git_commits_until': "
+                + self.config.weighted_git_commits_until
+            )
+            raise Exception("Invalid commit identifier in 'weighted_git_commits_until'")
+
+        weighted_commits = git_utils.find_involved_commits(
+            self.config.directory, commit_identifier
+        )
+        if weighted_commits:
             # calc release weights
             self.log(
-                "Add additional weight to release contributors of last "
-                + str(self.config.releases_included)
-                + " releases"
+                "Add additional weight to contributors of the last commits until "
+                + str(self.config.weighted_git_commits_until)
             )
             # Create a unique list of all release contributor
-            release_contributor = git_utils.find_release_contributor(
-                self.config.directory, self.config.releases_included
-            )
-            release_contributor = set(i.lower() for i in release_contributor)
-            self.log("Found release contributor: " + str(len(release_contributor)))
+            weighted_contributor = set(c.author.email.lower() for c in weighted_commits)
+            self.log("Found release contributor: " + str(len(weighted_contributor)))
             for idx, user in enumerate(mainContributors):
-                if user.stats.author.email.lower() in release_contributor:
-                    release_weights[idx] = self.config.release_weight
+                if user.stats.author.email.lower() in weighted_contributor:
+                    commit_weights[idx] = self.config.weighted_git_commits_weight
                     self.log(
-                        "Github email matches git commit email of release of contributor: "
+                        "Github email matches git commit email of contributor: "
                         + user.stats.author.login
                     )
-            self.log("Release Weights: " + str(release_weights))
-            # considers all release contributor equal
-            release_contributor = set(release_contributor)
+            self.log("Release Weights: " + str(commit_weights))
 
         # sum up the two list with the same size
-        combined_weights = [x + y for x, y in zip(uniform_weights, release_weights)]
+        combined_weights = [x + y for x, y in zip(uniform_weights, commit_weights)]
 
         self.log("Combined Weights: " + str(combined_weights))
         # read @user from commit
@@ -520,6 +528,18 @@ class OpenSelery(object):
             )
             with open(nativeBalanceBadgePath, "w") as write_file:
                 json.dump(native_balance_badge, write_file)
+
+            self.log("Creating Donation Website")
+            donation_website = (
+                "<p align='center'><b>Donate to this address to support OpenSelery:</b><br><b></b><br><b>BTC address:</b><br><b>"
+                + self.config.bitcoin_address
+                + "</b><br><img src='openselery/wallet_qrcode.png'></p>"
+            )
+
+            donationPagePath = os.path.join(self.config.result_dir, "Donation.md")
+
+            with open(donationPagePath, "w") as write_file:
+                print(donation_website, file=write_file)
 
         else:
             ### simulate a receipt

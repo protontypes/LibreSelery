@@ -25,7 +25,6 @@ The project donations splits can be weighted by the following options:
 The total amount of donations per push on the master is distributed based on the sum of weights and mailed via the Coinbase API to the public email address on Github. We don't want to send emails to the git commit email addresses to not spam people. 
 With our dependency scanning option you can even chose a user defined number of random contributors from your dependency tree and include them to your donation distribution. 
 
-
 ## How it works
 
 1. OpenSelery is configured based on the selery.yml file and runs completely decentralized as a Github Action.
@@ -159,7 +158,7 @@ Certainly we are funded by OpenSelery over direct donations via our [`QR code`](
 Contributors on the master branch will get emails with cryptocurrency from Coinbase. Only git profiles with emails on the Github profile page are considered.
 Find out more in the [Contribution Guide](https://github.com/protontypes/openselery/wiki/Contribution-Guide).
 
-## Contact and further Information
+## Contact and Feedback
 For further information please contact `team_at_protontypes.eu` or check out our [Wiki](https://github.com/protontypes/openselery/wiki)
 
 <p align="center">

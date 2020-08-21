@@ -1,34 +1,27 @@
 import git
+import os
 import re
 
 
-def find_release_contributor(repo_path, release_counter):
+def find_involved_commits(repo_path, endIdentifier):
     repo = git.Repo(repo_path)
-    tags = repo.tags
+    endCommit = endIdentifier.git_find(repo)
 
-    last_release_contributor_email = []
-    for check_tag in reversed(tags):
-        # TODO: re expressions should be in selery.yml
-        # Matches for semantic versioning
-        if re.match(r"^v(\d+\.)?(\d+\.)?(\*|\d+)$", str(check_tag)) and bool(
-            release_counter
-        ):
-            release_counter = release_counter - 1
-            continue
-        break
+    if endCommit:
+        return find_commits_between_commits(
+            repo_path, repo.commit("HEAD"), endIdentifier.git_find(repo)
+        )
 
-    last_release_commits_sha = repo.git.log(
-        "--oneline", "--format=format:%H", str(check_tag) + "..HEAD"
-    ).splitlines()
+    return []
 
-    commits = {}
-    for git_commit in repo.iter_commits():
-        commits[git_commit.hexsha] = git_commit
 
-    for sha in last_release_commits_sha:
-        commit = commits[sha]
-        last_release_contributor_email.append(commit.author.email)
-    return last_release_contributor_email
+def find_commits_between_commits(repo_path, start, end):
+    repo = git.Repo(repo_path)
+    commits = repo.git.rev_list(
+        "--ancestry-path", end.hexsha + ".." + start.hexsha
+    ).split(os.linesep)
+
+    return list(map(lambda c: repo.commit(c), commits))
 
 
 def grabLocalProject(repo_path, remoteName="origin"):
