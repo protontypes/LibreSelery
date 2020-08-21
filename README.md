@@ -2,17 +2,45 @@
 
 ### Automated Contribution Financing
 
-*OpenSelery is a decentralized framework for funding distribution in free software development. It offers transparent, automated and adaptable funding of contributors integrated into Github Action by the [actionselery](https://github.com/protontypes/seleryaction) template.*
+*OpenSelery is a decentralized framework for funding distribution in free software development. It offers transparent, automated and adaptable funding of contributors integrated into Github Action by the [seleryaction](https://github.com/protontypes/seleryaction) template.*
 
 [![](https://img.shields.io/gitter/room/protontypes/openselery)](https://gitter.im/protontypes/openselery)[![](https://img.shields.io/docker/cloud/build/protontypes/openselery?logo=docker)](https://hub.docker.com/r/openselery/openselery)[![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)   
 
-[![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions?query=workflow%3Aopenselery)![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/balance_badge.json&style=flat&logo=bitcoin)![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/native_balance_badge.json&style=flat&logo=bitcoin)      
-[![Donate with bitcoin](https://badgen.net/badge/Donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w/orange?icon=bitcoin)](https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/wallet_qrcode.png)
+[![Actions Status](https://github.com/protontypes/openselery/workflows/seleryaction/badge.svg)](https://github.com/protontypes/openselery/actions?query=workflow%3Aseleryaction)![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/balance_badge.json&style=flat&logo=bitcoin)![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/native_balance_badge.json&style=flat&logo=bitcoin)      
+[![Donate with bitcoin](https://badgen.net/badge/Donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w/orange?icon=bitcoin)](https://github.com/protontypes/openselery/wiki/Donation)
 [![Transaction History](https://badgen.net/badge/icon/Transaction%20History?icon=bitcoin&label)](https://github.com/protontypes/openselery/wiki/Transaction-History)
 
 *OpenSelery is a new funding model for digital open projects and in experimental state. The amount of funding on your wallet should therefore be limited.*
 
+## Concept
 
+OpenSelery is a donation distribution system for open source projects that runs decentralized in continuous integration pipelines. 
+It is triggered with every push to you master branch and distributes donations between contributors based on an open source metric that is publicly visible.
+The project donations splits can be weighted by the following options: 
+* Uniform Weight: Everyone who contributed a minimum number of commits to the master branch is considered.
+* Activity Weight: Everyone who contributed in the last X commits 
+* Issue Contribution: Everybody who created, commented or closed on an Issue that is closed since Y days and has minimum commits
+* (More weights are discussed)      
+
+The total amount of donations per push on the master is distributed based on the sum of weights and mailed via the Coinbase API to the public email address on Github. We don't want to send emails to the git commit email addresses to not spam people. 
+With our dependency scanning option you can even chose a user defined number of random contributors from your dependency tree and include them to your donation distribution. 
+
+## How it works
+
+1. OpenSelery is configured based on the selery.yml file and runs completely decentralized as a Github Action.
+2. Triggers with every push on the master branch.
+3. Gathers contributor information about the target project via the Github and Libraries.io API.
+4. Filters out contributors with hidden email address in the Github profile and below the mininum contribution limit. 
+5. Creates user defined funding distribution weights based on different projects contribution assessment: Minimum Contribution, activity, solved issues, ...
+6. Sums the weights together to the combined weight used for different split modes.
+7. Splits the funding between contributers based on the chosen mode.
+8. Pays out Cryptocurrency to the chosen contributor email addresses via the Coinbase API. Contributors without a Coinbase account will get a email to claim the donation.
+
+
+<a href="https://asciinema.org/a/353518">
+<p align="center">
+  <img src="https://asciinema.org/a/353518.svg" width="500">
+</p></a>
 
 ## Features
 
@@ -28,25 +56,7 @@
 * Simple simulation on your project to investigate distribution on past git history without the Coinbase tokens.
 
 
-## How it works
-
-1. OpenSelery is configured based on the selery.yml file and runs completely decentralized as a Github Action.
-2. Triggers with every push on the master branch.
-3. Gathers contributor information about the target project via the Github and Libraries.io API.
-4. Filters out contributors with hidden email address in the Github profile.
-5. Creates user defined funding distribution weights based on different projects contribution assessment: Minimum Contribution, activity, solved issues, ...
-6. Sums the weights together to the combined weight used for different split modes.
-7. Splits the funding between contributers based on the chosen mode.
-8. Pays out Cryptocurrency to the chosen contributor email addresses via the Coinbase API. Contributors without a Coinbase account will get a email to claim the donation.
-
-
-<a href="https://asciinema.org/a/353518">
-<p align="center">
-  <img src="https://asciinema.org/a/353518.svg" width="500">
-</p></a>
-
-
-## Integrated into Github
+## Github Integration
 
 Use the [template](https://github.com/protontypes/seleryexample) to integrate OpenSelery into any Github project.
 *Running OpenSelery with Github Action is the most simple way for newcomer and people without a Linux shell.*
@@ -132,7 +142,7 @@ OpenSelery is going to supports multiple APIs and assets in the near future:
 - [x] Libraries.io
 - [ ] Gitlab
 - [x] Coinbase
-- [ ] Paypal (Already tested but requires a business account activation)
+- [ ] Paypal (Already tested but requires a business account activation [#34](https://developer.paypal.com/docs/api/overview/#))
 - [ ] Uphold
 
 
@@ -149,8 +159,7 @@ Contributors on the master branch will get emails with cryptocurrency from Coinb
 Find out more in the [Contribution Guide](https://github.com/protontypes/openselery/wiki/Contribution-Guide).
 
 ## Contact and Feedback
-For further information please contact `team_at_protontypes.eu`.
-
+For further information please contact `team_at_protontypes.eu` or check out our [Wiki](https://github.com/protontypes/openselery/wiki)
 
 <p align="center">
   <img src="docs/selery_workflow.png" width="500">
