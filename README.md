@@ -156,7 +156,7 @@ Certainly we are funded by OpenSelery over direct donations via our [`QR code`](
 ### Contributions
 
 Contributors on the master branch will get emails with cryptocurrency from Coinbase. Only git profiles with emails on the Github profile page are considered.
-Find out more in the [Contribution Guide](https://github.com/protontypes/openselery/wiki/Contribution-Guide).
+Find out more in the [Design Guidelines](https://github.com/protontypes/openselery/wiki/Design-Guidelines) or look into the [Good First Issue]( https://github.com/protontypes/openselery/labels/good%20first%20issue) labels to get into the project. 
 
 ## Contact and Feedback
 For further information please contact `team_at_protontypes.eu` or check out our [Wiki](https://github.com/protontypes/openselery/wiki)
