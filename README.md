@@ -16,11 +16,11 @@
 
 OpenSelery is a donation distribution system for open source projects that runs decentralized in continuous integration pipelines. 
 It is triggered with every push to you master branch and distributes donations between contributors based on an open source metric that is publicly visible.
-The project donations splits can be weighted by the following options: 
+The project donations splits can be weighted by the following options. Further weights are being considered.      
+ 
 * Uniform Weight: Everyone who contributed a minimum number of commits to the master branch is considered.
 * Activity Weight: Everyone who contributed in the last X commits 
 * Service Weight: Everybody who created, commented or closed on an issue that is closed since Y days and has minimum commits
-* Further weights are in consideration      
 
 The total amount of donations per push on the master branch is distributed based on the sum of weights and mailed via the Coinbase API to the public email address on Github. We don't want to send emails to the git commit email addresses to not spam people. 
 With our dependency scanning option you can even chose a user defined number of random contributors from your dependency tree and include them to your donation distribution. 
@@ -59,7 +59,7 @@ With our dependency scanning option you can even chose a user defined number of 
 ## Github Integration
 
 Use the [template](https://github.com/protontypes/seleryexample) to integrate OpenSelery into any Github project.
-*Running OpenSelery with Github Action is the most simple way for newcomer and people without a Linux shell.*
+**Running OpenSelery with Github Action is the simplest way for newcomer and people without a Linux shell.**
 
 
 
