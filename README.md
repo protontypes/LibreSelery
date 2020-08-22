@@ -2,7 +2,7 @@
 
 ### Automated Free Software Funding
 
-*OpenSelery is a decentralized framework for funding distribution in free software development. It offers transparent, automated and adaptable funding of contributors integrated into GitHub Actions by the [seleryaction](https://github.com/protontypes/seleryaction) template.*
+*OpenSelery is a framework for funding distribution in free software development. It offers transparent, automated and adaptable funding of contributors integrated into GitHub Actions by the [seleryaction](https://github.com/protontypes/seleryaction) template. Instead of depending on another central entity to fund your project, you can add OpenSelerys as a github action to your project so that you can keep control of your project funding.*
 
 [![](https://img.shields.io/gitter/room/protontypes/openselery)](https://gitter.im/protontypes/openselery)[![](https://img.shields.io/docker/cloud/build/protontypes/openselery?logo=docker)](https://hub.docker.com/r/openselery/openselery)[![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)   
 
@@ -14,7 +14,7 @@
 
 ## Concept
 
-OpenSelery is a donation distribution system for open source projects that runs decentralized in continuous integration pipelines. 
+OpenSelery is a donation distribution system for open source projects that runs in continuous integration pipelines. 
 It is triggered with each push to your main branch and distributes donations between contributors based on a publicly visible open source metric. The metric can be configured per repository and is based on the following weights:
 - [x] Uniform Weight: Everyone who contributed a minimum number of commits to the main branch is considered
 - [x] Activity Weight: Everyone who contributed in the last X commits 

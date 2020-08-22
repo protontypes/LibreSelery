@@ -104,7 +104,9 @@ class OpenSelery(object):
         wallet_qrcode.best_fit()
         wallet_qrcode.makeImpl(False, 6)
         wallet_image = wallet_qrcode.make_image()
-        wallet_image.save(os.path.join(self.config.result_dir,"public", "wallet_qrcode.png"))
+        wallet_image.save(
+            os.path.join(self.config.result_dir, "public", "wallet_qrcode.png")
+        )
 
         # load tooling url
         if self.config.include_tooling_and_runtime and self.config.tooling_path:
@@ -259,7 +261,9 @@ class OpenSelery(object):
                             # safe project / dependency information
                             dependencyProjects.append(gitproject)
 
-            self.log("Gathering dependency contributor information from Github. This will take some time for larger projects.")
+            self.log(
+                "Gathering dependency contributor information from Github. This will take some time for larger projects."
+            )
             for p in dependencyProjects:
                 # grab contributors
                 depContributors = self.githubConnector.grabRemoteProjectContributors(p)
@@ -430,7 +434,9 @@ class OpenSelery(object):
                 % transactionFilePath
             )
             try:
-                visualizeTransactions(os.path.join(self.config.result_dir, "public"), transactionFilePath)
+                visualizeTransactions(
+                    os.path.join(self.config.result_dir, "public"), transactionFilePath
+                )
             except Exception as e:
                 self.logError("Error creating visualization: %s" % e)
 
@@ -470,7 +476,9 @@ class OpenSelery(object):
                         contributor.stats.author.email,
                         "{0:.6f}".format(contributor_payout_split[idx]).rstrip("0"),
                         self.config.skip_email,
-                        self._getEmailNote(contributor.stats.author.login, contributor.fromProject),
+                        self._getEmailNote(
+                            contributor.stats.author.login, contributor.fromProject
+                        ),
                     )
                     self.receiptStr = self.receiptStr + str(receipt)
                     self.log(
@@ -507,7 +515,7 @@ class OpenSelery(object):
             }
 
             balanceBadgePath = os.path.join(
-                self.config.result_dir,"public", "balance_badge.json"
+                self.config.result_dir, "public", "balance_badge.json"
             )
 
             with open(balanceBadgePath, "w") as write_file:
@@ -537,7 +545,9 @@ class OpenSelery(object):
                 + "</b><br><img src='openselery/wallet_qrcode.png'></p>"
             )
 
-            donationPagePath = os.path.join(self.config.result_dir,"public", "Donation.md")
+            donationPagePath = os.path.join(
+                self.config.result_dir, "public", "Donation.md"
+            )
 
             with open(donationPagePath, "w") as write_file:
                 print(donation_website, file=write_file)
@@ -573,7 +583,7 @@ class OpenSelery(object):
         else:
             return None
 
-    def _getEmailNote(self,login_name,project_url):
+    def _getEmailNote(self, login_name, project_url):
         repo_message = ""
         try:
             remote_url = git_utils.grabLocalProject(self.config.directory)
@@ -585,14 +595,19 @@ class OpenSelery(object):
             )
 
             if main_project_name.full_name != dependency_project_name.full_name:
-                repo_message = " to " +  dependency_project_name.full_name + ". We are using it at " + main_project_name.full_name  
+                repo_message = (
+                    " to "
+                    + dependency_project_name.full_name
+                    + ". We are using it at "
+                    + main_project_name.full_name
+                )
             else:
                 repo_message = " to " + main_project_name.full_name
 
         except Exception as e:
             print("Cannot detect remote url of git repo", e)
 
-        prefix = "@"+login_name+":Thank you for your contribution to" + repo_message
+        prefix = "@" + login_name + ":Thank you for your contribution to" + repo_message
         postfix = "Find out more about OpenSelery at https://github.com/protontypes/openselery."
         inner = ": " + self.config.email_note if self.config.email_note else ""
         return prefix + inner + ". " + postfix
