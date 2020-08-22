@@ -104,7 +104,7 @@ class OpenSelery(object):
         wallet_qrcode.best_fit()
         wallet_qrcode.makeImpl(False, 6)
         wallet_image = wallet_qrcode.make_image()
-        wallet_image.save(os.path.join(self.config.result_dir, "wallet_qrcode.png"))
+        wallet_image.save(os.path.join(self.config.result_dir,"public", "wallet_qrcode.png"))
 
         # load tooling url
         if self.config.include_tooling_and_runtime and self.config.tooling_path:
@@ -430,7 +430,7 @@ class OpenSelery(object):
                 % transactionFilePath
             )
             try:
-                visualizeTransactions(self.config.result_dir, transactionFilePath)
+                visualizeTransactions(os.path.join(self.config.result_dir, "public"), transactionFilePath)
             except Exception as e:
                 self.logError("Error creating visualization: %s" % e)
 
@@ -507,7 +507,7 @@ class OpenSelery(object):
             }
 
             balanceBadgePath = os.path.join(
-                self.config.result_dir, "balance_badge.json"
+                self.config.result_dir,"public", "balance_badge.json"
             )
 
             with open(balanceBadgePath, "w") as write_file:
@@ -525,7 +525,7 @@ class OpenSelery(object):
             }
 
             nativeBalanceBadgePath = os.path.join(
-                self.config.result_dir, "native_balance_badge.json"
+                self.config.result_dir, "public", "native_balance_badge.json"
             )
             with open(nativeBalanceBadgePath, "w") as write_file:
                 json.dump(native_balance_badge, write_file)
@@ -537,7 +537,7 @@ class OpenSelery(object):
                 + "</b><br><img src='openselery/wallet_qrcode.png'></p>"
             )
 
-            donationPagePath = os.path.join(self.config.result_dir, "Donation.md")
+            donationPagePath = os.path.join(self.config.result_dir,"public", "Donation.md")
 
             with open(donationPagePath, "w") as write_file:
                 print(donation_website, file=write_file)
@@ -585,7 +585,7 @@ class OpenSelery(object):
             )
 
             if main_project_name.full_name != dependency_project_name.full_name:
-                repo_message = " to " +  dependency_project_name.full_name + " and " + main_project_name.full_name  
+                repo_message = " to " +  dependency_project_name.full_name + ". We are using it at " + main_project_name.full_name  
             else:
                 repo_message = " to " + main_project_name.full_name
 

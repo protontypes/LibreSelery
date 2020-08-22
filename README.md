@@ -18,7 +18,7 @@ OpenSelery is a donation distribution system for open source projects that runs 
 It is triggered with each push to your main branch and distributes donations between contributors based on a publicly visible open source metric. The metric can be configured per repository and is based on the following weights:
 - [x] Uniform Weight: Everyone who contributed a minimum number of commits to the main branch is considered
 - [x] Activity Weight: Everyone who contributed in the last X commits 
-- [ ] Service Weight: Everyone who contributed to an closed issue in the last X commits
+- [ ] Service Weight: Everyone who is part of the uniform weight contributed to an closed issue in the last X commits
 
 More weights are under consideration.  The distribution will never be fair since fairness is not an objective measure but by combioning multiple weights in a transparent way we will be less arbitrarily than most donation distribution systems.  
 
@@ -68,7 +68,7 @@ Use the [template](https://github.com/protontypes/seleryexample) to integrate Op
 
 #### Running with Docker
 
-1. Install [docker](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04):
+1. Install [Docker](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04):
 ```bash
 cd ~
 git clone https://github.com/protontypes/openselery.git
@@ -78,7 +78,7 @@ cd openselery
 2. Create a token file for your user, where you store API keys and secrets:
 
 ```bash
-mkdir -p ~/.openselery/secrets ~/.openselery/results
+mkdir -p ~/.openselery/secrets ~/.openselery/results/public
 touch ~/.openselery/secrets/tokens.env
 ```
 

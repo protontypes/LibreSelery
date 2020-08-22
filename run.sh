@@ -24,7 +24,7 @@ docker run --rm -t \
 --env COINBASE_TOKEN=$COINBASE_TOKEN \
 --env COINBASE_SECRET=$COINBASE_SECRET \
 -v $OPENSELERY_TARGET_PROJECT:$DOCKER_PATH_TARGET_DIR \
--v $(realpath $RESULT_DIR):/home/selery/results \
+-v $(realpath $RESULT_DIR):/home/selery/ \
 -v $(realpath $DOT_DIR/config):/home/selery/config \
 -u $(id -u $USER):$(id -g $USER) \
   openselery \
