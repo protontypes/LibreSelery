@@ -91,7 +91,7 @@ jobs:
          echo "Change dir to ${HOME}/work"
          cd ./wiki
          mkdir -p openselery       
-         cp ${results_folder}/public/. ./openselery/
+         cp ${results_folder}/public/* ./openselery/
          git config user.name github-actions
          git config user.email github-actions@github.com
          git status
