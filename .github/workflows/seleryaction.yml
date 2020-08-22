@@ -45,7 +45,7 @@ jobs:
               
       - name: Create result and config folder
         run:  |
-               mkdir -vp $results_folder/public
+               mkdir -vp ${results_folder}/public
                mkdir -vp $config_folder
       - name: Give everyone permission to write to this folder
         run: chmod a+rw $results_folder $config_folder
@@ -65,7 +65,7 @@ jobs:
                 --env COINBASE_TOKEN=${{ secrets.COINBASE_TOKEN }}
                 --env COINBASE_SECRET=${{ secrets.COINBASE_SECRET }}
                 -v $PWD/:/home/selery/runningrepo/ 
-                -v $results_folder:/home/selery//
+                -v $results_folder:/home/selery/
                 -v $config_folder:/home/selery/config/ 
                 openselery 
                 --directory=/home/selery/runningrepo/ --config=/home/selery/config/selery.yml  --results_dir=/home/selery/results/  --tooling=/home/selery/config/tooling_repos.yml
