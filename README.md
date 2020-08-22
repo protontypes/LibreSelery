@@ -10,22 +10,24 @@
 [![Donate with bitcoin](https://badgen.net/badge/Donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w/orange?icon=bitcoin)](https://github.com/protontypes/openselery/wiki/Donation)
 [![Transaction History](https://badgen.net/badge/icon/Transaction%20History?icon=bitcoin&label)](https://github.com/protontypes/openselery/wiki/Transaction-History)
 
-*OpenSelery is a new, experimental funding model for digital open projects. The amount of funding on your wallet should therefore be limited.*
+*It is a new, experimental funding model for digital open projects. The amount of funding on your wallet should therefore be limited in this early development stage.*
 
 ## Concept
 
 OpenSelery is a donation distribution system for open source projects that runs decentralized in continuous integration pipelines. 
 It is triggered with each push to your main branch and distributes donations between contributors based on a publicly visible open source metric. The metric can be configured per repository and is based on the following weights:
-* Uniform Weight: Everyone who contributed a minimum number of commits to the master branch is considered.
-* Activity Weight: Everyone who contributed in the last X commits 
-* (More weights are discussed)  
+- [x] Uniform Weight: Everyone who contributed a minimum number of commits to the main branch is considered
+- [x] Activity Weight: Everyone who contributed in the last X commits 
+- [ ] Service Weight: Everyone who contributed to an closed issue in the last X commits
 
-The total amount of donations per push on the master is distributed based on this metric and sent via the Coinbase API to the public email address on Github. We don't want to send emails to the git commit email addresses in order not to spam anyone. 
+More weights are under consideration.  The distribution will never be fair since fairness is not an objective measure but by combioning multiple weights in a transparent way we will be less arbitrarily than most donation distribution systems.  
+
+The total amount of donations per push on the main branch is distributed based on the sum of weights and sent via the Coinbase API to the public email address on Github. We don't want to send emails to the git commit email addresses in order not to spam anyone. 
 Using our dependency scanning option, you can even randomly select a custom number of contributors from your dependency tree and include them in your donation distribution. 
 
 ## How it works
 
-1. OpenSelery is configured based on the selery.yml file and runs completely decentralized as a Github Action.
+1. OpenSelery is configured based on the selery.yml file and runs as a Github Action in your project.
 2. Is triggered with every push on the main branch.
 3. Gathers contributor information about the target project via the Github and Libraries.io API.
 4. Filters out contributors with a hidden email address in the github profile and below the minimum contribution limit 
@@ -42,7 +44,7 @@ Using our dependency scanning option, you can even randomly select a custom numb
 
 ## Features
 
-* **Transparent payout** of Github project contributors with every push you make to your master branch
+* **Transparent payout** of Github project contributors with every push you make to your main (master) branch.
 * Minimal changes to your Github project shown in the [`seleryexample`](https://github.com/protontypes/seleryexample) to adapt OpenSelery with just a view steps.
 * Detailed [`transaction history`](https://github.com/protontypes/openselery/wiki/Transaction-History) is regenerated in your github wiki every time you run OpenSelery.
 * **User defined payout configuration** by the [`selery.yml`](https://github.com/protontypes/openselery/blob/master/selery.yml).
@@ -58,7 +60,7 @@ Using our dependency scanning option, you can even randomly select a custom numb
 ### Github Actions Integration
 
 Use the [template](https://github.com/protontypes/seleryexample) to integrate OpenSelery into any GitHub project.
-*Running OpenSelery with GitHub Actions is the easiest way for newcomers and people without Linux knowledge.*
+**Running OpenSelery with GitHub Actions is the easiest way for newcomers and people without Linux knowledge.**
 
 
 
@@ -155,10 +157,10 @@ Certainly we are funded by OpenSelery over direct donations via our [`QR code`](
 ### Contributions
 
 Those who have contributed to the master branch receive emails with cryptocurrency from Coinbase. Only git profiles with emails on the GitHub profile page will be considered.
-Find out more in the [Contribution Guide](https://github.com/protontypes/openselery/wiki/Contribution-Guide).
+Find out more in the [Design Guidelines](https://github.com/protontypes/openselery/wiki/Design-Guidelines) or look into the [Good First Issue]( https://github.com/protontypes/openselery/labels/good%20first%20issue) labels to get into the project. 
 
 ## Contact and Feedback
-For further information please contact `team_at_protontypes.eu` or check out our [Wiki](https://github.com/protontypes/openselery/wiki)
+For further information please contact `team_at_protontypes.eu` or check out our [Wiki](https://github.com/protontypes/openselery/wiki).
 
 <p align="center">
   <img src="docs/selery_workflow.png" width="500">
