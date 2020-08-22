@@ -469,7 +469,7 @@ class OpenSelery(object):
                         contributor.stats.author.email,
                         "{0:.6f}".format(contributor_payout_split[idx]).rstrip("0"),
                         self.config.skip_email,
-                        self._getEmailNote(),
+                        self._getEmailNote(contributor.stats.author.login, contributor.fromProject),
                     )
                     self.receiptStr = self.receiptStr + str(receipt)
                     self.log(
@@ -572,18 +572,27 @@ class OpenSelery(object):
         else:
             return None
 
-    def _getEmailNote(self):
+    def _getEmailNote(self,login_name,project_url):
         repo_message = ""
         try:
             remote_url = git_utils.grabLocalProject(self.config.directory)
-            owner_project_name = self.githubConnector.parseRemoteToOwnerProjectName(
-                remote_url
+            main_project_name = self.githubConnector.grabRemoteProjectByUrl(
+                str(remote_url)
             )
-            repo_message = " to " + owner_project_name
+            dependency_project_name = self.githubConnector.grabRemoteProjectByUrl(
+                str(project_url)
+            )
+
+            if main_project_name.full_name != dependency_project_name.full_name:
+                repo_message = " to " +  dependency_project_name.full_name + " and " + main_project_name.full_name  
+            else:
+                repo_message = " to " + main_project_name.full_name
+            print(repo_message)
+
         except Exception as e:
             print("Cannot detect remote url of git repo", e)
 
-        prefix = "Thank you for your contribution" + repo_message
+        prefix = "@"+login_name+":Thank you for your contribution to" + repo_message
         postfix = "Find out more about OpenSelery at https://github.com/protontypes/openselery."
         inner = ": " + self.config.email_note if self.config.email_note else ""
         return prefix + inner + ". " + postfix

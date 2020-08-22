@@ -31,18 +31,23 @@ weighted_git_commits_weight: 70
 ## full_split: weighted split over all contributors
 ## random_split: random weighted split with equal payout per contributor
 split_mode: "full_split"
-## the amount of btc send per user at random_split
-btc_per_transaction: 0.000002
-## numbers of total contributors payout per run at random split
-number_payout_contributors_per_run: 5
 
+# configuration related to random_split
+## the amount of btc send per user at random_split
+btc_per_transaction: 0.000000
+## numbers of total contributors payout per run at random split
+number_payout_contributors_per_run: 1
+
+# configuration related to full_split and random_split mode
 ## the maximum amount of payout per run that is considered for random and full split
-max_payout_per_run: 0.002000
+max_payout_per_run: 0.000200
+
+
 # payout configurations
 bitcoin_address: "3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w"
 ## check that the public bitcoin address matches the secret coinbase address
 check_equal_private_and_public_address: True
 ## Skip email sended by coinbase
 skip_email: False
-## message send with every coinbase email. Never send an URL.
-email_note: "Fresh OpenSelery Funding"
+## message send with every coinbase email after the automatic generated thank you message. 
+email_note: "Please give us a star if you like our project"
