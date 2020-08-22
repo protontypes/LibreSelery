@@ -40,7 +40,7 @@ number_payout_contributors_per_run: 1
 
 # configuration related to full_split and random_split mode
 ## the maximum amount of payout per run that is considered for random and full split
-max_payout_per_run: 0.000200
+max_payout_per_run: 0.002000
 
 
 # payout configurations

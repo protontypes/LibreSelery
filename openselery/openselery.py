@@ -259,6 +259,7 @@ class OpenSelery(object):
                             # safe project / dependency information
                             dependencyProjects.append(gitproject)
 
+            self.log("Gathering dependency contributor information from Github. This will take some time for larger projects.")
             for p in dependencyProjects:
                 # grab contributors
                 depContributors = self.githubConnector.grabRemoteProjectContributors(p)
@@ -587,7 +588,6 @@ class OpenSelery(object):
                 repo_message = " to " +  dependency_project_name.full_name + " and " + main_project_name.full_name  
             else:
                 repo_message = " to " + main_project_name.full_name
-            print(repo_message)
 
         except Exception as e:
             print("Cannot detect remote url of git repo", e)
