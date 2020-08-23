@@ -78,17 +78,28 @@ def transactionToBtc(transaction):
 
 
 def drawBarChart(title, xlabel, keys, values):
-    plt.xscale("log")
     _, diagram = plt.subplots()
-    y_pos = np.arange(len(keys)) * 4
-    diagram.barh(y_pos, values, align="center", log="true", in_layout="true")
+    y_pos = np.arange(len(keys))
+    diagram.barh(y_pos, values, align="center", in_layout="true")
     diagram.set_yticks(y_pos)
     diagram.set_yticklabels(keys)
     diagram.invert_yaxis()  # labels read top-to-bottom
     diagram.set_xlabel(xlabel)
     diagram.set_title(title)
     diagram.xaxis.set_major_formatter(ScalarFormatter())
-
+    
+    
+def drawEurPerUser(title, xlabel, keys, values):
+    _, diagram = plt.subplots()
+    y_pos = np.arange(30)
+    diagram.barh(y_pos,list(values)[0:30], align="center", in_layout="true")
+    diagram.set_yticks(y_pos)
+    diagram.set_yticklabels(list(keys)[0:30])
+    diagram.invert_yaxis()  # labels read top-to-bottom
+    diagram.set_xlabel(xlabel)
+    diagram.set_title(title)
+    diagram.xaxis.set_major_formatter(ScalarFormatter())
+    
 
 def drawTimeSeries(title, ylabel, keys, values):
     months = mdates.MonthLocator()
@@ -171,19 +182,20 @@ def visualizeTransactions(resultDir, transactionFilePath):
 
         # draw diagrams
         plt.rcdefaults()
-
+        
         drawBarChart(
-            "EUR transactions per day in last month",
+            "Transactions per day over the last month",
             "EUR",
             eur_by_day_last_month.keys(),
             eur_by_day_last_month.values(),
         )
+        
         plt.savefig(
             os.path.join(resultDir, "transactions_per_day.png"), bbox_inches="tight"
         )
 
         drawBarChart(
-            "EUR transactions per month",
+            "Transactions per month",
             "EUR",
             eur_by_year_month.keys(),
             eur_by_year_month.values(),
@@ -192,8 +204,8 @@ def visualizeTransactions(resultDir, transactionFilePath):
             os.path.join(resultDir, "transactions_per_month.png"), bbox_inches="tight"
         )
 
-        drawBarChart(
-            "EUR transactions per user", "EUR", eur_by_user.keys(), eur_by_user.values()
+        drawEurPerUser(
+            "Transactions per user", "EUR", eur_by_user.keys(), eur_by_user.values()
         )
         plt.savefig(
             os.path.join(resultDir, "transactions_per_user.png"), bbox_inches="tight"
