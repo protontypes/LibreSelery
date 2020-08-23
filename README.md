@@ -1,8 +1,8 @@
 <img align="middle" src="./docs/OpenSelery-04.png" width="400">
 
-### Automated Free Software Funding
+### Continuous Software Funding
 
-*OpenSelery is a framework for funding distribution in free software development. It offers transparent, automated and adaptable funding of contributors integrated into GitHub Actions by the [seleryaction](https://github.com/protontypes/seleryaction) template. Instead of depending on another central entity to fund your project, add OpenSelerys as a Github Action to your project so that you keep control of your project funding.*
+*OpenSelery is a tool to distribute funding in software development. It offers transparent, automated and adaptable funding of contributors and is integrated into GitHub Actions by the [seleryaction](https://github.com/protontypes/seleryaction) template. It is a new, experimental funding model for digital open projects. The amount of funding on your wallet should therefore be limited in this early development stage.*
 
 [![](https://img.shields.io/gitter/room/protontypes/openselery)](https://gitter.im/protontypes/openselery)[![](https://img.shields.io/docker/cloud/build/protontypes/openselery?logo=docker)](https://hub.docker.com/r/openselery/openselery)[![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)   
 
@@ -10,12 +10,11 @@
 [![Donate with bitcoin](https://badgen.net/badge/Donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w/orange?icon=bitcoin)](https://github.com/protontypes/openselery/wiki/Donation)
 [![Transaction History](https://badgen.net/badge/icon/Transaction%20History?icon=bitcoin&label)](https://github.com/protontypes/openselery/wiki/Transaction-History)
 
-*It is a new, experimental funding model for digital open projects. The amount of funding on your wallet should therefore be limited in this early development stage.*
-
 ## Concept
 
 OpenSelery is a donation distribution system for open source projects that runs in continuous integration pipelines. 
 It is triggered with each push to your main branch and distributes donations between contributors based on a publicly visible open source metric. The metric can be configured per repository and is based on the following weights:
+
 - [x] Uniform Weight: Everyone who contributed a minimum number of commits to the main branch is considered
 - [x] Activity Weight: Everyone who contributed in the last X commits 
 - [ ] Service Weight: Everyone who is part of the uniform weight contributed to an closed issue in the last X commits
