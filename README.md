@@ -2,7 +2,7 @@
 
 ### Continuous Software Funding
 
-*OpenSelery is a tool to distribute funding in software development. It offers transparent, automated and adaptable funding of contributors and is integrated into GitHub Actions by the [seleryaction](https://github.com/protontypes/seleryaction) template. It is a new, experimental funding model for digital open projects. The amount of funding on your wallet should therefore be limited in this early development stage.*
+*OpenSelery is a tool to distribute funding in software development. It offers transparent, automated and adaptable funding of contributors and is integrated into GitHub Actions by the [seleryaction](https://github.com/protontypes/seleryaction) template. The goal is to create a new, experimental funding model for digital open projects. The amount of funding on your wallet should therefore be limited in this early development stage. This project is using the donation system itself. If you contribute to this repository, you will immediately earn money*
 
 [![](https://img.shields.io/gitter/room/protontypes/openselery)](https://gitter.im/protontypes/openselery)[![](https://img.shields.io/docker/cloud/build/protontypes/openselery?logo=docker)](https://hub.docker.com/r/openselery/openselery)[![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)   
 
@@ -19,7 +19,7 @@ It is triggered with each push to your main branch and distributes donations bet
 - [x] Activity Weight: Everyone who contributed in the last X commits 
 - [ ] Service Weight: Everyone who is part of the uniform weight contributed to an closed issue in the last X commits
 
-More weights are under consideration.  The distribution will never be fair since fairness is not an objective measure but by combioning multiple weights in a transparent way we will be less arbitrarily than most donation distribution systems.  
+More weights are under consideration. The distribution will never be fair since fairness is not an objective measure but by combioning multiple weights in a transparent way we will be less arbitrarily than most donation distribution systems.  
 
 The total amount of donations per push on the main branch is distributed based on the sum of weights and sent via the Coinbase API to the public email address on Github. We don't want to send emails to the git commit email addresses in order not to spam anyone. 
 Using our dependency scanning option, you can even randomly select a custom number of contributors from your dependency tree and include them in your donation distribution. 
@@ -159,7 +159,7 @@ Those who have contributed to the master branch receive emails with cryptocurren
 Find out more in the [Design Guidelines](https://github.com/protontypes/openselery/wiki/Design-Guidelines) or look into the [Good First Issue]( https://github.com/protontypes/openselery/labels/good%20first%20issue) labels to get into the project. 
 
 ## Contact and Feedback
-For further information please contact `team_at_protontypes.eu` or check out our [Wiki](https://github.com/protontypes/openselery/wiki).
+For further information please contact us at`team_at_protontypes.eu`, join our [Gitter Chat](https://gitter.im/protontypes/openselery) or check out our [Wiki](https://github.com/protontypes/openselery/wiki).
 
 <p align="center">
   <img src="docs/selery_workflow.png" width="500">
