@@ -12,24 +12,24 @@
 
 ## Concept
 
-OpenSelery is a donation distribution system for open source projects that runs in continuous integration pipelines. 
+OpenSelery is a donation distribution system for open source projects that runs in continuous integration pipelines.
 It is triggered with each push to your main branch and distributes donations between contributors based on a publicly visible open source metric. The metric can be configured per repository and is based on the following weights:
 
 - [x] Uniform Weight: Everyone who contributed a minimum number of commits to the main branch is considered
-- [x] Activity Weight: Everyone who contributed in the last X commits 
+- [x] Activity Weight: Everyone who contributed in the last X commits
 - [ ] Service Weight: Everyone who is part of the uniform weight contributed to an closed issue in the last X commits
 
-More weights are under consideration.  The distribution will never be fair since fairness is not an objective measure but by combioning multiple weights in a transparent way we will be less arbitrarily than most donation distribution systems.  
+More weights are under consideration.  The distribution will never be fair since fairness is not an objective measure. But by combining multiple weights in a transparent way, OpenSelery will be less arbitrary than most donation distribution systems.  
 
-The total amount of donations per push on the main branch is distributed based on the sum of weights and sent via the Coinbase API to the public email address on Github. We don't want to send emails to the git commit email addresses in order not to spam anyone. 
-Using our dependency scanning option, you can even randomly select a custom number of contributors from your dependency tree and include them in your donation distribution. 
+Each push to the main branch will trigger a distribution to the contributors. The amount distributed to each contributor is based on the sum of weights and sent via the Coinbase API to the public email address on Github. We don't want to send emails to the git commit email addresses in order not to spam anyone.
+Using the dependency scanning option, you can even randomly select a custom number of contributors from your dependency tree and include them in your donation distribution.
 
 ## How it works
 
 1. OpenSelery is configured based on the selery.yml file and runs as a Github Action in your project.
 2. Is triggered with every push on the main branch.
 3. Gathers contributor information about the target project via the Github and Libraries.io API.
-4. Filters out contributors with a hidden email address in the github profile and below the minimum contribution limit 
+4. Filters out contributors with a hidden email address in the github profile and below the minimum contribution limit
 5. Creates custom funding distribution weights based on the contribution rating of various projects: Minimum contribution, activity, ...
 6. Adds the weights to the combined weight used for different distribution modes
 7. Distributes the funding between the contributors based on the selected mode.
@@ -81,7 +81,7 @@ mkdir -p ~/.openselery/secrets ~/.openselery/results/public
 touch ~/.openselery/secrets/tokens.env
 ```
 
-3. OpenSelery just needs API tokens from [Github](https://github.com/settings/tokens) when `simulation = True` and `include_dependencies = False` in your `selery.yml`. The scope of your github token should not include any additional permissions beyond the standard minimum scope. Find out more about how to create Github tokens [here](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Replace XXXXX with the Coinbase and [Libraries.io](https://libraries.io/api) tokens to get started without creating an actual accounts for these APIs. 
+3. OpenSelery just needs API tokens from [Github](https://github.com/settings/tokens) when `simulation = True` and `include_dependencies = False` in your `selery.yml`. The scope of your github token should not include any additional permissions beyond the standard minimum scope. Find out more about how to create Github tokens [here](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Replace XXXXX with the Coinbase and [Libraries.io](https://libraries.io/api) tokens to get started without creating an actual accounts for these APIs.
 
 
 4. Make the token file read only:
@@ -156,7 +156,7 @@ Certainly we are funded by OpenSelery over direct donations via our [`QR code`](
 ### Contributions
 
 Those who have contributed to the master branch receive emails with cryptocurrency from Coinbase. Only git profiles with emails on the GitHub profile page will be considered.
-Find out more in the [Design Guidelines](https://github.com/protontypes/openselery/wiki/Design-Guidelines) or look into the [Good First Issue]( https://github.com/protontypes/openselery/labels/good%20first%20issue) labels to get into the project. 
+Find out more in the [Design Guidelines](https://github.com/protontypes/openselery/wiki/Design-Guidelines) or look into the [Good First Issue]( https://github.com/protontypes/openselery/labels/good%20first%20issue) labels to get into the project.
 
 ## Contact and Feedback
 For further information please contact `team_at_protontypes.eu` or check out our [Wiki](https://github.com/protontypes/openselery/wiki).
