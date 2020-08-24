@@ -2,17 +2,23 @@
 
 ### Continuous Software Funding
 
-*OpenSelery is a tool to distribute funding in software development. It offers transparent, automated and adaptable funding of contributors and is integrated into GitHub Actions by the [seleryaction](https://github.com/protontypes/seleryaction) template. The goal is to create a new, experimental funding model for digital open projects. The amount of funding on your wallet should therefore be limited in this early development stage. This project is using the donation system itself. If you contribute to this repository, you will immediately earn money*
+OpenSelery is a tool to distribute funding in free and open source projects. With a new funding model it offers transparent, automated and adaptable compensation of contributors.
 
-[![](https://img.shields.io/gitter/room/protontypes/openselery)](https://gitter.im/protontypes/openselery)[![](https://img.shields.io/docker/cloud/build/protontypes/openselery?logo=docker)](https://hub.docker.com/r/openselery/openselery)[![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)   
+*This project is funded by its own solution. If you contribute to this repository, you will immediately earn money.*
 
-[![Actions Status](https://github.com/protontypes/openselery/workflows/seleryaction/badge.svg)](https://github.com/protontypes/openselery/actions?query=workflow%3Aseleryaction)![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/balance_badge.json&style=flat&logo=bitcoin)![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/native_balance_badge.json&style=flat&logo=bitcoin)      
+[![](https://img.shields.io/gitter/room/protontypes/openselery)](https://gitter.im/protontypes/openselery) 
+[![](https://img.shields.io/docker/cloud/build/protontypes/openselery?logo=docker)](https://hub.docker.com/r/openselery/openselery) 
+[![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)   
+
+[![Actions Status](https://github.com/protontypes/openselery/workflows/seleryaction/badge.svg)](https://github.com/protontypes/openselery/actions?query=workflow%3Aseleryaction)
+![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/balance_badge.json&style=flat&logo=bitcoin)
+![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/native_balance_badge.json&style=flat&logo=bitcoin)      
 [![Donate with bitcoin](https://badgen.net/badge/Donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w/orange?icon=bitcoin)](https://github.com/protontypes/openselery/wiki/Donation)
 [![Transaction History](https://badgen.net/badge/icon/Transaction%20History?icon=bitcoin&label)](https://github.com/protontypes/openselery/wiki/Transaction-History)
 
 ## Concept
 
-OpenSelery is a donation distribution system for open source projects that runs in continuous integration pipelines. 
+OpenSelery is a donation distribution system for free and open source projects that runs in continuous integration pipelines. 
 It is triggered with each push to your main branch and distributes donations between contributors based on a publicly visible open source metric. The metric can be configured per repository and is based on the following weights:
 
 - [x] Uniform Weight: Everyone who contributed a minimum number of commits to the main branch is considered
@@ -61,6 +67,8 @@ Using our dependency scanning option, you can even randomly select a custom numb
 </p></a>
 
 ## Getting Started
+
+**Since the project is in its early stages the amount of funding on your wallet should therefore be limited.**
 
 ### Github Actions Integration
 
