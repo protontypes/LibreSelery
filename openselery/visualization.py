@@ -41,8 +41,9 @@ def transactionToYearMonth(transaction):
 
 def transactionToUserEmail(transaction):
     # user_name = GithubConnector.grabUserNameByEmail(transaction["to"]["email"])
-    return transaction["to"]["email"]
-
+    email = transaction["to"]["email"]
+    name, _, _ = email.partition("@")
+    return name
 
 def transactionIsLastMonth(transaction):
     now_date = datetime.datetime.now()
