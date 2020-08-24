@@ -51,8 +51,14 @@ Using our dependency scanning option, you can even randomly select a custom numb
 * The money is distributed via Coinbase. Other payment methods like Paypal or Uphold will be considered.
 * Donators can see transparent payout logs in the [`public Github Action`](https://github.com/protontypes/openselery/actions?query=workflow%3Aopenselery).
 * Self-hosted [`QR code`](https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/wallet_qrcode.png) for secure donations is automatically stored in the Wiki of your repository.
-* Automated statistics on how much money was paid out to which contributor.
 * Simulate the money distribution for your repository without actually transferring money to see how the money would be distributed.
+* Automated statistic generation on how much money was paid out to which contributor.
+
+
+<a href="https://asciinema.org/a/353518">
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/transactions_per_user.png" width="500">
+</p></a>
 
 ## Getting Started
 
