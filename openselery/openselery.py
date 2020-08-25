@@ -470,11 +470,18 @@ class OpenSelery(object):
             # Payout via the Coinbase API
             self.log("Trying to payout recipients")
             self.receiptStr = ""
+            total_send_amount = 0.0
             for idx, contributor in enumerate(recipients):
                 if self.coinConnector.useremail() != contributor.stats.author.email:
+                    send_amount = "{0:.6f}".format(contributor_payout_split[idx]).rstrip("0")
+                    total_send_amount += float(send_amount) 
+                    if total_send_amount > self.config.payout_per_run:
+                        self.logError("`payout_per_run` was exceeded. Stopping payouts.")
+                        break
+
                     receipt = self.coinConnector.payout(
                         contributor.stats.author.email,
-                        "{0:.6f}".format(contributor_payout_split[idx]).rstrip("0"),
+                        send_amount,
                         self.config.send_email_notification,
                         self._getEmailNote(
                             contributor.stats.author.login, contributor.fromProject
