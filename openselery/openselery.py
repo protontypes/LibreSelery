@@ -453,14 +453,13 @@ class OpenSelery(object):
             # check if the public address is in the privat wallet
             if self.config.perform_wallet_validation:
                 if self.coinConnector.iswalletAddress(self.config.bitcoin_address):
-                    self.log("Public and privat address match")
+                    self.log("Configured wallet address matches with address in README and in Coinbase")
                 else:
-                    self.logError("Public address does not match wallet address")
+                    self.logError("Configured address does not match Coinbase and README address")
                     raise Exception("Aborting")
 
             # Check what transactions are done on the account.
-            self.log(
-                "Checking transaction history of given account [%s]"
+            self.log("Receiving transaction history of coinbase account [%s]"
                 % transactionFilePath
             )
             transactions = self.coinConnector.pastTransactions()
