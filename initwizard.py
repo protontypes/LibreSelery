@@ -95,14 +95,14 @@ def main():
 
         answer = answerStringToBool(
             prompt(
-                "include_self: ",
-                default=str(config.__dict__["include_self"]),
+                "include_main_repository: ",
+                default=str(config.__dict__["include_main_repository"]),
                 rprompt="Include the target folders contributors.",
                 validator=BoolValidator(),
             )
         )
         inputFeedback(answer)
-        answers["include_self"] = answer
+        answers["include_main_repository"] = answer
 
         answer = answerStringToBool(
             prompt(
@@ -127,14 +127,14 @@ def main():
 
         answer = int(
             prompt(
-                "min_contributions: ",
-                default=str(config.__dict__["min_contributions"]),
+                "min_contributions_required_payout: ",
+                default=str(config.__dict__["min_contributions_required_payout"]),
                 rprompt="Minimum contributions made to be considered.",
                 validator=IntegerValidator(),
             )
         )
         inputFeedback(answer)
-        answers["min_contributions"] = answer
+        answers["min_contributions_required_payout"] = answer
 
         answer = int(
             prompt(
@@ -159,31 +159,31 @@ def main():
         answers["uniform_weight"] = answer
 
         answer = prompt(
-            "weighted_git_commits_until: ",
-            default=str(config.__dict__["weighted_git_commits_until"]),
+            "activity_since_commit: ",
+            default=str(config.__dict__["activity_since_commit"]),
             rprompt="Give weight to the last x git commits.",
         )
         inputFeedback(answer)
-        answers["weighted_git_commits_until"] = answer
+        answers["activity_since_commit"] = answer
 
         answer = int(
             prompt(
-                "weighted_git_commits_weight: ",
-                default=str(config.__dict__["weighted_git_commits_weight"]),
+                "activity_weight: ",
+                default=str(config.__dict__["activity_weight"]),
                 rprompt="Weight for weighted git commits.",
                 validator=IntegerValidator(),
             )
         )
         inputFeedback(answer)
-        answers["weighted_git_commits_weight"] = answer
+        answers["activity_weight"] = answer
 
         ## full_split: weighted split over all contributors
         ## random_split: random weighted split with equal payout per contributor
         options = ["full", "random"]
         answer = (
             prompt(
-                "split_mode: ",
-                default=str(config.__dict__["split_mode"][:-6]),
+                "split_behavior: ",
+                default=str(config.__dict__["split_behavior"][:-6]),
                 rprompt="split mode of salery for contributors.",
                 validator=WordValidator(options),
                 completer=WordCompleter(options, ignore_case=True),
@@ -191,18 +191,18 @@ def main():
             + "_split"
         )
         inputFeedback(answer)
-        answers["split_mode"] = answer
+        answers["split_behavior"] = answer
 
         answer = float(
             prompt(
-                "btc_per_transaction: ",
-                default=str(config.__dict__["btc_per_transaction"]),
+                "btc_per_picked_contributor: ",
+                default=str(config.__dict__["btc_per_picked_contributor"]),
                 rprompt="The amount of bitcons send per transaction.",
                 validator=DecimalValidator(),
             )
         )
         inputFeedback(answer)
-        answers["btc_per_transaction"] = answer
+        answers["btc_per_picked_contributor"] = answer
 
         answer = int(
             prompt(
@@ -217,14 +217,14 @@ def main():
 
         answer = float(
             prompt(
-                "max_payout_per_run: ",
-                default=str(config.__dict__["max_payout_per_run"]),
+                "payout_per_run: ",
+                default=str(config.__dict__["payout_per_run"]),
                 rprompt="The maximum amount of payout per run that is considered for random and full split.",
                 validator=DecimalValidator(),
             )
         )
         inputFeedback(answer)
-        answers["max_payout_per_run"] = answer
+        answers["payout_per_run"] = answer
 
         answer = prompt(
             "bitcoin_address: ",
@@ -237,33 +237,33 @@ def main():
 
         answer = answerStringToBool(
             prompt(
-                "check_equal_private_and_public_address: ",
-                default=str(config.__dict__["check_equal_private_and_public_address"]),
+                "perform_wallet_validation: ",
+                default=str(config.__dict__["perform_wallet_validation"]),
                 rprompt="Check that the public bitcoin address matches the secret coinbase address.",
                 validator=BoolValidator(),
             )
         )
         inputFeedback(answer)
-        answers["check_equal_private_and_public_address"] = answer
+        answers["perform_wallet_validation"] = answer
 
         answer = answerStringToBool(
             prompt(
-                "skip_email: ",
-                default=str(config.__dict__["skip_email"]),
+                "send_email_notification: ",
+                default=str(config.__dict__["send_email_notification"]),
                 rprompt="Skip email sended by coinbase.",
                 validator=BoolValidator(),
             )
         )
         inputFeedback(answer)
-        answers["skip_email"] = answer
+        answers["send_email_notification"] = answer
 
         answer = prompt(
-            "email_note: ",
-            default=str(config.__dict__["email_note"]),
+            "optional_email_message: ",
+            default=str(config.__dict__["optional_email_message"]),
             rprompt="Message send with every coinbase email. Never send an URL.",
         )
         inputFeedback(answer)
-        answers["email_note"] = answer
+        answers["optional_email_message"] = answer
 
         print("pretending to write full config:")
         print(str(answers))
