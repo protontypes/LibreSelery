@@ -390,16 +390,16 @@ class OpenSelery(object):
             self.logError("Could not find any contributors to payout")
             raise Exception("Aborting")
 
-        if self.config.split_behavior == "random_split":
+        if self.config.split_strategy == "random_split":
             self.log("Creating random split based on weights")
             recipients = random.choices(
-                contributors, weights, k=self.config.number_payout_contributors_per_run
+                contributors, weights, k=self.config.random_split_picked_contributors
             )
-            contributor_payout_split = [self.config.btc_per_picked_contributor] * len(
-                contributors
-            )
+            contributor_payout_split = [
+                self.config.random_split_btc_per_picked_contributor
+            ] * len(contributors)
 
-        elif self.config.split_behavior == "full_split":
+        elif self.config.split_strategy == "full_split":
             self.log("Creating full split based on weights")
             recipients = contributors
             contributor_payout_split = selery_utils.weighted_split(
@@ -469,12 +469,23 @@ class OpenSelery(object):
             # Payout via the Coinbase API
             self.log("Trying to payout recipients")
             self.receiptStr = ""
+            total_send_amount = 0.0
             for idx, contributor in enumerate(recipients):
                 if self.coinConnector.useremail() != contributor.stats.author.email:
+                    send_amount = "{0:.6f}".format(
+                        contributor_payout_split[idx]
+                    ).rstrip("0")
+                    total_send_amount += float(send_amount)
+                    if total_send_amount > self.config.payout_per_run:
+                        self.logError(
+                            "`payout_per_run` was exceeded. Stopping payouts."
+                        )
+                        break
+
                     receipt = self.coinConnector.payout(
                         contributor.stats.author.email,
-                        "{0:.6f}".format(contributor_payout_split[idx]).rstrip("0"),
-                        self.config.send_email_notification,
+                        send_amount,
+                        not self.config.send_email_notification,
                         self._getEmailNote(
                             contributor.stats.author.login, contributor.fromProject
                         ),
