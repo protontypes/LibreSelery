@@ -19,17 +19,31 @@ OpenSelery is a tool to distribute funding in free and open source projects. Wit
 ## Concept
 
 
-OpenSelery is a donation distribution system for free and open source projects that runs in continuous integration pipelines. 
-It is triggered with each push to your main branch and distributes donations between contributors based on a publicly visible open source metric. The metric can be configured per repository and is based on the following weights:
+OpenSelery is a donation distribution system for free and open source projects.
+Donations are collected in a Bitcoin wallet that acts as a donation pool.
+At each run, a constant amount of money is taken from the donation pool and distributed to the project's donors.
+It runs in continuous integration pipelines like GitHub Actions.
 
-- [x] Uniform Weight: Everyone who contributed a minimum number of commits to the main branch is considered
-- [x] Activity Weight: Everyone who contributed in the last X commits
-- [ ] Service Weight: Everyone who is part of the uniform weight contributed to an closed issue in the last X commits
+OpenSelery is different from other funding solutions in a very essential way.
+**Money flows directly from the donors to the contributors of the project, without any middlemen.**
+Donation transactions are automatically handled by the continuous integration.
+Transaction details are published for transparency into the wiki of your repository.
 
-More weights are under consideration. The distribution will never be fair since fairness can not be objectively measured.
+The distribution is triggered by every push to your main branch.
+The money is then split between contributors based on a public and transparent metric.
+The metric can be configured per repository and is based on the following weights:
 
-Each push to the main branch will trigger a distribution to the contributors. The amount distributed to each contributor is based on the sum of weights and sent via the Coinbase API to the public email address on Github. We don't want to send emails to the git commit email addresses in order not to spam anyone.
-Using the dependency scanning option, you can even randomly select a custom number of contributors from your dependency tree and include them in your donation distribution.
+- *Uniform Weight*: Everyone who contributed a minimum number of commits to the main branch is considered
+- *Activity Weight*: Everyone who contributed in the last X commits
+- *Service Weight*: Everyone who is part of the uniform weight contributed to an closed issue in the last X commits (not implemented yet)
+
+More weights are under consideration.
+It is a difficult and controversial topic, since the importance and amount of contributions cannot be measured in perfectly fair way.
+
+The amount distributed to each contributor is calculated from a sum of these weights.
+The money is sent via the Coinbase API to the public email address on the contributor's GitHub profile.
+We won't send emails to the git commit email addresses in order not to spam anyone.
+You can even activate to compensate contributors from your dependencies.
 
 ## How it works
 
