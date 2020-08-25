@@ -1,53 +1,69 @@
-# Configuration file for OpenSelery distribution
-## debug states
-## simulation let you run OpenSelery without payout and coinbase tokens
+# Configuration file for OpenSelery 
+## simulation lets you run OpenSelery without payout or coinbase tokens
 simulation: False
 
-# take into consideration
-## include the target folders contributors
+
+## include the contributors from target repository
 include_main_repository: True
-## include the dependencies of the target folder
+
+## include the dependencies of the target folder. This requires a libraries.io token.
 include_dependencies: True
+
 ## include the tooling and runtime from file tooling_repos.yml
+## You can add tools, which will not be detected by the dependency scanner.
+## For example command line tools. If you want to support the OpenSelery project, include it in tooling_repos.yml
 include_tooling_and_runtime: False
-## minimum contributions made to be considered
+
+## minimum number of commits to be considered as contributor
 min_contributions_required_payout: 1
+
 ## number of randomly selected dependency contributors
 included_dependency_contributor: 2
+
 
 # weight configuations
 ## base weight for all included contributors
 uniform_weight: 30
+
 ## give weight to the last x git commits
+## activity since specified git reference (tag, branch, commit hash, ...)
 activity_since_commit: 'tag_regex:v[0-9]+\.[0-9]+\.[0-9]+' # until last tag matching the regex
 # activity_since_commit: "commit:HEAD~1" # last commit
 # activity_since_commit: "commit:<sha>" # specific commit
 # activity_since_commit: "commit:<branch>" # certain branch
 # activity_since_commit: none # whole history
-## weight for weighted git commits
+
+## weight for contributors in the activity time range defined by `activity_since_commit`
 activity_weight: 70
 
-## split mode
-## full_split: weighted split over all contributors
-## random_split: random weighted split with equal payout per contributor
-split_behavior: "full_split"
+# Strategy how every payout is split among contributors.
+## The weights are used to decide which contributors receive how much money.
+## "full_split": All contributors receive a payout according to their weight.
+## "random_split": X contributors are randomly picked using the weight as probabilty.
+split_strategy: "full_split"
 
-# configuration related to random_split
-## the amount of btc send per user at random_split
-btc_per_picked_contributor: 0.000000
-## numbers of total contributors payout per run at random split
-number_payout_contributors_per_run: 1
-
-# configuration related to full_split and random_split mode
-## the maximum amount of payout per run that is considered for random and full split
+## the amount of payout per run that is used for all split strategies
 payout_per_run: 0.002000
 
 
-# payout configurations
+# Random Split Strategy configuration
+## numbers of total contributors payout per run at random split
+random_split_picked_contributors: 1
+
+## the amount of btc send per user at random_split
+random_split_btc_per_picked_contributor: 0.000000
+
+
+# payout configuration
+## bitcoin address used to pay contributors and receive donations
 bitcoin_address: "3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w"
-## check that the public bitcoin address matches the secret coinbase address
+
+## automatically check that the configured `bitcoin_address` matches the coinbase wallet address
 perform_wallet_validation: True
-## Skip email sended by coinbase
+
+## Send payout notification emails by coinbase to contributors?
 send_email_notification: False
-## message send with every coinbase email after the automatic generated thank you message. 
+
+## message included in every coinbase email. (after the automatically generated thank you message.)
 optional_email_message: "Please give us a star if you like our project"
+
