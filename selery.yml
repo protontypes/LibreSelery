@@ -55,7 +55,7 @@ payout_per_run: 0.002000
 random_split_picked_contributors: 1
 
 ## the amount of btc send per user at random_split
-_random_split_btc_per_picked_contributor: 0.000000
+random_split_btc_per_picked_contributor: 0.000000
 
 
 # payout configuration
