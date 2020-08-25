@@ -81,7 +81,7 @@ def transactionToBtc(transaction):
 def drawBarChart(title, xlabel, keys, values):
     _, diagram = plt.subplots()
     y_pos = np.arange(len(keys))
-    diagram.barh(y_pos, values, align="center", in_layout="true")
+    diagram.barh(y_pos, values, align="center", in_layout="true", color=(0.23137254901960785, 0.3215686274509804, 1.0), edgecolor="black")
     diagram.set_yticks(y_pos)
     diagram.set_yticklabels(keys)
     diagram.invert_yaxis()  # labels read top-to-bottom
@@ -93,7 +93,7 @@ def drawBarChart(title, xlabel, keys, values):
 def drawEurPerUser(title, xlabel, keys, values):
     _, diagram = plt.subplots()
     y_pos = np.arange(30)
-    diagram.barh(y_pos,list(values)[0:30], align="center", in_layout="true")
+    diagram.barh(y_pos,list(values)[0:30], align="center", in_layout="true",color=(0.23137254901960785, 0.3215686274509804, 1.0), edgecolor="black")
     diagram.set_yticks(y_pos)
     diagram.set_yticklabels(list(keys)[0:30])
     diagram.invert_yaxis()  # labels read top-to-bottom
@@ -108,7 +108,7 @@ def drawTimeSeries(title, ylabel, keys, values):
     months_fmt = mdates.DateFormatter("%m/%Y")
 
     fig, ax = plt.subplots()
-    ax.plot(keys, values)
+    ax.plot(keys, values, color=(0.23137254901960785, 0.3215686274509804, 1.0))
 
     ax.xaxis.set_major_locator(months)
     ax.xaxis.set_major_formatter(months_fmt)
