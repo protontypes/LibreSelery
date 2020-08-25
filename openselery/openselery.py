@@ -182,7 +182,7 @@ class OpenSelery(object):
         )
 
         print("=======================================================")
-        if self.config.include_self:
+        if self.config.include_main_repository:
             # find official repositories
             self.log(
                 "Including contributors of root project '%s'" % localProject.full_name
@@ -199,7 +199,7 @@ class OpenSelery(object):
                 mainContributor = self.githubConnector.grabRemoteProjectContributors(p)
                 # filter contributors
                 mainContributor = selery_utils.validateContributors(
-                    mainContributor, self.config.min_contributions
+                    mainContributor, self.config.min_contributions_required_payout
                 )
                 # safe contributor information
                 mainContributors.extend(mainContributor)
@@ -269,7 +269,7 @@ class OpenSelery(object):
                 depContributors = self.githubConnector.grabRemoteProjectContributors(p)
                 # filter contributors based min contribution
                 depContributors = selery_utils.validateContributors(
-                    depContributors, self.config.min_contributions
+                    depContributors, self.config.min_contributions_required_payout
                 )
                 # safe contributor information
                 dependencyContributors.extend(depContributors)
@@ -295,7 +295,7 @@ class OpenSelery(object):
                 )
                 # filter contributors
                 toolingContributor = selery_utils.validateContributors(
-                    toolingContributor, self.config.min_contributions
+                    toolingContributor, self.config.min_contributions_required_payout
                 )
                 # safe contributor information
                 dependencyContributors.extend(toolingContributor)
@@ -344,14 +344,14 @@ class OpenSelery(object):
         # create commit weights
         commit_weights = [0] * len(mainContributors)
         commit_identifier = CommitIdentifierFromString(
-            self.config.weighted_git_commits_until
+            self.config.activity_since_commit
         )
         if not commit_identifier:
             self.logError(
-                "Invalid commit identifier in 'weighted_git_commits_until': "
-                + self.config.weighted_git_commits_until
+                "Invalid commit identifier in 'activity_since_commit': "
+                + self.config.activity_since_commit
             )
-            raise Exception("Invalid commit identifier in 'weighted_git_commits_until'")
+            raise Exception("Invalid commit identifier in 'activity_since_commit'")
 
         weighted_commits = git_utils.find_involved_commits(
             self.config.directory, commit_identifier
@@ -360,14 +360,14 @@ class OpenSelery(object):
             # calc release weights
             self.log(
                 "Add additional weight to contributors of the last commits until "
-                + str(self.config.weighted_git_commits_until)
+                + str(self.config.activity_since_commit)
             )
             # Create a unique list of all release contributor
             weighted_contributor = set(c.author.email.lower() for c in weighted_commits)
             self.log("Found release contributor: " + str(len(weighted_contributor)))
             for idx, user in enumerate(mainContributors):
                 if user.stats.author.email.lower() in weighted_contributor:
-                    commit_weights[idx] = self.config.weighted_git_commits_weight
+                    commit_weights[idx] = self.config.activity_weight
                     self.log(
                         "Github email matches git commit email of contributor: "
                         + user.stats.author.login
@@ -390,20 +390,20 @@ class OpenSelery(object):
             self.logError("Could not find any contributors to payout")
             raise Exception("Aborting")
 
-        if self.config.split_mode == "random_split":
+        if self.config.split_behavior == "random_split":
             self.log("Creating random split based on weights")
             recipients = random.choices(
                 contributors, weights, k=self.config.number_payout_contributors_per_run
             )
-            contributor_payout_split = [self.config.btc_per_transaction] * len(
+            contributor_payout_split = [self.config.btc_per_picked_contributor] * len(
                 contributors
             )
 
-        elif self.config.split_mode == "full_split":
+        elif self.config.split_behavior == "full_split":
             self.log("Creating full split based on weights")
             recipients = contributors
             contributor_payout_split = selery_utils.weighted_split(
-                contributors, weights, self.config.max_payout_per_run
+                contributors, weights, self.config.payout_per_run
             )
 
         else:
@@ -451,7 +451,7 @@ class OpenSelery(object):
             receiptFilePath = os.path.join(self.config.result_dir, "receipt.txt")
 
             # check if the public address is in the privat wallet
-            if self.config.check_equal_private_and_public_address:
+            if self.config.perform_wallet_validation:
                 if self.coinConnector.iswalletAddress(self.config.bitcoin_address):
                     self.log("Public and privat address match")
                 else:
@@ -475,7 +475,7 @@ class OpenSelery(object):
                     receipt = self.coinConnector.payout(
                         contributor.stats.author.email,
                         "{0:.6f}".format(contributor_payout_split[idx]).rstrip("0"),
-                        self.config.skip_email,
+                        self.config.send_email_notification,
                         self._getEmailNote(
                             contributor.stats.author.login, contributor.fromProject
                         ),
@@ -609,7 +609,11 @@ class OpenSelery(object):
 
         prefix = "@" + login_name + ":Thank you for your contribution to" + repo_message
         postfix = "Find out more about OpenSelery at https://github.com/protontypes/openselery."
-        inner = ": " + self.config.email_note if self.config.email_note else ""
+        inner = (
+            ": " + self.config.optional_email_message
+            if self.config.optional_email_message
+            else ""
+        )
         return prefix + inner + ". " + postfix
 
     def getConfig(self):
