@@ -21,10 +21,10 @@ class OpenSeleryConfig(object):
         "perform_wallet_validation": bool,
         "send_email_notification": bool,
         "optional_email_message": str,
-        "btc_per_picked_contributor": float,
-        "number_payout_contributors_per_run": int,
+        "random_split_btc_per_picked_contributor": float,
+        "random_split_picked_contributors": int,
         "payout_per_run": float,
-        "split_behavior": str,
+        "split_strategy": str,
         "min_contributions_required_payout": int,
         "uniform_weight": int,
         "activity_weight": int,
@@ -97,11 +97,11 @@ class OpenSeleryConfig(object):
             # special evaluations
             if (
                 self.payout_per_run
-                < self.btc_per_picked_contributor
-                * self.number_payout_contributors_per_run
+                < self.random_split_btc_per_picked_contributor
+                * self.random_split_picked_contributors
             ):
                 raise ValueError(
-                    "The specified payout amount (self.btc_per_picked_contributor * self.number_payout_contributors_per_run) exceeds the maximum payout (payout_per_run)"
+                    "The specified payout amount (self.random_split_btc_per_picked_contributor * self.random_split_picked_contributors) exceeds the maximum payout (payout_per_run)"
                 )
 
             # block url in note

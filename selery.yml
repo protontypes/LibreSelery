@@ -47,11 +47,15 @@ payout_per_run: 0.002000
 
 
 # Random Split Strategy configuration
+## Please consider that:
+## random_split_picked_contributors X random_split_btc_per_picked_contributors = payout_per_run
+## OpenSelery does fail if this does not apply.
+
 ## numbers of total contributors payout per run at random split
 random_split_picked_contributors: 1
 
 ## the amount of btc send per user at random_split
-random_split_btc_per_picked_contributor: 0.000000
+_random_split_btc_per_picked_contributor: 0.000000
 
 
 # payout configuration
@@ -65,5 +69,5 @@ perform_wallet_validation: True
 send_email_notification: False
 
 ## message included in every coinbase email. (after the automatically generated thank you message.)
-optional_email_message: "Please give us a star if you like our project"
+optional_email_message: "You are part of a new experimental funding concept for free and open projects. Please give us a star if you like our project"
 
