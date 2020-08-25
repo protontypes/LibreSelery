@@ -14,21 +14,21 @@ class OpenSeleryConfig(object):
     __default_config_template__ = {
         "simulation": bool,
         "include_dependencies": bool,
-        "include_self": bool,
+        "include_main_repository": bool,
         "include_tooling_and_runtime": bool,
         "included_dependency_contributor": int,
         "bitcoin_address": str,
-        "check_equal_private_and_public_address": bool,
-        "skip_email": bool,
-        "email_note": str,
-        "btc_per_transaction": float,
+        "perform_wallet_validation": bool,
+        "send_email_notification": bool,
+        "optional_email_message": str,
+        "btc_per_picked_contributor": float,
         "number_payout_contributors_per_run": int,
-        "max_payout_per_run": float,
-        "split_mode": str,
-        "min_contributions": int,
+        "payout_per_run": float,
+        "split_behavior": str,
+        "min_contributions_required_payout": int,
         "uniform_weight": int,
-        "weighted_git_commits_weight": int,
-        "weighted_git_commits_until": str,
+        "activity_weight": int,
+        "activity_since_commit": str,
     }
 
     __secure_config_entries__ = [
@@ -96,16 +96,17 @@ class OpenSeleryConfig(object):
 
             # special evaluations
             if (
-                self.max_payout_per_run
-                < self.btc_per_transaction * self.number_payout_contributors_per_run
+                self.payout_per_run
+                < self.btc_per_picked_contributor
+                * self.number_payout_contributors_per_run
             ):
                 raise ValueError(
-                    "The specified payout amount (self.btc_per_transaction * self.number_payout_contributors_per_run) exceeds the maximum payout (max_payout_per_run)"
+                    "The specified payout amount (self.btc_per_picked_contributor * self.number_payout_contributors_per_run) exceeds the maximum payout (payout_per_run)"
                 )
 
             # block url in note
             extractor = URLExtract()
-            if extractor.has_urls(self.email_note):
+            if extractor.has_urls(self.optional_email_message):
                 raise ValueError("Using URLs in note not possible")
 
     def writeYaml(self, path):
