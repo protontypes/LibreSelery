@@ -339,7 +339,7 @@ class OpenSelery(object):
         uniform_weights = selery_utils.calculateContributorWeights(
             mainContributors, self.config.uniform_weight
         )
-        self.log("Uniform Weights:" + str(uniform_weights))
+        self.log("Uniform Weights: " + str(uniform_weights))
 
         # create commit weights
         commit_weights = [0] * len(mainContributors)
@@ -453,9 +453,9 @@ class OpenSelery(object):
             # check if the public address is in the privat wallet
             if self.config.perform_wallet_validation:
                 if self.coinConnector.iswalletAddress(self.config.bitcoin_address):
-                    self.log("Configured wallet address matches with address in README and in Coinbase")
+                    self.log("Configured wallet address matches with wallet address Coinbase account")
                 else:
-                    self.logError("Configured address does not match Coinbase and README address")
+                    self.logError("Configured wallet address does not match address of Coinbase account")
                     raise Exception("Aborting")
 
             # Check what transactions are done on the account.
@@ -548,7 +548,7 @@ class OpenSelery(object):
             with open(nativeBalanceBadgePath, "w") as write_file:
                 json.dump(native_balance_badge, write_file)
 
-            self.log("Creating Donation Website")
+            self.log("Creating donation website")
             donation_website = (
                 "<p align='center'><b>Donate to this address to support OpenSelery:</b><br><b></b><br><b>BTC address:</b><br><b>"
                 + self.config.bitcoin_address
