@@ -13,9 +13,6 @@ from prompt_toolkit.completion import WordCompleter
 
 from openselery.configuration import OpenSeleryConfig
 
-config = OpenSeleryConfig()
-config.applyYaml("selery.yml")
-
 
 class BitcoinAddressValidator(Validator):
     def __init__(self):
@@ -78,8 +75,9 @@ def inputFeedback(arg):
     print("You said: %s" % str(arg))
 
 
-def main():
+def getConfigThroughWizard():
     # print(str(config))
+    config = OpenSeleryConfig()
 
     try:
         answers = {}
@@ -87,11 +85,7 @@ def main():
             "Do you want to enable simulation? Setting `simulation` to `True` allows you to run OpenSelery in a try state that does not pay out real money. It will also allow you to test OpenSelery without creating any accounts or actually payout out any real money."
         )
         answer = answerStringToBool(
-            prompt(
-                "simulation: ",
-                default=str(config.__dict__["simulation"]),
-                validator=BoolValidator(),
-            )
+            prompt("simulation: ", default="True", validator=BoolValidator(),)
         )
         if answer:
             print("Simulation Enabled. No real money will be distributed.")
@@ -105,9 +99,7 @@ def main():
         )
         answer = answerStringToBool(
             prompt(
-                "include_main_repository: ",
-                default=str(config.__dict__["include_main_repository"]),
-                validator=BoolValidator(),
+                "include_main_repository: ", default="True", validator=BoolValidator(),
             )
         )
         if answer:
@@ -118,11 +110,7 @@ def main():
 
         print("Do you want to distribute money to your project dependencies?")
         answer = answerStringToBool(
-            prompt(
-                "include_dependencies: ",
-                default=str(config.__dict__["include_dependencies"]),
-                validator=BoolValidator(),
-            )
+            prompt("include_dependencies: ", default="True", validator=BoolValidator(),)
         )
         if answer:
             print("Dependencies will receive money.")
@@ -134,10 +122,7 @@ def main():
             "Do you want to invest money in your tools listed in `tooling_repos.yml`?."
         )
         answer = answerStringToBool(
-            prompt(
-                "include_tooling_and_runtime: ",
-                default=str(config.__dict__["include_tooling_and_runtime"]),
-            )
+            prompt("include_tooling_and_runtime: ", default="False")
         )
         inputFeedback(answer)
         answers["include_tooling_and_runtime"] = answer
@@ -148,7 +133,7 @@ def main():
         answer = int(
             prompt(
                 "min_contributions_required_payout: ",
-                default=str(config.__dict__["min_contributions_required_payout"]),
+                default="1",
                 validator=IntegerValidator(),
             )
         )
@@ -165,7 +150,7 @@ def main():
             answer = int(
                 prompt(
                     "included_dependency_contributor: ",
-                    default=str(config.__dict__["included_dependency_contributor"]),
+                    default="2",
                     validator=IntegerValidator(),
                 )
             )
@@ -176,11 +161,7 @@ def main():
             "To compute the contribution of a person to the project, there is a uniform weight attached equally to everybody who contributed to the project. How much should this weight be?"
         )
         answer = int(
-            prompt(
-                "uniform_weight: ",
-                default=str(config.__dict__["uniform_weight"]),
-                validator=IntegerValidator(),
-            )
+            prompt("uniform_weight: ", default="30", validator=IntegerValidator(),)
         )
         print("The uniform base weight is set to %d", answer)
         answers["uniform_weight"] = answer
@@ -189,11 +170,7 @@ def main():
             "The activity (estimation of work) of a contributor is weighted as well. How much weight do you want to set for the activity?"
         )
         answer = int(
-            prompt(
-                "activity_weight: ",
-                default=str(config.__dict__["activity_weight"]),
-                validator=IntegerValidator(),
-            )
+            prompt("activity_weight: ", default="70", validator=IntegerValidator(),)
         )
         answers["activity_weight"] = answer
         if answer == 0:
@@ -204,29 +181,26 @@ def main():
                 "What activity do you want to take into consideration in payout calculation?"
             )
             print("here are some example for valid values:")
+            print("tag_regex:<regex>")
             print("commit:HEAD~1")  # last commit
             print("commit:<sha>")  # specific commit
             print("commit:<branch>")  # certain branch
             print("all")
             ## weight for weighted git commits
-            answer = prompt(
-                "activity_since_commit: ",
-                default=str(config.__dict__["activity_since_commit"]),
-            )
+            answer = prompt("activity_since_commit: ", default="all",)
             if answer != "all":
                 answers["activity_since_commit"] = answer
 
         ## full_split: weighted split over all contributors
         ## random_split: random weighted split with equal payout per contributor
         print(
-            "For some payment services the fees can become significant if a large amount of transactions with a small amount of money is performed. For this use case, a random picking behavior for contributors has been developed. This mode only pays out to a few randomly picked contributor instead of all contributors. Full split mode splits all money"
+            "For some payment services the fees can become significant if a large amount of transactions with a small amount of money is performed. For this use case, a random picking behavior for contributors has been developed. This mode only pays out to a few randomly picked contributor instead of all contributors. Full split mode splits all money. Possible values are 'full' and 'random'."
         )
-        print("split mode of salery for contributors.")
         options = ["full", "random"]
         answer = (
             prompt(
                 "split_behavior: ",
-                default=str(config.__dict__["split_behavior"][:-6]),
+                default="full",
                 validator=WordValidator(options),
                 completer=WordCompleter(options, ignore_case=True),
             ).lower()
@@ -240,7 +214,7 @@ def main():
             answer = float(
                 prompt(
                     "btc_per_picked_contributor: ",
-                    default=str(config.__dict__["btc_per_picked_contributor"]),
+                    default="0.0001",
                     validator=DecimalValidator(),
                 )
             )
@@ -250,7 +224,7 @@ def main():
             answer = int(
                 prompt(
                     "number_payout_contributors_per_run: ",
-                    default=str(config.__dict__["number_payout_contributors_per_run"]),
+                    default="1",
                     validator=BoolValidator(),
                 )
             )
@@ -258,21 +232,13 @@ def main():
 
         print("How much money should be send in each run of OpenSelery")
         answer = float(
-            prompt(
-                "payout_per_run: ",
-                default=str(config.__dict__["payout_per_run"]),
-                validator=DecimalValidator(),
-            )
+            prompt("payout_per_run: ", default="0.002", validator=DecimalValidator(),)
         )
         inputFeedback(answer)
         answers["payout_per_run"] = answer
 
         print("What is the Bitcoin address to take money from for payout?")
-        answer = prompt(
-            "bitcoin_address: ",
-            default=str(config.__dict__["bitcoin_address"]),
-            validator=BitcoinAddressValidator(),
-        )
+        answer = prompt("bitcoin_address: ", validator=BitcoinAddressValidator(),)
         inputFeedback(answer)
         answers["bitcoin_address"] = answer
 
@@ -282,46 +248,31 @@ def main():
         answer = answerStringToBool(
             prompt(
                 "perform_wallet_validation: ",
-                default=str(config.__dict__["perform_wallet_validation"]),
+                default="True",
                 validator=BoolValidator(),
             )
         )
         inputFeedback(answer)
         answers["perform_wallet_validation"] = answer
 
-        print("Skip email sended by coinbase.")
+        print("Do you want Coinbase to send notification e-mails?")
         answer = answerStringToBool(
             prompt(
-                "send_email_notification: ",
-                default=str(config.__dict__["send_email_notification"]),
-                validator=BoolValidator(),
+                "send_email_notification: ", default="False", validator=BoolValidator(),
             )
         )
         inputFeedback(answer)
         answers["send_email_notification"] = answer
 
-        print(
-            "What message to you want to attach in each coinbase email? Pleast never send an URL."
-        )
-        answer = prompt(
-            "optional_email_message: ",
-            default=str(config.__dict__["optional_email_message"]),
-        )
-        inputFeedback(answer)
-        answers["optional_email_message"] = answer
+        if answer:
+            print(
+                "What message to you want to attach in each coinbase email? Pleast never send an URL."
+            )
+            answer = prompt("optional_email_message: ", default="Have a nice day.",)
+            inputFeedback(answer)
+            answers["optional_email_message"] = answer
 
-        hasChanges = False
-        for key in answers:
-            if answers[key] != config.__dict__[key]:
-                if not hasChanges:
-                    print("The following changes have been made:")
-                    hasChanges = true
-                print(
-                    "change %s from %s to %s"
-                    % (key, config.__dict__[key], answers[key])
-                )
-        if not hasChanges:
-            print("using default configuration")
+        return answers
 
     except KeyboardInterrupt:
         print("Setup canceled, nothing is safed.")
@@ -330,4 +281,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    print(str(getConfigThroughWizard()))

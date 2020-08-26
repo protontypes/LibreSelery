@@ -3,6 +3,7 @@ import sys
 
 from openselery.configuration import OpenSeleryConfig
 from openselery import openselery
+from openselery.initwizard import getConfigThroughWizard
 
 
 def runCli():
@@ -56,14 +57,7 @@ def _runCommand(args):
 
 def _initCommand(args):
     print("Initializing new OpenSelery project")
-
-    config = OpenSeleryConfig()
-
-    config.bitcoin_address = input("Enter your public bitcoin address: ")
-    if not config.bitcoin_address:
-        print("Invalid bitcoin address")
-        exit(-1)
-
+    config = getConfigThroughWizard()
     config.writeYaml("./selery.yml")
 
 
