@@ -34,7 +34,7 @@ activity_since_commit: 'tag_regex:v[0-9]+\.[0-9]+\.[0-9]+' # until last tag matc
 # activity_since_commit: none # whole history
 
 ## weight for contributors in the activity time range defined by `activity_since_commit`
-activity_weight: 70
+activity_weight: 30
 
 # Strategy how every payout is split among contributors.
 ## The weights are used to decide which contributors receive how much money.
@@ -44,7 +44,8 @@ split_strategy: "full_split"
 
 ## the amount of payout per run that is used for all split strategies
 payout_per_run: 0.002000
-
+## the minimum payout per contributor. Below that number the payout is skipped to avoid bother contributors with very small payout. 
+min_payout_per_contributor: 0.0001
 
 # Random Split Strategy configuration
 ## Please consider that:

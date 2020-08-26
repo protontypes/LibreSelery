@@ -45,6 +45,7 @@ def transactionToUserEmail(transaction):
     name, _, _ = email.partition("@")
     return name
 
+
 def transactionIsLastMonth(transaction):
     now_date = datetime.datetime.now()
     creation_date = datetime.datetime.strptime(
@@ -81,26 +82,40 @@ def transactionToBtc(transaction):
 def drawBarChart(title, xlabel, keys, values):
     _, diagram = plt.subplots()
     y_pos = np.arange(len(keys))
-    diagram.barh(y_pos, values, align="center", in_layout="true", color=(0.23137254901960785, 0.3215686274509804, 1.0), edgecolor="black")
+    diagram.barh(
+        y_pos,
+        values,
+        align="center",
+        in_layout="true",
+        color=(0.23137254901960785, 0.3215686274509804, 1.0),
+        edgecolor="black",
+    )
     diagram.set_yticks(y_pos)
     diagram.set_yticklabels(keys)
     diagram.invert_yaxis()  # labels read top-to-bottom
     diagram.set_xlabel(xlabel)
     diagram.set_title(title)
     diagram.xaxis.set_major_formatter(ScalarFormatter())
-    
-    
+
+
 def drawEurPerUser(title, xlabel, keys, values):
     _, diagram = plt.subplots()
     y_pos = np.arange(30)
-    diagram.barh(y_pos,list(values)[0:30], align="center", in_layout="true",color=(0.23137254901960785, 0.3215686274509804, 1.0), edgecolor="black")
+    diagram.barh(
+        y_pos,
+        list(values)[0:30],
+        align="center",
+        in_layout="true",
+        color=(0.23137254901960785, 0.3215686274509804, 1.0),
+        edgecolor="black",
+    )
     diagram.set_yticks(y_pos)
     diagram.set_yticklabels(list(keys)[0:30])
     diagram.invert_yaxis()  # labels read top-to-bottom
     diagram.set_xlabel(xlabel)
     diagram.set_title(title)
     diagram.xaxis.set_major_formatter(ScalarFormatter())
-    
+
 
 def drawTimeSeries(title, ylabel, keys, values):
     months = mdates.MonthLocator()
@@ -183,14 +198,14 @@ def visualizeTransactions(resultDir, transactionFilePath):
 
         # draw diagrams
         plt.rcdefaults()
-        
+
         drawBarChart(
             "Transactions per day over the last month",
             "EUR",
             eur_by_day_last_month.keys(),
             eur_by_day_last_month.values(),
         )
-        
+
         plt.savefig(
             os.path.join(resultDir, "transactions_per_day.png"), bbox_inches="tight"
         )

@@ -453,13 +453,18 @@ class OpenSelery(object):
             # check if the public address is in the privat wallet
             if self.config.perform_wallet_validation:
                 if self.coinConnector.iswalletAddress(self.config.bitcoin_address):
-                    self.log("Configured wallet address matches with wallet address Coinbase account")
+                    self.log(
+                        "Configured wallet address matches with wallet address Coinbase account"
+                    )
                 else:
-                    self.logError("Configured wallet address does not match address of Coinbase account")
+                    self.logError(
+                        "Configured wallet address does not match address of Coinbase account"
+                    )
                     raise Exception("Aborting")
 
             # Check what transactions are done on the account.
-            self.log("Receiving transaction history of coinbase account [%s]"
+            self.log(
+                "Receiving transaction history of coinbase account [%s]"
                 % transactionFilePath
             )
             transactions = self.coinConnector.pastTransactions()
@@ -471,34 +476,44 @@ class OpenSelery(object):
             self.receiptStr = ""
             total_send_amount = 0.0
             for idx, contributor in enumerate(recipients):
-                if self.coinConnector.useremail() != contributor.stats.author.email:
-                    send_amount = "{0:.6f}".format(
-                        contributor_payout_split[idx]
-                    ).rstrip("0")
-                    total_send_amount += float(send_amount)
-                    if total_send_amount > self.config.payout_per_run:
-                        self.logError(
-                            "`payout_per_run` was exceeded. Stopping payouts."
-                        )
-                        break
+                self.log("Initiate payout to [%s]" % contributor.stats.author.login)
 
-                    receipt = self.coinConnector.payout(
-                        contributor.stats.author.email,
-                        send_amount,
-                        not self.config.send_email_notification,
-                        self._getEmailNote(
-                            contributor.stats.author.login, contributor.fromProject
-                        ),
-                    )
-                    self.receiptStr = self.receiptStr + str(receipt)
-                    self.log(
-                        "Payout of [%s][%s] succeeded"
-                        % (receipt["amount"]["amount"], receipt["amount"]["currency"])
-                    )
-                else:
+                send_amount = "{0:.6f}".format(contributor_payout_split[idx]).rstrip(
+                    "0"
+                )
+
+                total_send_amount += float(send_amount)
+
+                if total_send_amount > self.config.payout_per_run:
+                    self.logError("`payout_per_run` was exceeded. Stopping payouts.")
+                    break
+
+                if self.coinConnector.useremail() == contributor.stats.author.email:
                     self.logWarning(
                         "Skip payout since coinbase email is equal to contributor email"
                     )
+                    continue
+
+                if self.config.min_payout_per_contributor > float(send_amount):
+                    self.logWarning(
+                        "Skip payout of [%s] for being below [%s]"
+                        % (send_amount, self.config.min_payout_per_contributor)
+                    )
+                    continue
+
+                receipt = self.coinConnector.payout(
+                    contributor.stats.author.email,
+                    send_amount,
+                    not self.config.send_email_notification,
+                    self._getEmailNote(
+                        contributor.stats.author.login, contributor.fromProject
+                    ),
+                )
+                self.receiptStr = self.receiptStr + str(receipt)
+                self.log(
+                    "Payout of [%s][%s] succeeded"
+                    % (receipt["amount"]["amount"], receipt["amount"]["currency"])
+                )
 
             with open(receiptFilePath, "a") as f:
                 f.write(str(self.receiptStr))

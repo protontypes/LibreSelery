@@ -24,6 +24,7 @@ class OpenSeleryConfig(object):
         "random_split_btc_per_picked_contributor": float,
         "random_split_picked_contributors": int,
         "payout_per_run": float,
+        "min_payout_per_contributor": float,
         "split_strategy": str,
         "min_contributions_required_payout": int,
         "uniform_weight": int,
