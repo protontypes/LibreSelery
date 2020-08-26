@@ -7,6 +7,7 @@ import time
 import re
 import textwrap
 import curses
+import pprint
 
 from prompt_toolkit.shortcuts import progress_dialog
 from prompt_toolkit import prompt
@@ -74,10 +75,6 @@ def answerStringToBool(arg):
     return arg[0] in "tT1"
 
 
-def inputFeedback(arg):
-    print("You said: %s" % str(arg))
-
-
 COLOR_GREEN = "\33[32m"
 COLOR_YELLOW = "\33[33m"
 COLOR_DEFAULT = "\33[0m"
@@ -121,12 +118,14 @@ def getConfigThroughWizard():
         answers["simulation"] = answer
 
         # Added "You probably want to do this enabled", because asking this question in the first place could be confusing.
-        print(
+        printQuestion(
             "Do you want to invest money to contributors of the of the root project? You probably want to do this enabled."
         )
         answer = answerStringToBool(
             prompt(
-                "include_main_repository: ", default="True", validator=BoolValidator(),
+                makeColorPrompt("include_main_repository"),
+                default="True",
+                validator=BoolValidator(),
             )
         )
         if answer:
@@ -135,9 +134,13 @@ def getConfigThroughWizard():
             print("Excluding contributors of root project")
         answers["include_main_repository"] = answer
 
-        print("Do you want to distribute money to your project dependencies?")
+        printQuestion("Do you want to distribute money to your project dependencies?")
         answer = answerStringToBool(
-            prompt("include_dependencies: ", default="True", validator=BoolValidator(),)
+            prompt(
+                makeColorPrompt("include_dependencies"),
+                default="True",
+                validator=BoolValidator(),
+            )
         )
         if answer:
             print("Dependencies will receive money.")
@@ -145,21 +148,24 @@ def getConfigThroughWizard():
             print("Dependencies will NOT receive money.")
         answers["include_dependencies"] = answer
 
-        print(
+        printQuestion(
             "Do you want to invest money in your tools listed in `tooling_repos.yml`?."
         )
         answer = answerStringToBool(
-            prompt("include_tooling_and_runtime: ", default="False")
+            prompt(makeColorPrompt("include_tooling_and_runtime"), default="False")
         )
-        inputFeedback(answer)
+        if answer:
+            print("Tooling and Runtime will receive money.")
+        else:
+            print("Tooling and Runtime has been disabled to receive money.")
         answers["include_tooling_and_runtime"] = answer
 
-        print(
+        printQuestion(
             "How many contributions does a contributor need in order to be considered for payout?"
         )
         answer = int(
             prompt(
-                "min_contributions_required_payout: ",
+                makeColorPrompt("min_contributions_required_payout"),
                 default="1",
                 validator=IntegerValidator(),
             )
@@ -176,7 +182,7 @@ def getConfigThroughWizard():
             )
             answer = int(
                 prompt(
-                    "included_dependency_contributor: ",
+                    makeColorPrompt("included_dependency_contributor"),
                     default="2",
                     validator=IntegerValidator(),
                 )
@@ -184,27 +190,35 @@ def getConfigThroughWizard():
             print("%d contributors from the dependencies will receive money." % answer)
             answers["included_dependency_contributor"] = answer
 
-        print(
+        printQuestion(
             "To compute the contribution of a person to the project, there is a uniform weight attached equally to everybody who contributed to the project. How much should this weight be?"
         )
         answer = int(
-            prompt("uniform_weight: ", default="30", validator=IntegerValidator(),)
+            prompt(
+                makeColorPrompt("uniform_weight"),
+                default="30",
+                validator=IntegerValidator(),
+            )
         )
         print("The uniform base weight is set to %d", answer)
         answers["uniform_weight"] = answer
 
-        print(
+        printQuestion(
             "The activity (estimation of work) of a contributor is weighted as well. How much weight do you want to set for the activity?"
         )
         answer = int(
-            prompt("activity_weight: ", default="70", validator=IntegerValidator(),)
+            prompt(
+                makeColorPrompt("activity_weight"),
+                default="70",
+                validator=IntegerValidator(),
+            )
         )
         answers["activity_weight"] = answer
         if answer == 0:
             print("The activity won't have an affect on the salery.")
         else:
             print("The activity weight is %s" % answer)
-            print(
+            printQuestion(
                 "What activity do you want to take into consideration in payout calculation?"
             )
             print("here are some example for valid values:")
@@ -214,92 +228,113 @@ def getConfigThroughWizard():
             print("commit:<branch>")  # certain branch
             print("all")
             ## weight for weighted git commits
-            answer = prompt("activity_since_commit: ", default="all",)
+            answer = prompt(makeColorPrompt("activity_since_commit"), default="all",)
             if answer != "all":
                 answers["activity_since_commit"] = answer
 
         ## full_split: weighted split over all contributors
         ## random_split: random weighted split with equal payout per contributor
-        print(
+        printQuestion(
             "For some payment services the fees can become significant if a large amount of transactions with a small amount of money is performed. For this use case, a random picking behavior for contributors has been developed. This mode only pays out to a few randomly picked contributor instead of all contributors. Full split mode splits all money. Possible values are 'full' and 'random'."
         )
         options = ["full", "random"]
         answer = (
             prompt(
-                "split_behavior: ",
+                makeColorPrompt("split_behavior"),
                 default="full",
                 validator=WordValidator(options),
                 completer=WordCompleter(options, ignore_case=True),
             ).lower()
             + "_split"
         )
-        inputFeedback(answer)
+        print("The split behavior has been set to " + answer)
         answers["split_behavior"] = answer
 
         if answer == "random_split":
-            print("How much money should a picked contributor get?")
+            printQuestion("How much money should a picked contributor get?")
             answer = float(
                 prompt(
-                    "btc_per_picked_contributor: ",
+                    makeColorPrompt("btc_per_picked_contributor"),
                     default="0.0001",
                     validator=DecimalValidator(),
                 )
             )
             answers["btc_per_picked_contributor"] = answer
 
-            print("How many contributors should get picked at random picking?")
+            printQuestion("How many contributors should get picked at random picking?")
             answer = int(
                 prompt(
-                    "number_payout_contributors_per_run: ",
+                    makeColorPrompt("number_payout_contributors_per_run"),
                     default="1",
                     validator=BoolValidator(),
                 )
             )
             answers["number_payout_contributors_per_run"] = answer
 
-        print("How much money should be send in each run of OpenSelery")
+        printQuestion("How much money should be sent in each run of OpenSelery?")
         answer = float(
-            prompt("payout_per_run: ", default="0.002", validator=DecimalValidator(),)
+            prompt(
+                makeColorPrompt("payout_per_run"),
+                default="0.002",
+                validator=DecimalValidator(),
+            )
         )
-        inputFeedback(answer)
+        print("Each run of OpenSelery will send %s BTC" % str(answer))
         answers["payout_per_run"] = answer
 
-        print("What is the Bitcoin address to take money from for payout?")
-        answer = prompt("bitcoin_address: ", validator=BitcoinAddressValidator(),)
-        inputFeedback(answer)
+        printQuestion("What is the Bitcoin address to take money from for payout?")
+        answer = prompt(
+            makeColorPrompt("bitcoin_address"), validator=BitcoinAddressValidator(),
+        )
+        print("%s will be used to send money to contributores.")
         answers["bitcoin_address"] = answer
 
-        print(
+        printQuestion(
             "Should OpenSelery validate that the public bitcoin address matches the secret coinbase address?"
         )
         answer = answerStringToBool(
             prompt(
-                "perform_wallet_validation: ",
+                makeColorPrompt("perform_wallet_validation"),
                 default="True",
                 validator=BoolValidator(),
             )
         )
-        inputFeedback(answer)
+        if answer:
+            print("Double checking of bitcoin address enabled.")
+        else:
+            print("Double checking of bitcoin address disabled.")
         answers["perform_wallet_validation"] = answer
 
-        print("Do you want Coinbase to send notification e-mails?")
+        printQuestion("Do you want Coinbase to send notification e-mails?")
         answer = answerStringToBool(
             prompt(
-                "send_email_notification: ", default="False", validator=BoolValidator(),
+                makeColorPrompt("send_email_notification"),
+                default="False",
+                validator=BoolValidator(),
             )
         )
-        inputFeedback(answer)
+        if answer:
+            print("Email notifications will be sent.")
+        else:
+            print("Sending of notification emails is disabled.")
         answers["send_email_notification"] = answer
 
         if answer:
             print(
                 "What message to you want to attach in each coinbase email? Pleast never send an URL."
             )
-            answer = prompt("optional_email_message: ", default="Have a nice day.",)
-            inputFeedback(answer)
-            answers["optional_email_message"] = answer
+            answer = prompt(
+                makeColorPrompt("optional_email_message"), default="Have a nice day.",
+            )
+            if len(answer) > 0:
+                print("message in notifications: " + answer)
+                answers["optional_email_message"] = answer
+            else:
+                print("message in notifications disabled")
 
-        return answers
+        config = OpenSeleryConfig()
+        config.__dict__ = answers
+        return config
 
     except KeyboardInterrupt:
         print("Setup canceled, nothing is safed.")
@@ -308,4 +343,5 @@ def getConfigThroughWizard():
 
 
 if __name__ == "__main__":
-    print(str(getConfigThroughWizard()))
+    config = getConfigThroughWizard()
+    pprint.pprint(config.__dict__, sort_dicts=False)
