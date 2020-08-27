@@ -4,7 +4,7 @@
 
 OpenSelery is a tool to distribute funding in free and open source projects. With a new funding model it offers transparent, automated and adaptable compensation of contributors. The aim is to replace the middleman of donation distribution as far as possible with a free and transparent algorithm.
 
-*This project is funded by its own solution. If you contribute to this repository, you will immediately donation of this project.*
+*This project is funded by its own solution. If you contribute to this repository, you will immediately receive donation for this project.*
 
 [![](https://img.shields.io/gitter/room/protontypes/openselery)](https://gitter.im/protontypes/openselery) 
 [![](https://img.shields.io/docker/cloud/build/protontypes/openselery?logo=docker)](https://hub.docker.com/r/openselery/openselery) 
