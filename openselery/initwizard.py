@@ -28,7 +28,7 @@ def getBitcoinPrice():
     URL = "https://www.bitstamp.net/api/ticker/"
     try:
         r = requests.get(URL)
-        return Decimal(json.loads(r.text, parse_float=decimal.Decimal)["last"])
+        return Decimal(json.loads(r.text, parse_float=Decimal)["last"])
     except requests.ConnectionError:
         return Decimal("NaN")
 
@@ -306,9 +306,32 @@ def getConfigThroughWizard():
                 validator=DecimalValidator(),
             )
         )
-        answers["payout_per_run"] = answer
         print("Each run of OpenSelery will send %s BTC" % str(answer))
         print("Currently woth %s$" % str(answer * bitcoinPrice))
+        answers["payout_per_run"] = answer
+
+        printQuestion("What should be the minimum payment per contributor?")
+        answer = Decimal(
+            prompt(
+                makeColorPrompt("min_payout_per_contributor"),
+                default="0.0",
+                validator=DecimalValidator(),
+            )
+        )
+        print("Currently woth %s$" % str(answer * bitcoinPrice))
+        answers["min_payout_per_contributor"] = answer
+
+        printQuestion(
+            "How many commits should a contributor have at minimum to be picked as a contributor to receive compensation?"
+        )
+        answer = int(
+            prompt(
+                makeColorPrompt("min_contributions_required_payout"),
+                default="1",
+                validator=IntegerValidator(),
+            )
+        )
+        answers["min_contributions_required_payout"] = answer
 
         printQuestion("What is the Bitcoin address to take money from for payout?")
         answer = prompt(
@@ -372,4 +395,5 @@ def getConfigThroughWizard():
 
 if __name__ == "__main__":
     config = getConfigThroughWizard()
-    pprint.pprint(config.__dict__, sort_dicts=False)
+    if config:
+        pprint.pprint(config.__dict__, sort_dicts=False)
