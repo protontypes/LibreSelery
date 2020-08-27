@@ -1,10 +1,10 @@
 <img align="middle" src="./docs/OpenSelery-04.png" width="400">
 
-### Continuous Software Funding
+### Continuous Funding
 
-OpenSelery is a tool to distribute funding in free and open source projects. With a new funding model it offers transparent, automated and adaptable compensation of contributors.
+OpenSelery is a tool to distribute funding in free and open source projects. With a new funding model it offers transparent, automated and adaptable compensation of contributors. The aim is to replace the middleman of donation distribution as far as possible with a free and transparent algorithm.
 
-*This project is funded by its own solution. If you contribute to this repository, you will immediately earn money.*
+*This project is funded by its own solution. If you contribute to this repository, you will immediately donation of this project.*
 
 [![](https://img.shields.io/gitter/room/protontypes/openselery)](https://gitter.im/protontypes/openselery) 
 [![](https://img.shields.io/docker/cloud/build/protontypes/openselery?logo=docker)](https://hub.docker.com/r/openselery/openselery) 
@@ -18,27 +18,21 @@ OpenSelery is a tool to distribute funding in free and open source projects. Wit
 
 ## Concept
 
+Donations are collected in a Cryptocurrency wallet (currently Bitcoin) that acts as a donation pool.
+At each run, a constant amount of money is taken from the donation pool and distributed to the project's contributors.
 
-OpenSelery is a donation distribution system for free and open source projects.
-Donations are collected in a Bitcoin wallet that acts as a donation pool.
-At each run, a constant amount of money is taken from the donation pool and distributed to the project's donors.
 It runs in continuous integration pipelines like GitHub Actions.
-
-OpenSelery is different from other funding solutions in a very essential way.
-**Money flows directly from the donors to the contributors of the project, without any middlemen.**
-Donation transactions are automatically handled by the continuous integration.
-Transaction details are published for transparency into the wiki of your repository.
+Donation transactions are automatically handled and transaction details are published for transparency into the wiki of your repository.
 
 The distribution is triggered by every push to your main branch.
-The money is then split between contributors based on a public and transparent metric.
+Donations are splitted between contributors based on a public and transparent metric.
 The metric can be configured per repository and is based on the following weights:
 
 - *Uniform Weight*: Everyone who contributed a minimum number of commits to the main branch is considered
 - *Activity Weight*: Everyone who contributed in the last X commits
 - *Service Weight*: Everyone who is part of the uniform weight contributed to an closed issue in the last X commits (not implemented yet)
 
-More weights are under consideration.
-It is a difficult and controversial topic, since the importance and amount of contributions cannot be measured in perfectly fair way.
+More weights are under consideration and discussed publicly in the issue board of this project. 
 
 The amount distributed to each contributor is calculated from a sum of these weights.
 The money is sent via the Coinbase API to the public email address on the contributor's GitHub profile.
@@ -48,7 +42,7 @@ You can even activate to compensate contributors from your dependencies.
 ## How it works
 
 1. OpenSelery is configured based on the selery.yml file and runs as a Github Action in your project.
-2. Is triggered with every push on the main branch.
+2. Is triggered with every push on the main branch by the Github Action worflow file that is part of your project repository.  
 3. Gathers contributor information about the target project via the Github and Libraries.io API.
 4. Filters out contributors with a hidden email address in the github profile and below the minimum contribution limit
 5. Creates custom funding distribution weights based on the contribution rating of various projects: Minimum contribution, activity, ...
@@ -83,13 +77,12 @@ You can even activate to compensate contributors from your dependencies.
 
 ## Getting Started
 
-**Since the project is in its early stages the amount of funding on your wallet should therefore be limited.**
+Since the project is in its early stages the amount of funding on your wallet should therefore be limited.
 
 ### Github Actions Integration
 
 Use the [template](https://github.com/protontypes/seleryexample) to integrate OpenSelery into any GitHub project.
 **Running OpenSelery with GitHub Actions is the easiest way for newcomers and people without Linux knowledge.**
-
 
 
 ### Command Line Usage
