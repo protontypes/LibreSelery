@@ -18,6 +18,24 @@ from prompt_toolkit.formatted_text import ANSI, HTML
 from openselery.configuration import OpenSeleryConfig
 
 
+# /usr/bin/python3
+from decimal import Decimal
+import requests
+import json
+
+
+def getBitcoinPrice():
+    URL = "https://www.bitstamp.net/api/ticker/"
+    try:
+        r = requests.get(URL)
+        return Decimal(json.loads(r.text, parse_float=decimal.Decimal)["last"])
+    except requests.ConnectionError:
+        return Decimal("NaN")
+
+
+bitcoinPrice = getBitcoinPrice()
+
+
 class BitcoinAddressValidator(Validator):
     def __init__(self):
         self.pattern = re.compile(r"(1|3|bc1)[a-zA-Z0-9]+", 0)
@@ -57,7 +75,7 @@ class IntegerValidator(Validator):
 class DecimalValidator(Validator):
     def validate(self, document):
         try:
-            float(document.text)
+            Decimal(document.text)
         except ValueError:
             raise ValidationError(message="Expected decimal number here")
 
@@ -98,10 +116,9 @@ def getConfigThroughWizard():
             """\
             Do you want to enable simulation? Setting `simulation` to `True`
             allows you to run OpenSelery in a try state that does not
-            pay out real money. It will also allow you to test Open
-            Selery without creating any accounts or actually payout
-            out any real money.
-            """
+            pay out real money. It will also allow you to test
+            OpenSelery without creating any accounts or actually
+            payout out any real money.  """
         )
 
         answer = answerStringToBool(
@@ -215,7 +232,7 @@ def getConfigThroughWizard():
         )
         answers["activity_weight"] = answer
         if answer == 0:
-            print("The activity won't have an affect on the salery.")
+            print("The activity won't have an affect on the salary.")
         else:
             print("The activity weight is %s" % answer)
             printQuestion(
@@ -235,12 +252,20 @@ def getConfigThroughWizard():
         ## full_split: weighted split over all contributors
         ## random_split: random weighted split with equal payout per contributor
         printQuestion(
-            "For some payment services the fees can become significant if a large amount of transactions with a small amount of money is performed. For this use case, a random picking behavior for contributors has been developed. This mode only pays out to a few randomly picked contributor instead of all contributors. Full split mode splits all money. Possible values are 'full' and 'random'."
+            """\
+            For some payment services the fees can become significant if a
+            large amount of transactions with a small amount of money
+            is performed. For this use case, a random picking behavior
+            for contributors has been developed. This mode only pays
+            out to a few randomly picked contributor instead of all
+            contributors. Full split mode splits all money. Possible
+            values are 'full' and 'random'."""
         )
+
         options = ["full", "random"]
         answer = (
             prompt(
-                makeColorPrompt("split_behavior"),
+                makeColorPrompt("split_strategy"),
                 default="full",
                 validator=WordValidator(options),
                 completer=WordCompleter(options, ignore_case=True),
@@ -248,39 +273,42 @@ def getConfigThroughWizard():
             + "_split"
         )
         print("The split behavior has been set to " + answer)
-        answers["split_behavior"] = answer
+        answers["split_strategy"] = answer
 
         if answer == "random_split":
             printQuestion("How much money should a picked contributor get?")
-            answer = float(
+            answer = Decimal(
                 prompt(
-                    makeColorPrompt("btc_per_picked_contributor"),
+                    makeColorPrompt("random_split_picked_contributors"),
                     default="0.0001",
                     validator=DecimalValidator(),
                 )
             )
-            answers["btc_per_picked_contributor"] = answer
+            print("Each picked contributor will receive %s BTC." % str(answer))
+            print("Currently woth %s$" % str(answer * bitcoinPrice))
+            answers["random_split_picked_contributors"] = answer
 
             printQuestion("How many contributors should get picked at random picking?")
             answer = int(
                 prompt(
-                    makeColorPrompt("number_payout_contributors_per_run"),
+                    makeColorPrompt("random_split_picked_contributors"),
                     default="1",
                     validator=BoolValidator(),
                 )
             )
-            answers["number_payout_contributors_per_run"] = answer
+            answers["random_split_picked_contributors"] = answer
 
         printQuestion("How much money should be sent in each run of OpenSelery?")
-        answer = float(
+        answer = Decimal(
             prompt(
                 makeColorPrompt("payout_per_run"),
                 default="0.002",
                 validator=DecimalValidator(),
             )
         )
-        print("Each run of OpenSelery will send %s BTC" % str(answer))
         answers["payout_per_run"] = answer
+        print("Each run of OpenSelery will send %s BTC" % str(answer))
+        print("Currently woth %s$" % str(answer * bitcoinPrice))
 
         printQuestion("What is the Bitcoin address to take money from for payout?")
         answer = prompt(
