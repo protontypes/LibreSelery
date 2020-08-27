@@ -19,12 +19,10 @@ OpenSelery is a tool to distribute funding in free and open source projects. Wit
 ## Concept
 
 Donations are collected in a Cryptocurrency wallet (currently Bitcoin) that acts as a donation pool.
-At each run, a constant amount of money is taken from the donation pool and distributed to the project's contributors.
+At each run an amount is taken from the donation pool and distributed to the project's contributors and dependencies.
 
-It runs in continuous integration pipelines like GitHub Actions.
-Donation transactions are automatically handled and transaction details are published for transparency into the wiki of your repository.
+It runs in continuous integration pipelines like GitHub Actions. Donation transactions are automatically handled and transaction details are published for transparency into the wiki of your repository.
 
-The distribution is triggered by every push to your main branch.
 Donations are splitted between contributors based on a public and transparent metric.
 The metric can be configured per repository and is based on the following weights:
 
@@ -38,6 +36,12 @@ The amount distributed to each contributor is calculated from a sum of these wei
 The money is sent via the Coinbase API to the public email address on the contributor's GitHub profile.
 We won't send emails to the git commit email addresses in order not to spam anyone.
 You can even activate to compensate contributors from your dependencies.
+
+<p align="center">
+  <img src="docs/concept.png">
+</p>
+
+
 
 ## How it works
 
@@ -58,7 +62,7 @@ You can even activate to compensate contributors from your dependencies.
 
 ## Features
 
-* **Transparent payout** of Github project contributors with every push you make to your main (master) branch.
+* **Transparent** payout of Github project contributors with every push you make to your main (master) branch.
 * Minimal changes to your Github project shown in the [`seleryexample`](https://github.com/protontypes/seleryexample) to adapt OpenSelery with just a view steps.
 * Detailed [`transaction history`](https://github.com/protontypes/openselery/wiki/Transaction-History) is regenerated in your github wiki every time you run OpenSelery.
 * **User defined payout configuration** by the [`selery.yml`](https://github.com/protontypes/openselery/blob/master/selery.yml).
@@ -69,8 +73,8 @@ You can even activate to compensate contributors from your dependencies.
 * Simulate the money distribution for your repository without actually transferring money to see how the money would be distributed.
 * Automated statistic generation on how much money was paid out to which contributor.
 
-
 <a href="https://asciinema.org/a/353518">
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/transactions_per_user.png" width="500">
 </p></a>
@@ -81,8 +85,7 @@ Since the project is in its early stages the amount of funding on your wallet sh
 
 ### Github Actions Integration
 
-Use the [template](https://github.com/protontypes/seleryexample) to integrate OpenSelery into any GitHub project.
-**Running OpenSelery with GitHub Actions is the easiest way for newcomers and people without Linux knowledge.**
+Use the [template](https://github.com/protontypes/seleryexample) to integrate OpenSelery into any GitHub project. Running OpenSelery with GitHub Actions is the easiest way for newcomers and people without Linux knowledge.
 
 
 ### Command Line Usage
@@ -121,7 +124,7 @@ git clone <target_repository>
 9. Buy some cryptocurrency. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transferring money into the Coinbase account.
 10. Configure the [access control settings](https://github.com/protontypes/openselery/wiki/Coinbase-Settings) of the automated Coinbase wallet.  
 11. Never transfer or store large values with automated cryptocurrency wallets. Use [recurring automated buys](https://blog.coinbase.com/easier-recurring-buys-and-sells-on-coinbase-9a3cd7ea934e) to recharge you wallet on a regular base to avoid financial and security risks. Coinbase does not charge for transferring cryptocurrency from one Coinbase wallet to another.
-12. Add your coinbase API keys and secrets to the newly created file (`~/.openselery/tokens.env`). **Never store these tokens in a public repository**.
+12. Add your coinbase API keys and secrets to the newly created file (`~/.openselery/tokens.env`).  Never store these tokens in a public repository .
 
 ```bash
 COINBASE_TOKEN=<your_coinbase_token>
