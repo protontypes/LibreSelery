@@ -339,7 +339,7 @@ class OpenSelery(object):
         uniform_weights = selery_utils.calculateContributorWeights(
             mainContributors, self.config.uniform_weight
         )
-        self.log("Uniform Weights:" + str(uniform_weights))
+        self.log("Uniform Weights: " + str(uniform_weights))
 
         # create commit weights
         commit_weights = [0] * len(mainContributors)
@@ -390,16 +390,16 @@ class OpenSelery(object):
             self.logError("Could not find any contributors to payout")
             raise Exception("Aborting")
 
-        if self.config.split_behavior == "random_split":
+        if self.config.split_strategy == "random_split":
             self.log("Creating random split based on weights")
             recipients = random.choices(
-                contributors, weights, k=self.config.number_payout_contributors_per_run
+                contributors, weights, k=self.config.random_split_picked_contributors
             )
-            contributor_payout_split = [self.config.btc_per_picked_contributor] * len(
-                contributors
-            )
+            contributor_payout_split = [
+                self.config.random_split_btc_per_picked_contributor
+            ] * len(contributors)
 
-        elif self.config.split_behavior == "full_split":
+        elif self.config.split_strategy == "full_split":
             self.log("Creating full split based on weights")
             recipients = contributors
             contributor_payout_split = selery_utils.weighted_split(
@@ -453,14 +453,18 @@ class OpenSelery(object):
             # check if the public address is in the privat wallet
             if self.config.perform_wallet_validation:
                 if self.coinConnector.iswalletAddress(self.config.bitcoin_address):
-                    self.log("Public and privat address match")
+                    self.log(
+                        "Configured wallet address matches with wallet address Coinbase account"
+                    )
                 else:
-                    self.logError("Public address does not match wallet address")
+                    self.logError(
+                        "Configured wallet address does not match address of Coinbase account"
+                    )
                     raise Exception("Aborting")
 
             # Check what transactions are done on the account.
             self.log(
-                "Checking transaction history of given account [%s]"
+                "Receiving transaction history of coinbase account [%s]"
                 % transactionFilePath
             )
             transactions = self.coinConnector.pastTransactions()
@@ -470,25 +474,46 @@ class OpenSelery(object):
             # Payout via the Coinbase API
             self.log("Trying to payout recipients")
             self.receiptStr = ""
+            total_send_amount = 0.0
             for idx, contributor in enumerate(recipients):
-                if self.coinConnector.useremail() != contributor.stats.author.email:
-                    receipt = self.coinConnector.payout(
-                        contributor.stats.author.email,
-                        "{0:.6f}".format(contributor_payout_split[idx]).rstrip("0"),
-                        self.config.send_email_notification,
-                        self._getEmailNote(
-                            contributor.stats.author.login, contributor.fromProject
-                        ),
-                    )
-                    self.receiptStr = self.receiptStr + str(receipt)
-                    self.log(
-                        "Payout of [%s][%s] succeeded"
-                        % (receipt["amount"]["amount"], receipt["amount"]["currency"])
-                    )
-                else:
+                self.log("Initiate payout to [%s]" % contributor.stats.author.login)
+
+                send_amount = "{0:.6f}".format(contributor_payout_split[idx]).rstrip(
+                    "0"
+                )
+
+                total_send_amount += float(send_amount)
+
+                if total_send_amount > self.config.payout_per_run:
+                    self.logError("`payout_per_run` was exceeded. Stopping payouts.")
+                    break
+
+                if self.coinConnector.useremail() == contributor.stats.author.email:
                     self.logWarning(
                         "Skip payout since coinbase email is equal to contributor email"
                     )
+                    continue
+
+                if self.config.min_payout_per_contributor > float(send_amount):
+                    self.logWarning(
+                        "Skip payout of [%s] for being below [%s]"
+                        % (send_amount, self.config.min_payout_per_contributor)
+                    )
+                    continue
+
+                receipt = self.coinConnector.payout(
+                    contributor.stats.author.email,
+                    send_amount,
+                    not self.config.send_email_notification,
+                    self._getEmailNote(
+                        contributor.stats.author.login, contributor.fromProject
+                    ),
+                )
+                self.receiptStr = self.receiptStr + str(receipt)
+                self.log(
+                    "Payout of [%s][%s] succeeded"
+                    % (receipt["amount"]["amount"], receipt["amount"]["currency"])
+                )
 
             with open(receiptFilePath, "a") as f:
                 f.write(str(self.receiptStr))
@@ -538,7 +563,7 @@ class OpenSelery(object):
             with open(nativeBalanceBadgePath, "w") as write_file:
                 json.dump(native_balance_badge, write_file)
 
-            self.log("Creating Donation Website")
+            self.log("Creating donation website")
             donation_website = (
                 "<p align='center'><b>Donate to this address to support OpenSelery:</b><br><b></b><br><b>BTC address:</b><br><b>"
                 + self.config.bitcoin_address
