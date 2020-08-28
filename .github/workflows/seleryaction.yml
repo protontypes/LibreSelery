@@ -22,7 +22,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Check out the repo openselery is working on.
-      - uses: actions/checkout@v1 
+      - name: Checkout the target repository
+        uses: actions/checkout@v1 
+
       - name: print Repository_name and folder
         run: |
               REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
@@ -35,10 +37,10 @@ jobs:
       #- name: Pull openselery from dockerhub
       #  run: docker pull protontypes/openselery
 
-      - name: Build openselery from repo dockerfile
+      - name: Create container from local Dockerfile
         run: docker build -t openselery .
 
-      - name: Set env variables for all following jobs
+      - name: Set env variables for folder paths that are used between steps
         run:  |
               echo "::set-env name=results_folder::${HOME}/results_folder"
               echo "::set-env name=config_folder::${HOME}/config_folder"
@@ -47,17 +49,18 @@ jobs:
         run:  |
                mkdir -vp ${results_folder}/public
                mkdir -vp $config_folder
-      - name: Give everyone permission to write to this folder
+
+      - name: Give everyone permission to write folder
         run: chmod -R a+rw $results_folder $config_folder
 
-      - name: Pass openselery configuation
+      - name: Pass openselery configuation from target project
         run:  |
                echo "Use selery.yml from target project directory: ${TARGET_PROJECT}"
                cat ${TARGET_PROJECT}/selery.yml
                cp ${TARGET_PROJECT}/selery.yml $config_folder/selery.yml
       
       # Run Openselery on the current folder.
-      - name: Run openselery on sources
+      - name: Run openselery on its own sources 
         run:  > 
                 docker run --rm 
                 --env GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} 
@@ -70,12 +73,14 @@ jobs:
                 openselery 
                 --directory=/home/selery/runningrepo/ --config=/home/selery/config/selery.yml  --results_dir=/home/selery/results/  --tooling=/home/selery/config/tooling_repos.yml
         # Upload the receipt file to github artifact.
-      - uses: actions/upload-artifact@v1
+
+      - name: Upload the artifacts 
+        uses: actions/upload-artifact@v1
         with:
           name: selery_dump
           path: /home/runner/results_folder
 
-      - name: Check for payout receipt.txt
+      - name: Verify a successful payout 
         run: | 
               cat ${results_folder}/receipt.txt 
               echo "Payout receipt found"
@@ -86,7 +91,7 @@ jobs:
             repository: ${{ env.GITHUB_REPOSITORY_NEW }}.wiki
             path: wiki
             
-      - name: Add Badge yaml
+      - name: Commit to the wiki repository 
         run: |
          echo "Change dir to ${HOME}/work"
          cd ./wiki
@@ -99,7 +104,7 @@ jobs:
          git commit -m "Action generated"
       
       ## You will need a privat access token since the GITHUB_TOKEN is not allowed to push to the wiki
-      - name: Push changes
+      - name: Push changes to the wiki repository
         uses: ad-m/github-push-action@master
         with:
          github_token: ${{ secrets.PAT_SELERY }}
