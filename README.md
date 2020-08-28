@@ -181,10 +181,10 @@ Certainly we are funded by OpenSelery over direct donations via our [`Donation W
 
 ### Contributions
 Those who have contributed to the master branch receive emails with cryptocurrency from Coinbase. Only git profiles with emails on the GitHub profile page will be considered.
-Find out more in the [Contribution Guide](https://github.com/protontypes/openselery/wiki/Contribution-Guide) or look into the [Good First Issue]( https://github.com/protontypes/openselery/labels/good%20first%20issue) labels to get into the project with some first simple tasks.
+Find out more in the [contribution guide](https://github.com/protontypes/openselery/wiki/Contribution-Guide) or look into the [Good First Issue]( https://github.com/protontypes/openselery/labels/good%20first%20issue) labels to get into the project with some first simple tasks.
 
 ## Contact and Feedback
-For further information please contact us at`team_at_protontypes.eu`, join our [Gitter Chat](https://gitter.im/protontypes/openselery) or check out our [Wiki](https://github.com/protontypes/openselery/wiki).
+For further information please contact us at`team_at_protontypes.eu`, join our [Gitter chat](https://gitter.im/protontypes/openselery) or check out our [wiki](https://github.com/protontypes/openselery/wiki).
 
 <p align="center">
   <img src="docs/selery_workflow.png" width="500">

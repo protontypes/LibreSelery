@@ -1,6 +1,6 @@
 # Configuration file for OpenSelery 
 ## simulation lets you run OpenSelery without payout or coinbase tokens
-simulation: True
+simulation: False
 
 
 ## include the contributors from target repository
@@ -45,7 +45,7 @@ split_strategy: "full_split"
 ## the amount of payout per run that is used for all split strategies
 payout_per_run: 0.002000
 ## the minimum payout per contributor. Below that number the payout is skipped to avoid bother contributors with very small payout. 
-min_payout_per_contributor: 0.00001
+min_payout_per_contributor: 0.00005
 
 # Random Split Strategy configuration
 ## Please consider that:
