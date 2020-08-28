@@ -68,7 +68,7 @@ OpenSelery ...
 * Dependency scanning for most languages to **even include developers of your dependencies** using [`Libraries.io`](https://libraries.io/).
 * The money is distributed via Coinbase. Other payment methods like Uphold are currently work in progress.
 * Donators can see transparent payout logs in the [`public Github Action`](https://github.com/protontypes/openselery/actions?query=workflow%3Aopenselery).
-* Self-hosted [`QR code`](https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/wallet_qrcode.png) for secure donations is automatically stored in the Wiki of your repository.
+* Self-hosted [`Donation Website`](https://github.com/protontypes/openselery/wiki/Donation) for secure donations is automatically stored in the Wiki of your repository.
 * Simulate the money distribution for your repository without actually transferring money to see how the money would be distributed.
 * Automated statistic generation on how much money was paid out to which contributor.
 * Splitting Strategies:
@@ -177,13 +177,11 @@ OpenSelery plans to support multiple APIs and assets in the near future like:
 ## Support OpenSelery
 
 ### Donations
-
-Certainly we are funded by OpenSelery over direct donations via our [`QR code`](https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/wallet_qrcode.png). The usage and development of OpenSelery will always be free and without any charges. If you want to support us by using OpenSelery you need to add us to the [`tooling_repos.yml`](https://github.com/protontypes/seleryexample/blob/master/selery.yml).
+Certainly we are funded by OpenSelery over direct donations via our [`Donation Website`](https://github.com/protontypes/openselery/wiki/Donation). The usage and development of OpenSelery will always be free and without any charges. If you want to support us by using OpenSelery you need to add us to the [`tooling_repos.yml`](https://github.com/protontypes/seleryexample/blob/master/selery.yml).
 
 ### Contributions
-
 Those who have contributed to the master branch receive emails with cryptocurrency from Coinbase. Only git profiles with emails on the GitHub profile page will be considered.
-Find out more in the [Design Guidelines](https://github.com/protontypes/openselery/wiki/Design-Guidelines) or look into the [Good First Issue]( https://github.com/protontypes/openselery/labels/good%20first%20issue) labels to get into the project.
+Find out more in the [Contribution Guide](https://github.com/protontypes/openselery/wiki/Contribution-Guide) or look into the [Good First Issue]( https://github.com/protontypes/openselery/labels/good%20first%20issue) labels to get into the project with some first simple tasks.
 
 ## Contact and Feedback
 For further information please contact us at`team_at_protontypes.eu`, join our [Gitter Chat](https://gitter.im/protontypes/openselery) or check out our [Wiki](https://github.com/protontypes/openselery/wiki).
