@@ -43,15 +43,15 @@ You can even activate to compensate contributors from your dependencies.
 OpenSelery ...
 
 
-1. is configured based on the selery.yml file and runs as a Github Action on your project.
-2. is triggered with every push on the main branch by the Github Action worflow file that is part of your project repository.
-3. gathers contributor information about the target project via the Github and Libraries.io API.
+1. is configured based on the selery.yml file and runs as a GitHub Action on your project.
+2. is triggered with every push on the main branch by the GitHub Action worflow file that is part of your project repository.
+3. gathers contributor information about the target project via the GitHub and Libraries.io API.
 4. filters out contributors with a hidden email address in the github profile and below the minimum contribution limit. OpenSelery will not send emails to the git commit email addresses in order to avoid spam.
 5. creates custom funding distribution weights based on the contribution rating of various projects: Minimum contribution, activity, ...
 6. adds the weights to the combined weight used for different distribution splitting behaviors.
 7. distributes the funding between the contributors based on the selected split behavior.
 8. pays out cryptocurrency to the selected contributors' email addresses via the Coinbase API. Contributors without a Coinbase account will receive an email to claim the donation.
-9. generates automatically a dotation and transaction visualization website in your Github wiki.
+9. generates automatically a dotation and transaction visualization website in your GitHub wiki.
 
 
 <a href="https://asciinema.org/a/353518">
@@ -61,13 +61,13 @@ OpenSelery ...
 
 ## Features
 
-* **Transparent** payout of Github project contributors with every push you make to your main (master) branch.
-* Minimal changes to your Github project shown in the [`seleryexample`](https://github.com/protontypes/seleryexample) to adapt OpenSelery with just a view steps.
+* **Transparent** payout of GitHub project contributors with every push you make to your main (master) branch.
+* Minimal changes to your GitHub project shown in the [`seleryexample`](https://github.com/protontypes/seleryexample) to adapt OpenSelery with just a view steps.
 * Detailed [`transaction history`](https://github.com/protontypes/openselery/wiki/Transaction-History) is regenerated in your github wiki every time you run OpenSelery.
 * **User defined payout configuration** by the [`selery.yml`](https://github.com/protontypes/openselery/blob/master/selery.yml).
 * Dependency scanning for most languages to **even include developers of your dependencies** using [`Libraries.io`](https://libraries.io/).
 * The money is distributed via Coinbase. Other payment methods like Uphold are currently work in progress.
-* Donators can see transparent payout logs in the [`public Github Action`](https://github.com/protontypes/openselery/actions?query=workflow%3Aopenselery).
+* Donators can see transparent payout logs in the [`public GitHub Action`](https://github.com/protontypes/openselery/actions?query=workflow%3Aopenselery).
 * Self-hosted [`Donation Website`](https://github.com/protontypes/openselery/wiki/Donation) for secure donations is automatically stored in the Wiki of your repository.
 * Simulate the money distribution for your repository without actually transferring money to see how the money would be distributed.
 * Automated statistic generation on how much money was paid out to which contributor.
@@ -85,7 +85,7 @@ OpenSelery ...
 
 Since the project is in its early stages the amount of funding on your wallet should therefore be limited.
 
-### Github Actions Integration
+### GitHub Actions Integration
 
 Use the [template](https://github.com/protontypes/seleryexample) to integrate OpenSelery into any GitHub project. Running OpenSelery with GitHub Actions is the easiest way for newcomers and people without Linux knowledge.
 
@@ -108,7 +108,7 @@ mkdir -p ~/.openselery/secrets ~/.openselery/results/public
 touch ~/.openselery/secrets/tokens.env
 ```
 
-3. OpenSelery just needs API tokens from [Github](https://github.com/settings/tokens) when `simulation = True` and `include_dependencies = False` in your `selery.yml`. The scope of your github token should not include any additional permissions beyond the standard minimum scope. Find out more about how to create Github tokens [here](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Replace XXXXX with the Coinbase and [Libraries.io](https://libraries.io/api) tokens to get started without creating an actual accounts for these APIs.
+3. OpenSelery just needs API tokens from [GitHub](https://github.com/settings/tokens) when `simulation = True` and `include_dependencies = False` in your `selery.yml`. The scope of your github token should not include any additional permissions beyond the standard minimum scope. Find out more about how to create GitHub tokens [here](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Replace XXXXX with the Coinbase and [Libraries.io](https://libraries.io/api) tokens to get started without creating an actual accounts for these APIs.
 
 
 4. Make the token file read only:
@@ -165,7 +165,7 @@ env $(cat ~/.openselery/secrets/tokens.env) selery run -d ~/<target_repository> 
 ## API Integrations
 
 OpenSelery plans to support multiple APIs and assets in the near future like:
-- [x] Github
+- [x] GitHub
 - [ ] Gitlab
 - [ ] Savannah
 - [x] Libraries.io
