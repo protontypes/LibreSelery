@@ -7,7 +7,7 @@ simulation: False
 include_main_repository: True
 
 ## include the dependencies of the target folder. This requires a libraries.io token.
-include_dependencies: True
+include_dependencies: False
 
 ## include the tooling and runtime from file tooling_repos.yml
 ## You can add tools, which will not be detected by the dependency scanner.
@@ -18,7 +18,7 @@ include_tooling_and_runtime: False
 min_contributions_required_payout: 1
 
 ## number of randomly selected dependency contributors
-included_dependency_contributor: 2
+included_dependency_contributor: 0
 
 
 # weight configuations
@@ -43,9 +43,9 @@ activity_weight: 30
 split_strategy: "full_split"
 
 ## the amount of payout per run that is used for all split strategies
-payout_per_run: 0.002000
+payout_per_run: 0.000200
 ## the minimum payout per contributor. Below that number the payout is skipped to avoid bother contributors with very small payout. 
-min_payout_per_contributor: 0.0001
+min_payout_per_contributor: 0.00001
 
 # Random Split Strategy configuration
 ## Please consider that:
