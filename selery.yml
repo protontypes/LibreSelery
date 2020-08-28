@@ -15,7 +15,7 @@ include_dependencies: False
 include_tooling_and_runtime: False
 
 ## minimum number of commits to be considered as contributor
-min_contributions_required_payout: 3
+min_contributions_required_payout: 1
 
 ## number of randomly selected dependency contributors
 included_dependency_contributor: 0
@@ -43,7 +43,7 @@ activity_weight: 30
 split_strategy: "full_split"
 
 ## the amount of payout per run that is used for all split strategies
-payout_per_run: 0.000200
+payout_per_run: 0.002000
 ## the minimum payout per contributor. Below that number the payout is skipped to avoid bother contributors with very small payout. 
 min_payout_per_contributor: 0.00001
 
@@ -53,7 +53,7 @@ min_payout_per_contributor: 0.00001
 ## OpenSelery does fail if this does not apply.
 
 ## numbers of total contributors payout per run at random split
-random_split_picked_contributors: 1
+random_split_picked_contributors: 3
 
 ## the amount of btc send per user at random_split
 random_split_btc_per_picked_contributor: 0.000000
@@ -70,5 +70,5 @@ perform_wallet_validation: True
 send_email_notification: False
 
 ## message included in every coinbase email. (after the automatically generated thank you message.)
-optional_email_message: "You are part of a new experimental funding concept for free and open projects. Enjoy your Selery"
+optional_email_message: "You are part of a new experimental funding concept for free and open projects. Enjoy your Selery."
 
