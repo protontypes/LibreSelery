@@ -4,7 +4,7 @@
 
 OpenSelery is a tool to distribute funding in free and open source projects. With a new funding model it offers transparent, automated and adaptable compensation of contributors. The aim is to replace the middleman of donation distribution as far as possible with a free and transparent algorithm.
 
-*This project is funded by its own solution. If you contribute to this repository, you will immediately receive donation for this project.*
+*This project is funded by OpenSelery itself. If you contribute to this repository, you will immediately receive donation for this project.*
 
 [![](https://img.shields.io/gitter/room/protontypes/openselery)](https://gitter.im/protontypes/openselery) 
 [![](https://img.shields.io/docker/cloud/build/protontypes/openselery?logo=docker)](https://hub.docker.com/r/openselery/openselery) 
@@ -72,8 +72,8 @@ OpenSelery ...
 * Simulate the money distribution for your repository without actually transferring money to see how the money would be distributed.
 * Automated statistic generation on how much money was paid out to which contributor.
 * Splitting Strategies:
-   - full_split -- All contributors receive a payout according to their weight.
-   - random_split -- X contributors are randomly picked using the weight as probabilty.
+   - full_split - All contributors receive a payout according to their weight.
+   - random_split - X contributors are randomly picked using the weight as probabilty.
 
 <a href="https://asciinema.org/a/353518">
 
@@ -146,7 +146,7 @@ env $(cat ~/.openselery/secrets/tokens.env) ./run.sh <target_repository>
 
 ```bash
 sudo apt update && sudo apt install git ruby ruby-dev curl python3-pip
-python3 setup.py install --user
+pip3 install .
 ```
 
 2. Ensure that `$HOME/.local/bin` is in `$PATH`. Check the output of `echo $PATH`. If it does not contain `.local/bin` add the following line to your dotfile for example `~/.bashrc`.
@@ -164,12 +164,12 @@ env $(cat ~/.openselery/secrets/tokens.env) selery run -d ~/<target_repository> 
 
 ## API Integrations
 
-OpenSelery plans to support multiple APIs and assets in the near future:
+OpenSelery plans to support multiple APIs and assets in the near future like:
 - [x] Github
-- [x] Libraries.io
 - [ ] Gitlab
+- [ ] Savannah
+- [x] Libraries.io
 - [x] Coinbase
-- [ ] Paypal (Already tested but requires a business account activation [#34](https://developer.paypal.com/docs/api/overview/#))
 - [ ] Uphold
 
 

@@ -497,7 +497,7 @@ class OpenSelery(object):
 
                 if total_send_amount > self.config.payout_per_run:
                     overage = total_send_amount - self.config.payout_per_run
-                    self.logError("`payout_per_run` was exceeded. Stopping payouts. overage is %s" % overage)
+                    self.logError("`payout_per_run` was exceeded. Overage is [%s]. Stopping payouts." % overage)
                     break
 
                 total_send_amount += float(send_amount)
