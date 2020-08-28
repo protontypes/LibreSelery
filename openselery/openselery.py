@@ -482,6 +482,14 @@ class OpenSelery(object):
                     "0"
                 )
 
+                if total_send_amount > self.config.payout_per_run + 0.00000001:
+                    overage = total_send_amount - self.config.payout_per_run
+                    self.logError(
+                        "`payout_per_run` was exceeded. Overage is [%s]. Stopping payouts."
+                        % overage
+                    )
+                    break
+
                 if self.coinConnector.useremail() == contributor.stats.author.email:
                     self.logWarning(
                         "Skip payout since coinbase email is equal to contributor email"
@@ -494,11 +502,6 @@ class OpenSelery(object):
                         % (send_amount, self.config.min_payout_per_contributor)
                     )
                     continue
-
-                if total_send_amount > self.config.payout_per_run:
-                    overage = total_send_amount - self.config.payout_per_run
-                    self.logError("`payout_per_run` was exceeded. Overage is [%s]. Stopping payouts." % overage)
-                    break
 
                 total_send_amount += float(send_amount)
 
