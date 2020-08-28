@@ -70,5 +70,5 @@ perform_wallet_validation: True
 send_email_notification: False
 
 ## message included in every coinbase email. (after the automatically generated thank you message.)
-optional_email_message: "You are part of a new experimental funding concept for free and open projects. Please give us a star if you like our project"
+optional_email_message: "You are part of a new experimental funding concept for free and open projects."
 
