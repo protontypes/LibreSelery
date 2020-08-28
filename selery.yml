@@ -1,6 +1,6 @@
 # Configuration file for OpenSelery 
 ## simulation lets you run OpenSelery without payout or coinbase tokens
-simulation: False
+simulation: True
 
 
 ## include the contributors from target repository
@@ -15,7 +15,7 @@ include_dependencies: False
 include_tooling_and_runtime: False
 
 ## minimum number of commits to be considered as contributor
-min_contributions_required_payout: 1
+min_contributions_required_payout: 3
 
 ## number of randomly selected dependency contributors
 included_dependency_contributor: 0
@@ -70,5 +70,5 @@ perform_wallet_validation: True
 send_email_notification: False
 
 ## message included in every coinbase email. (after the automatically generated thank you message.)
-optional_email_message: "You are part of a new experimental funding concept for free and open projects."
+optional_email_message: "You are part of a new experimental funding concept for free and open projects. Enjoy your Selery"
 
