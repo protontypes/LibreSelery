@@ -7,7 +7,7 @@ LibreSelery is a tool to distribute funding in free and open source projects. Wi
 *This project is funded by LibreSelery itself. If you contribute to this repository, you will immediately receive donation for this project.*
 
 [![Join the chat at https://gitter.im/protontypes/LibreSelery](https://badges.gitter.im/protontypes/LibreSelery.svg)](https://gitter.im/protontypes/LibreSelery?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-![Docker Pulls](https://img.shields.io/docker/pulls/protontypes/libreselery)
+[![Docker Pulls](https://img.shields.io/docker/pulls/protontypes/libreselery)](https://hub.docker.com/r/protontypes/libreselery/tags)
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 
 [![Actions Status](https://github.com/protontypes/libreselery/workflows/seleryaction/badge.svg)](https://github.com/protontypes/libreselery/actions?query=workflow%3Aseleryaction)
@@ -18,8 +18,7 @@ LibreSelery is a tool to distribute funding in free and open source projects. Wi
 
 ## Concept
 
-Donations are collected in a Cryptocurrency wallet (currently Bitcoin) that acts as a donation pool.
-At each run an amount is taken from the donation pool and distributed to the project's contributors and dependencies.
+LibreSelery is a simple tool that can be attached to any git based project. It creates as a donation pool collecting cryptocurrency in a wallet (currently Bitcoin).At each run an amount is taken from the donation pool and distributed to the project's contributors and dependencies.
 
 It is designed to run in a continuous integration pipeline like GitHub Actions. Donation transactions are automatically handled and transaction details are published for transparency into the wiki of your repository.
 
