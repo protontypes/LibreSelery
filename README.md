@@ -1,122 +1,194 @@
-<img align="middle" src="./docs/design/OpenSelery-04.png" width="400"> 
+<img align="middle" src="./docs/logo_LibreSelery-04.png" width="400">
 
-### Continuous and Transparent Developer Payout
+### Continuous Funding
 
-> OpenSelery is a decentralized framework for a free and transparent salary distribution in free software. It defines a funding distribution to generate a transparent and adaptable cash flow to your digital project and all its contributors, including your dependencies.
+LibreSelery is a tool to distribute funding in free and open source projects. With a new funding model it offers transparent, automated and adaptable compensation of contributors. The aim is to replace the middleman of donation distribution as far as possible with a free and transparent algorithm.
 
-[![Actions Status](https://github.com/protontypes/openselery/workflows/openselery/badge.svg)](https://github.com/protontypes/openselery/actions) ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/protontypes/openselery?logo=docker) [![Updates](https://pyup.io/repos/github/protontypes/openselery/shield.svg)](https://pyup.io/repos/github/protontypes/openselery/)         
-![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/openselery/openselery/balance_badge.json&style=flat&logo=bitcoin)          
-[![Donate with bitcoin](https://en.cryptobadges.io/badge/small/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w)](https://en.cryptobadges.io/donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w)  
+*This project is funded by LibreSelery itself. If you contribute to this repository, you will immediately receive donation for this project.*
+
+[![](https://img.shields.io/gitter/room/protontypes/libreselery)](https://gitter.im/protontypes/libreselery)
+[![](https://img.shields.io/docker/cloud/build/protontypes/libreselery?logo=docker)](https://hub.docker.com/r/libreselery/libreselery)
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
-> Please keep in mind that OpenSelery is in an experimental state right now. The amount of funding should therefore be kept to a minimum.
+
+[![Actions Status](https://github.com/protontypes/libreselery/workflows/seleryaction/badge.svg)](https://github.com/protontypes/libreselery/actions?query=workflow%3Aseleryaction)
+![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/balance_badge.json&style=flat&logo=bitcoin)
+![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/native_balance_badge.json&style=flat&logo=bitcoin)
+[![Donate with bitcoin](https://badgen.net/badge/Donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w/orange?icon=bitcoin)](https://github.com/protontypes/libreselery/wiki/Donation)
+[![Transaction History](https://badgen.net/badge/icon/Transaction%20History?icon=bitcoin&label)](https://github.com/protontypes/libreselery/wiki/Transaction-History) [![Join the chat at https://gitter.im/protontypes/LibreSelery](https://badges.gitter.im/protontypes/LibreSelery.svg)](https://gitter.im/protontypes/LibreSelery?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+## Concept
+
+Donations are collected in a Cryptocurrency wallet (currently Bitcoin) that acts as a donation pool.
+At each run an amount is taken from the donation pool and distributed to the project's contributors and dependencies.
+
+It is designed to run in a continuous integration pipeline like GitHub Actions. Donation transactions are automatically handled and transaction details are published for transparency into the wiki of your repository.
+
+Donations are divided between contributors based on a public and transparent metric.
+The metric can be configured per repository and is based on the following weights:
+
+- *Uniform Weight*: Everyone who contributed a minimum number of commits to the main branch is considered
+- *Activity Weight*: Everyone who contributed in the last X commits
+- *Service Weight*: Everyone who is part of the uniform weight contributed to an closed issue in the last X commits (not implemented yet)
+
+More weights are under active development and will be added in the future.
+
+The amount distributed to each contributor is calculated from an accumulation of these weights.
+It is sent via the cryptocurrency market API to the public email address of the git platform user profile.
+You can even activate to compensate contributors from your dependencies.
+
+<p align="center"><img src="docs/concept.png"></p>
+
+## Implementation
+
+LibreSelery ...
+
+
+1. is configured based on the selery.yml file and runs as a GitHub Action on your project.
+2. is triggered with every push on the main branch by the GitHub Action worflow file that is part of your project repository.
+3. gathers contributor information about the target project via the GitHub and Libraries.io API.
+4. filters out contributors with a hidden email address in the github profile and below the minimum contribution limit. LibreSelery will not send emails to the git commit email addresses in order to avoid spam.
+5. creates custom funding distribution weights based on the contribution rating of various projects: Minimum contribution, activity, ...
+6. adds the weights to the combined weight used for different distribution splitting behaviors.
+7. distributes the funding between the contributors based on the selected split behavior.
+8. pays out cryptocurrency to the selected contributors' email addresses via the Coinbase API. Contributors without a Coinbase account will receive an email to claim the donation.
+9. generates automatically a dotation and transaction visualization website in your GitHub wiki.
+
+
+<a href="https://asciinema.org/a/353518">
+<p align="center">
+  <img src="https://asciinema.org/a/353518.svg" width="500">
+</p></a>
 
 ## Features
 
-* Transparent payout to the developers of your Github project.
-* Dependency scanning for most languages to even include developers of your dependency.
-* Distribution of money is done via Bitcoin (currently via coinbase).
-* Investors can see a transparent payout with public CI logs.
+* **Transparent** payout of GitHub project contributors with every push you make to your main (master) branch.
+* Minimal changes to your GitHub project shown in the [`seleryexample`](https://github.com/protontypes/seleryexample) to adapt LibreSelery with just a view steps.
+* Detailed [`transaction history`](https://github.com/protontypes/libreselery/wiki/Transaction-History) is regenerated in your github wiki every time you run LibreSelery.
+* **User defined payout configuration** by the [`selery.yml`](https://github.com/protontypes/libreselery/blob/master/selery.yml).
+* Dependency scanning for most languages to **even include developers of your dependencies** using [`Libraries.io`](https://libraries.io/).
+* The money is distributed via Coinbase. Other payment methods like Uphold are currently work in progress.
+* Donators can see transparent payout logs in the [`public GitHub Action`](https://github.com/protontypes/libreselery/actions?query=workflow%3Alibreselery).
+* Self-hosted [`Donation Website`](https://github.com/protontypes/libreselery/wiki/Donation) for secure donations is automatically stored in the Wiki of your repository.
+* Simulate the money distribution for your repository without actually transferring money to see how the money would be distributed.
+* Automated statistic generation on how much money was paid out to which contributor.
+* Splitting Strategies:
+   - full_split - All contributors receive a payout according to their weight.
+   - random_split - X contributors are randomly picked using the weight as probabilty.
 
-## How does OpenSelery work?
+<a href="https://asciinema.org/a/353518">
 
-1. OpenSelery is configured based on the selery.yml file, so it runs as a CI-job in GitHub.
-2. Gathers contributor information about the target project via the Github and Libraries.io API
-3. Filters out contributors that not made the email address visible in the Github profile.
-4. Creates a uniform weight distribution between all contributors. Custom distributions like release participation are under construction.
-5. Creates an activity weight between all contributors to reward activity.
-6. Sums the weights.
-7. Randomly chooses contributors based on the weights.
-8. Pays out Bitcoin to the chosen contributor email addresses via the Coinbase API. Contributor without a Coinbase account will get a email to claim the donation.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/transactions_per_user.png" width="500">
+</p></a>
 
-## Demo
+## Getting Started
 
-[![demo](https://asciinema.org/a/qT8m8Tbvt2Fwck077FLGVjMn1.svg)](https://asciinema.org/a/qT8m8Tbvt2Fwck077FLGVjMn1?autoplay=1)
+Since the project is in its early stages the amount of funding on your wallet should therefore be limited.
 
-## Usage
+### GitHub Actions Integration
 
-### Create the access Tokens and Accounts
+Use the [template](https://github.com/protontypes/seleryexample) to integrate LibreSelery into any GitHub project. Running LibreSelery with GitHub Actions is the easiest way for newcomers and people without Linux knowledge.
 
-1. You will need API tokens for [Github](https://github.com/settings/tokens) and [Libraries.io](https://libraries.io/api). Then you can simulate payouts without the [coinbase token](https://www.coinbase.com/settings/api) to try it out and find the right settings. You can later add the coinbase token. Configure the [access control settings](https://github.com/protontypes/openselery/wiki/Coinbase-Settings) of the automated coinbase account. 
 
-2. Install with [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/):
+### Command Line Usage
 
+#### Running with Docker
+
+1. Install [Docker](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04):
 ```bash
 cd ~
-git clone https://github.com/protontypes/openselery.git
-cd openselery
+git clone https://github.com/protontypes/libreselery.git
+cd libreselery
 ./build.sh
 ```
-
-3. When you are done trying it out, create a dedicated coinbase account with limited amounts. OpenSelery is based on the APIs of Libraries.io, Github and Coinbase. Setting simulation to false (in your selery.yml) will require your coinbase tokens.
-
-4. Never transfer or store large values with automated cryptocurrency wallets. Use recurring automated transaction from another account to recharge you wallet on a regular base. 
-
-5. Transfer some money to this wallet for testing. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transfering money into the coinbase account.
-
-6. Create a readonly token file for your user, where you store API keys and secrets:
+2. Create a token file for your user, where you store API keys and secrets:
 
 ```bash
-mkdir ~/.openselery/
-touch ~/.openselery/tokens.env
-chmod 400 ~/.openselery/tokens.env
+mkdir -p ~/.libreselery/secrets ~/.libreselery/results/public
+touch ~/.libreselery/secrets/tokens.env
 ```
 
-7. Add your API keys and secrets to the newly created file (`~/.openselery/tokens.env`). **Never store these tokens in a repository**.
+3. LibreSelery just needs API tokens from [GitHub](https://github.com/settings/tokens) when `simulation = True` and `include_dependencies = False` in your `selery.yml`. The scope of your github token should not include any additional permissions beyond the standard minimum scope. Find out more about how to create GitHub tokens [here](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Replace XXXXX with the Coinbase and [Libraries.io](https://libraries.io/api) tokens to get started without creating an actual accounts for these APIs.
 
+
+4. Make the token file read only:
 ```bash
-nano 
-
-COINBASE_TOKEN=XXXXXXXXXXXXXXXX
-COINBASE_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-GITHUB_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-LIBRARIES_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+chmod 400 ~/.libreselery/secrets/tokens.env
 ```
 
-8. Configure your distribution in the `selery.yml` file located in ~/.openselery/ or your <target_repository>
-The `simulation` paramter is set `True` by default. You will need the `COINBASE_TOKEN` and `COINBASE_SECRET` when setting Simulation to False in your selery.yml. You can use the `selery.yml` template from the OpenSelery project, modifiy it and copy it into you <target_repository>.
-
-
-### Clone OpenSelery
-      
+5. Clone your target repository:
 ```bash
-git clone https://github.com/protontypes/openselery.git
-```  
-
-### Fund the target repository
-
-This will send cryptocurrency to weighted random product contributors with a valid email address on the git platform (GitHub) or git commit:
-
-#### Run as dockerized Command-Line Tool
+git clone <target_repository>
+```
+6. Copy a [selery.yml](https://github.com/protontypes/seleryexample) into your <target_repository>.  Set `simulation: False` in your selery.yml to enable payouts with LibreSelery.
+7. Adjust and test different configurations in simulation mode on your repository project.
+8. Create a dedicated Coinbase account with limited amounts. Coinbase does not support sending emails to yourself. That's why you should use a dedicated email address when you are the owner of the Coinbase account and contributor of the project. Otherwise LibreSelery will skip these payouts.
+9. Buy some cryptocurrency. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transferring money into the Coinbase account.
+10. Configure the [access control settings](https://github.com/protontypes/libreselery/wiki/Coinbase-Settings) of the automated Coinbase wallet.
+11. Never transfer or store large values with automated cryptocurrency wallets. Use [recurring automated buys](https://blog.coinbase.com/easier-recurring-buys-and-sells-on-coinbase-9a3cd7ea934e) to recharge you wallet on a regular base to avoid financial and security risks. Coinbase does not charge for transferring cryptocurrency from one Coinbase wallet to another.
+12. Add your coinbase API keys and secrets to the newly created file (`~/.libreselery/tokens.env`).  Never store these tokens in a public repository .
 
 ```bash
-env $(cat ~/.openselery/tokens.env) ~/openselery/run.sh <target_repository>
+COINBASE_TOKEN=<your_coinbase_token>
+COINBASE_SECRET=<your_coinbase_secret>
+GITHUB_TOKEN=<your_github_tokens>
+LIBRARIES_API_KEY=<your_libaries_io_tokens>
+```
+13. Send cryptocurrency to weighted random product contributors with a valid visible email address on GitHub:
+
+```bash
+env $(cat ~/.libreselery/secrets/tokens.env) ./run.sh <target_repository>
 ```
 
-#### Run nativly on Debian / Ubuntu
+#### Run directly on your host machine
 
-1. Install Dependencies
-
-```bash
-sudo apt update && apt install git ruby ruby-dev ruby-bundler build-essentail curl python3-pip
-cd openselery
-bundle install 
-pip3 install -r requirements.txt
-```
-
-2. Run OpenSelery
+1. Install the dependencies on your machine.
 
 ```bash
-TARGET_DIR=<target_repository> && env $(cat ~/.openselery/tokens.env) python3 selery.py --config $TARGET_DIR/selery.yml --directory $TARGET_DIR --result results
+sudo apt update && sudo apt install git ruby ruby-dev curl python3-pip
+pip3 install .
 ```
-    
-### Continuous Integration  
-Use the [github template](https://github.com/protontypes/seleryexample) to create a new selery in your project.
+
+2. Ensure that `$HOME/.local/bin` is in `$PATH`. Check the output of `echo $PATH`. If it does not contain `.local/bin` add the following line to your dotfile for example `~/.bashrc`.
+
+```bash
+export PATH=$HOME/.local/bin:$PATH
+```
+
+3. Run LibreSelery on your target project.
+
+```bash
+env $(cat ~/.libreselery/secrets/tokens.env) selery run -d ~/<target_repository> -r ~/.libreselery/results/
+```
 
 
-## Contribution
-Constributors on the master branch will probably get emails with cryptocurrency. Only git profiles with emails on the Github profile page are considered. We will never send a URL in the note.
+## API Integrations
 
-# Knowledge Base
-* [Knowledge-Links](https://github.com/protontypes/openselery/wiki/Knowledge-Links)
+LibreSelery plans to support multiple APIs and assets in the near future like:
+- [x] GitHub
+- [ ] Gitlab
+- [ ] Savannah
+- [x] Libraries.io
+- [x] Coinbase
+- [ ] Uphold
 
-  *Artwork by Miriam Winter*
+
+
+## Support LibreSelery
+
+### Donations
+Certainly we are funded by LibreSelery over direct donations via our [`Donation Website`](https://github.com/protontypes/libreselery/wiki/Donation). The usage and development of LibreSelery will always be free and without any charges. If you want to support us by using LibreSelery you need to add us to the [`tooling_repos.yml`](https://github.com/protontypes/seleryexample/blob/master/selery.yml).
+
+### Contributions
+Those who have contributed to the master branch receive emails with cryptocurrency from Coinbase. Only git profiles with emails on the GitHub profile page will be considered.
+Find out more in the [contribution guide](https://github.com/protontypes/libreselery/wiki/Contribution-Guide) or look into the [Good First Issue]( https://github.com/protontypes/libreselery/labels/good%20first%20issue) labels to get into the project with some first simple tasks.
+
+## Contact and Feedback
+For further information please contact us at`team_at_protontypes.eu`, join our [Gitter chat](https://gitter.im/protontypes/libreselery) or check out our [wiki](https://github.com/protontypes/libreselery/wiki).
+
+<p align="center">
+  <img src="docs/selery_workflow.png" width="500">
+</p>
+
+
+*Artwork by Miriam Winter and [undraw](https://undraw.co/)*
