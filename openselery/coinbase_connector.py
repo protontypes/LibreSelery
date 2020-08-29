@@ -1,6 +1,6 @@
 import json
 from coinbase.wallet.client import Client
-from openselery import selery_utils
+from libreselery import selery_utils
 
 
 class CoinbaseConnector(selery_utils.Connector):

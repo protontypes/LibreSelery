@@ -3,13 +3,13 @@
 
 OPENSELERY_TARGET_PROJECT=$1
 if [ -z ${OPENSELERY_TARGET_PROJECT} ]; then 
-    echo "Please provide the directory path of the project you want to use with openselery!"
+    echo "Please provide the directory path of the project you want to use with libreselery!"
     echo "run.sh <some_project_dir>"
     exit
 fi
 
 
-DOT_DIR="~/.openselery/"
+DOT_DIR="~/.libreselery/"
 DOT_DIR="${DOT_DIR/#\~/$HOME}"
 RESULT_DIR="${DOT_DIR/results}"
 DOCKER_PATH_TARGET_DIR="/home/selery/runningrepo"
@@ -27,7 +27,7 @@ docker run --rm -t \
 -v $(realpath $RESULT_DIR):/home/selery/ \
 -v $(realpath $DOT_DIR/config):/home/selery/config \
 -u $(id -u $USER):$(id -g $USER) \
-  openselery \
+  libreselery \
     --config $DOCKER_PATH_TARGET_DIR/selery.yml \
     --directory $DOCKER_PATH_TARGET_DIR \
     --result /home/selery/results \

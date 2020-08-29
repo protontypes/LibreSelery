@@ -12,11 +12,11 @@ with open(os.path.join(pwd, "README.md"), encoding="utf-8") as f:
 
 ### package definition
 setup(
-    name="openselery",
+    name="libreselery",
     version_format="{tag}.dev{commitcount}",
     setup_requires=["setuptools-git-version"],
     description="A Software-Defined Funding Distribution",
-    url="https://github.com/protontypes/openselery",
+    url="https://github.com/protontypes/libreselery",
     long_description=long_description,
     long_description_content_type="text/markdown",
     dependency_links=[
@@ -35,8 +35,10 @@ setup(
         "qrcode",
         "wheel",
     ],
-    packages=["openselery",],
+    packages=["libreselery",],
     scripts=["scripts/selery",],
     ### add additional files to $TARGET_DIR containing [$SOURCE_FILES]
-    data_files=[("openselery/ruby_extensions", ["openselery/ruby_extensions/scan.rb"])],
+    data_files=[
+        ("libreselery/ruby_extensions", ["libreselery/ruby_extensions/scan.rb"])
+    ],
 )

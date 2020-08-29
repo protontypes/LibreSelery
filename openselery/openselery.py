@@ -10,21 +10,21 @@ import datetime
 from urlextract import URLExtract
 from qrcode import QRCode
 
-from openselery.github_connector import GithubConnector
-from openselery.librariesio_connector import LibrariesIOConnector
-from openselery.coinbase_connector import CoinbaseConnector
-from openselery import git_utils
-from openselery import selery_utils
-from openselery import os_utils
-from openselery.visualization import visualizeTransactions
-from openselery.commit_identifier import CommitIdentifierFromString
+from libreselery.github_connector import GithubConnector
+from libreselery.librariesio_connector import LibrariesIOConnector
+from libreselery.coinbase_connector import CoinbaseConnector
+from libreselery import git_utils
+from libreselery import selery_utils
+from libreselery import os_utils
+from libreselery.visualization import visualizeTransactions
+from libreselery.commit_identifier import CommitIdentifierFromString
 
 
-class OpenSelery(object):
+class LibreSelery(object):
     def __init__(self, config, silent=False):
-        super(OpenSelery, self).__init__()
+        super(LibreSelery, self).__init__()
         print("=======================================================")
-        # set our openselery project dir, which is '../../this_script'
+        # set our libreselery project dir, which is '../../this_script'
         self.seleryDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.silent = silent
         self.librariesIoConnector = None
@@ -35,7 +35,7 @@ class OpenSelery(object):
 
     def __del__(self):
         self.logNotify(
-            "Feel free to visit us @ https://github.com/protontypes/openselery"
+            "Feel free to visit us @ https://github.com/protontypes/libreselery"
         )
         print("=======================================================")
 
@@ -50,14 +50,14 @@ class OpenSelery(object):
         return success
 
     def initialize(self):
-        self.logNotify("Initializing OpenSelery")
+        self.logNotify("Initializing LibreSelery")
 
-        self.seleryPackageInfo = os_utils.getPackageInfo("openselery")
+        self.seleryPackageInfo = os_utils.getPackageInfo("libreselery")
         if self.seleryPackageInfo:
-            self.log("OpenSelery version [%s]" % self.seleryPackageInfo["version"])
+            self.log("LibreSelery version [%s]" % self.seleryPackageInfo["version"])
         else:
             # when project is executed locally without installation, seleryPackageInfo is empty
-            self.log("OpenSelery version [undefined]")
+            self.log("LibreSelery version [undefined]")
 
         self.log("Preparing Configuration")
         # find all configs in potentially given config directory
@@ -86,7 +86,7 @@ class OpenSelery(object):
             mdfile = open("README.md", "r")
             mdstring = mdfile.read()
             urls = extractor.find_urls(mdstring)
-            badge_string = "https://badgen.net/badge/OpenSelery-Donation/"
+            badge_string = "https://badgen.net/badge/LibreSelery-Donation/"
             for url in urls:
                 if badge_string in url:
                     self.config.bitcoin_address = url.split(badge_string, 1)[1]
@@ -210,7 +210,7 @@ class OpenSelery(object):
             )
             # scan for dependencies repositories
             rubyScanScriptPath = os.path.join(
-                self.seleryDir, "openselery", "ruby_extensions", "scan.rb"
+                self.seleryDir, "libreselery", "ruby_extensions", "scan.rb"
             )
             process = subprocess.run(
                 ["ruby", rubyScanScriptPath, "--project=%s" % self.config.directory],
@@ -569,9 +569,9 @@ class OpenSelery(object):
 
             self.log("Creating donation website")
             donation_website = (
-                "<p align='center'><b>Donate to this address to support OpenSelery:</b><br><b></b><br><b>BTC address:</b><br><b>"
+                "<p align='center'><b>Donate to this address to support LibreSelery:</b><br><b></b><br><b>BTC address:</b><br><b>"
                 + self.config.bitcoin_address
-                + "</b><br><img src='openselery/wallet_qrcode.png'></p>"
+                + "</b><br><img src='libreselery/wallet_qrcode.png'></p>"
             )
 
             donationPagePath = os.path.join(
@@ -637,7 +637,7 @@ class OpenSelery(object):
             print("Cannot detect remote url of git repo", e)
 
         prefix = "@" + login_name + ":Thank you for your contribution to" + repo_message
-        postfix = "Find out more about OpenSelery at https://github.com/protontypes/openselery."
+        postfix = "Find out more about LibreSelery at https://github.com/protontypes/libreselery."
         inner = (
             ": " + self.config.optional_email_message
             if self.config.optional_email_message

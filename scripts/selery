@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from openselery.commandline import runCli
+from libreselery.commandline import runCli
 
 if __name__ == "__main__":
     runCli()

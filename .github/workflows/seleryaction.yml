@@ -1,6 +1,6 @@
-# ./.github/workflows/openselery
+# ./.github/workflows/libreselery
 # Use Openselery as a simple Github action on your project workflow.
-# For configuration create an .openselery.yml file in your project repo.
+# For configuration create an .libreselery.yml file in your project repo.
 name: seleryaction
 
 #on:
@@ -17,11 +17,11 @@ on:
 
 
 jobs:
-  openselery:
+  libreselery:
     name: seleryaction
     runs-on: ubuntu-latest
     steps:
-      # Check out the repo openselery is working on.
+      # Check out the repo libreselery is working on.
       - name: Checkout the target repository
         uses: actions/checkout@v1
 
@@ -34,11 +34,11 @@ jobs:
               echo "::set-env name=GITHUB_REPOSITORY_NEW::$GITHUB_REPOSITORY"
 
 
-      #- name: Pull openselery from dockerhub
-      #  run: docker pull protontypes/openselery
+      #- name: Pull libreselery from dockerhub
+      #  run: docker pull protontypes/libreselery
 
       - name: Create container from local Dockerfile
-        run: docker build -t openselery .
+        run: docker build -t libreselery .
 
       - name: Set env variables for folder paths that are used between steps
         run:  |
@@ -53,14 +53,14 @@ jobs:
       - name: Give everyone permission to write folder
         run: chmod -R a+rw $results_folder $config_folder
 
-      - name: Pass openselery configuation from target project
+      - name: Pass libreselery configuation from target project
         run:  |
                echo "Use selery.yml from target project directory: ${TARGET_PROJECT}"
                cat ${TARGET_PROJECT}/selery.yml
                cp ${TARGET_PROJECT}/selery.yml $config_folder/selery.yml
 
       # Run Openselery on the current folder.
-      - name: Run openselery on its own sources
+      - name: Run libreselery on its own sources
         run:  >
                 docker run --rm
                 --env GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
@@ -70,7 +70,7 @@ jobs:
                 -v $PWD/:/home/selery/runningrepo/
                 -v $results_folder:/home/selery/results/
                 -v $config_folder:/home/selery/config/
-                openselery
+                libreselery
                 --directory=/home/selery/runningrepo/ --config=/home/selery/config/selery.yml  --results_dir=/home/selery/results/  --tooling=/home/selery/config/tooling_repos.yml
         # Upload the receipt file to github artifact.
 
@@ -95,8 +95,8 @@ jobs:
         run: |
          echo "Change dir to ${HOME}/work"
          cd ./wiki
-         mkdir -p openselery
-         cp ${results_folder}/public/* ./openselery/
+         mkdir -p libreselery
+         cp ${results_folder}/public/* ./libreselery/
          git config user.name github-actions
          git config user.email github-actions@github.com
          git status
@@ -116,6 +116,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: protontypes/openselery
+          repository: protontypes/libreselery
           tag_with_ref: true
           tag_with_sha: true

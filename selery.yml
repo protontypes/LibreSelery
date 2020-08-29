@@ -1,5 +1,5 @@
-# Configuration file for OpenSelery 
-## simulation lets you run OpenSelery without payout or coinbase tokens
+# Configuration file for LibreSelery 
+## simulation lets you run LibreSelery without payout or coinbase tokens
 simulation: False
 
 
@@ -11,7 +11,7 @@ include_dependencies: False
 
 ## include the tooling and runtime from file tooling_repos.yml
 ## You can add tools, which will not be detected by the dependency scanner.
-## For example command line tools. If you want to support the OpenSelery project, include it in tooling_repos.yml
+## For example command line tools. If you want to support the LibreSelery project, include it in tooling_repos.yml
 include_tooling_and_runtime: False
 
 ## minimum number of commits to be considered as contributor
@@ -50,7 +50,7 @@ min_payout_per_contributor: 0.00005
 # Random Split Strategy configuration
 ## Please consider that:
 ## random_split_picked_contributors X random_split_btc_per_picked_contributors = payout_per_run
-## OpenSelery does fail if this does not apply.
+## LibreSelery does fail if this does not apply.
 
 ## numbers of total contributors payout per run at random split
 random_split_picked_contributors: 3
