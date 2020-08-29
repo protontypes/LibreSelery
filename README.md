@@ -11,8 +11,8 @@ LibreSelery is a tool to distribute funding in free and open source projects. Wi
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 
 [![Actions Status](https://github.com/protontypes/libreselery/workflows/seleryaction/badge.svg)](https://github.com/protontypes/libreselery/actions?query=workflow%3Aseleryaction)
-![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/balance_badge.json&style=flat&logo=bitcoin)
-![Balance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/native_balance_badge.json&style=flat&logo=bitcoin)
+![Balance BTC](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/balance_badge.json&style=flat&logo=bitcoin)
+![Balance EUR](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/native_balance_badge.json&style=flat&logo=bitcoin)
 [![Donate with bitcoin](https://badgen.net/badge/Donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w/orange?icon=bitcoin)](https://github.com/protontypes/libreselery/wiki/Donation)
 [![Transaction History](https://badgen.net/badge/icon/Transaction%20History?icon=bitcoin&label)](https://github.com/protontypes/libreselery/wiki/Transaction-History)
 
@@ -161,7 +161,7 @@ env $(cat ~/.libreselery/secrets/tokens.env) selery run -d ~/<target_repository>
 ```
 
 
-## API Integrations
+## Roadmap and API Integrations
 
 LibreSelery plans to support multiple APIs and assets in the near future like:
 - [x] GitHub
@@ -171,16 +171,17 @@ LibreSelery plans to support multiple APIs and assets in the near future like:
 - [x] Coinbase
 - [ ] Uphold
 
+Find out more on the future plans of LibreSelery in the [`roadmap`](https://github.com/protontypes/libreselery/wiki/Roadmap).
 
 
 ## Support LibreSelery
 
 ### Donations
-Certainly we are funded by LibreSelery over direct donations via our [`Donation Website`](https://github.com/protontypes/libreselery/wiki/Donation). The usage and development of LibreSelery will always be free and without any charges. If you want to support us by using LibreSelery you need to add us to the [`tooling_repos.yml`](https://github.com/protontypes/seleryexample/blob/master/selery.yml).
+Certainly we are funded by LibreSelery over direct donations via our [`donation website`](https://github.com/protontypes/libreselery/wiki/Donation). The usage and development of LibreSelery will always be free and without any charges. If you want to support us by using LibreSelery you need to add us to the [`tooling_repos.yml`](https://github.com/protontypes/seleryexample/blob/master/selery.yml).
 
 ### Contributions
 Those who have contributed to the master branch receive emails with cryptocurrency from Coinbase. Only git profiles with emails on the GitHub profile page will be considered.
-Find out more in the [contribution guide](https://github.com/protontypes/libreselery/wiki/Contribution-Guide) or look into the [Good First Issue]( https://github.com/protontypes/libreselery/labels/good%20first%20issue) labels to get into the project with some first simple tasks.
+Find out more in the [contribution guide](https://github.com/protontypes/libreselery/wiki/Contribution-Guide) or look into the [good first issue]( https://github.com/protontypes/libreselery/labels/good%20first%20issue) labels to get into the project with some first simple tasks.
 
 ## Contact and Feedback
 For further information please contact us at`team_at_protontypes.eu`, join our [Gitter chat](https://gitter.im/protontypes/libreselery) or check out our [wiki](https://github.com/protontypes/libreselery/wiki).
