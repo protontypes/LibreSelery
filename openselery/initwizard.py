@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Example of a progress bar dialog.
 """
@@ -16,7 +16,6 @@ from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.formatted_text import ANSI, HTML
 
 from openselery.configuration import OpenSeleryConfig
-
 
 # /usr/bin/python3
 from decimal import Decimal
@@ -52,6 +51,8 @@ class BoolValidator(Validator):
         self.pattern = re.compile(r"t(rue)?|f(alse)?|0|1", re.IGNORECASE)
 
     def validate(self, document):
+        if len(document.text) == 0:
+            raise ValidationError(message="No input")
         if not re.fullmatch(self.pattern, document.text):
             raise ValidationError(message="Expected Boolean Value", cursor_position=0)
 
@@ -66,23 +67,25 @@ class IntegerValidator(Validator):
             self.max = max
 
     def validate(self, document):
-        if len(document.text) > 0:
-            if not re.fullmatch(self.pattern, document.text):
-                raise ValidationError(
-                    message="Expected Integer Here",
-                    cursor_position=re.search(
-                        self.negativePattern, document.text
-                    ).start(0),
-                )
-            N = int(document.text)
-            if hasattr(self, "min") and N < self.min:
-                raise ValidationError(message="Number must be at least %d" % self.min)
-            if hasattr(self, "max") and N > self.max:
-                raise ValidationError(message="Number must be at maximum %d" % self.max)
+        if len(document.text) == 0:
+            raise ValidationError(message="No Input")
+
+        if not re.fullmatch(self.pattern, document.text):
+            raise ValidationError(
+                message="Expected Integer Here",
+                cursor_position=re.search(self.negativePattern, document.text).start(0),
+            )
+        N = int(document.text)
+        if hasattr(self, "min") and N < self.min:
+            raise ValidationError(message="Number must be at least %d" % self.min)
+        if hasattr(self, "max") and N > self.max:
+            raise ValidationError(message="Number must be at maximum %d" % self.max)
 
 
 class DecimalValidator(Validator):
     def validate(self, document):
+        if len(document.text) == 0:
+            raise ValidationError(message="Expected decimal number here")
         try:
             Decimal(document.text)
         except ValueError:
@@ -138,7 +141,7 @@ def getConfigThroughWizard():
         if answer:
             print("Simulation Enabled. No payout.")
         else:
-            print("Simulation Disabled. ")
+            print("Simulation Disabled.")
         answers["simulation"] = answer
 
         # Added "You probably want to do this enabled", because asking this question in the first place could be confusing.
@@ -171,7 +174,7 @@ def getConfigThroughWizard():
         answers["include_dependencies"] = answer
 
         printQuestion(
-            "Do you want to invest in your tools listed in `tooling_repos.yml`?."
+            "Do you want to invest in your tools listed in `tooling_repos.yml`?"
         )
         answer = answerStringToBool(
             prompt(makeColorPrompt("include_tooling_and_runtime"), default="False")
@@ -274,23 +277,21 @@ def getConfigThroughWizard():
             large amount of transactions with a small amount of money
             is performed. For this use case, a random picking behavior
             for contributors has been developed. This mode only pays
-            out to a few randomly picked contributor instead of all
-            contributors. Full split mode splits all money. Possible
-            values are 'full' and 'random'."""
+            out to a few randomly picked contributors instead of all
+            of them. Full split mode splits all money. Possible values are:"""
         )
+        print("1: full_split")
+        print("2: random_split")
 
         options = ["full", "random"]
-        answer = (
-            prompt(
-                makeColorPrompt("split_strategy"),
-                default="full",
-                validator=WordValidator(options),
-                completer=WordCompleter(options, ignore_case=True),
-            ).lower()
-            + "_split"
+        answer = prompt(
+            makeColorPrompt("split_strategy"),
+            default="1",
+            validator=IntegerValidator(min=1, max=2),
         )
-        print("The split behavior has been set to " + answer)
+        answer = [None, "full_split", "random_split"][int(answer)]
         answers["split_strategy"] = answer
+        print("The split behavior has been set to " + answer)
 
         if answer == "random_split":
             printQuestion("How much should a picked contributor get?")
@@ -388,9 +389,7 @@ def getConfigThroughWizard():
         answers["send_email_notification"] = answer
 
         if answer:
-            print(
-                "What message to you want to attach in each coinbase email? Pleast never send an URL."
-            )
+            printQuestion("What message to you want to attach in each coinbase email?")
             answer = prompt(
                 makeColorPrompt("optional_email_message"), default="Have a nice day.",
             )
