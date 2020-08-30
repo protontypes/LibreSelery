@@ -18,7 +18,7 @@ from prompt_toolkit.formatted_text import ANSI, HTML
 from openselery.configuration import OpenSeleryConfig
 
 # /usr/bin/python3
-from decimal import Decimal
+from decimal import Decimal, Context
 import requests
 import json
 
@@ -285,6 +285,11 @@ def getConfigThroughWizard():
         answers["split_strategy"] = answer
         print("The split behavior has been set to " + answer)
 
+        print("current bitcoin value: $%s (US)" % str(bitcoinPrice))
+        print(
+            "you need %.10f BTC for $1 (US)" % Context(prec=6).divide(1, bitcoinPrice)
+        )
+
         if answer == "random_split":
             printQuestion("How much should a picked contributor get?")
             answer = Decimal(
@@ -295,7 +300,7 @@ def getConfigThroughWizard():
                 )
             )
             print("Each picked contributor will receive %s BTC." % str(answer))
-            print("Currently woth %s$" % str(answer * bitcoinPrice))
+            print("Currently woth $%s (US)" % str(answer * bitcoinPrice))
             answers["random_split_picked_contributors"] = answer
 
             printQuestion("How many contributors should get picked at random picking?")
@@ -309,7 +314,6 @@ def getConfigThroughWizard():
             answers["random_split_picked_contributors"] = answer
 
         printQuestion("How much should be sent in each run of OpenSelery?")
-        print("current bitcoin value: %s USD" % str(bitcoinPrice))
         answer = Decimal(
             prompt(
                 makeColorPrompt("payout_per_run"),
@@ -318,7 +322,7 @@ def getConfigThroughWizard():
             )
         )
         print("Each run of OpenSelery will send %s BTC" % str(answer))
-        print("Currently woth %s USD" % str(answer * bitcoinPrice))
+        print("Currently woth $%s (US)" % str(answer * bitcoinPrice))
         answers["payout_per_run"] = answer
 
         printQuestion("What should be the minimum payment per contributor?")
