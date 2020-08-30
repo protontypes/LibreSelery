@@ -55,8 +55,15 @@ def _runCommand(args):
     # Done.
 
 
+WelcomeMessage = """Initializing new OpenSelery project.
+
+OpenSelery is a tool to distribute funding in free and open source
+projects. This Wizard will guide you through a few question to get
+your project running."""
+
+
 def _initCommand(args):
-    print("Initializing new OpenSelery project")
+    print(WelcomeMessage)
     config = getConfigThroughWizard()
     config.writeYaml("./selery.yml")
 

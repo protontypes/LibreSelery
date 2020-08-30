@@ -57,19 +57,28 @@ class BoolValidator(Validator):
 
 
 class IntegerValidator(Validator):
-    def __init__(self):
+    def __init__(self, min=None, max=None):
         self.pattern = re.compile(r"[0-9]+")
         self.negativePattern = re.compile(r"[^0-9]")
+        if min != None:
+            self.min = min
+        if max != None:
+            self.max = max
 
     def validate(self, document):
-        if not re.fullmatch(self.pattern, document.text):
-            if len(document.text) > 0:
+        if len(document.text) > 0:
+            if not re.fullmatch(self.pattern, document.text):
                 raise ValidationError(
                     message="Expected Integer Here",
                     cursor_position=re.search(
                         self.negativePattern, document.text
                     ).start(0),
                 )
+            N = int(document.text)
+            if hasattr(self, "min") and N < self.min:
+                raise ValidationError(message="Number must be at least %d" % self.min)
+            if hasattr(self, "max") and N > self.max:
+                raise ValidationError(message="Number must be at maximum %d" % self.max)
 
 
 class DecimalValidator(Validator):
@@ -103,7 +112,7 @@ def makeColorPrompt(arg):
 
 
 def printQuestion(arg):
-    print(COLOR_GREEN + textwrap.fill(textwrap.dedent(arg)) + COLOR_DEFAULT)
+    print("\n" + COLOR_GREEN + textwrap.fill(textwrap.dedent(arg)) + COLOR_DEFAULT)
 
 
 def getConfigThroughWizard():
@@ -116,9 +125,7 @@ def getConfigThroughWizard():
             """\
             Do you want to enable simulation? Setting `simulation` to `True`
             allows you to run OpenSelery in a try state that does not
-            pay out real money. It will also allow you to test
-            OpenSelery without creating any accounts or actually
-            payout out any real money.  """
+            pay out. No Coinbase token is needed in simulation."""
         )
 
         answer = answerStringToBool(
@@ -129,15 +136,13 @@ def getConfigThroughWizard():
             )
         )
         if answer:
-            print("Simulation Enabled. No real money will be distributed.")
+            print("Simulation Enabled. No payout.")
         else:
             print("Simulation Disabled. ")
         answers["simulation"] = answer
 
         # Added "You probably want to do this enabled", because asking this question in the first place could be confusing.
-        printQuestion(
-            "Do you want to invest money to contributors of the of the root project? You probably want to do this enabled."
-        )
+        printQuestion("Do you want to include contributors of the main project?")
         answer = answerStringToBool(
             prompt(
                 makeColorPrompt("include_main_repository"),
@@ -146,12 +151,12 @@ def getConfigThroughWizard():
             )
         )
         if answer:
-            print("Including contributors of root project")
+            print("Including contributors of main project")
         else:
-            print("Excluding contributors of root project")
+            print("Excluding contributors of main project")
         answers["include_main_repository"] = answer
 
-        printQuestion("Do you want to distribute money to your project dependencies?")
+        printQuestion("Do you want to include your project dependencies?")
         answer = answerStringToBool(
             prompt(
                 makeColorPrompt("include_dependencies"),
@@ -160,26 +165,24 @@ def getConfigThroughWizard():
             )
         )
         if answer:
-            print("Dependencies will receive money.")
+            print("Dependencies will be included.")
         else:
-            print("Dependencies will NOT receive money.")
+            print("Dependencies will NOT be included.")
         answers["include_dependencies"] = answer
 
         printQuestion(
-            "Do you want to invest money in your tools listed in `tooling_repos.yml`?."
+            "Do you want to invest in your tools listed in `tooling_repos.yml`?."
         )
         answer = answerStringToBool(
             prompt(makeColorPrompt("include_tooling_and_runtime"), default="False")
         )
         if answer:
-            print("Tooling and Runtime will receive money.")
+            print("Tooling and Runtime will be included.")
         else:
-            print("Tooling and Runtime has been disabled to receive money.")
+            print("Tooling and Runtime has been disabled from inclusion.")
         answers["include_tooling_and_runtime"] = answer
 
-        printQuestion(
-            "How many contributions does a contributor need in order to be considered for payout?"
-        )
+        printQuestion("How many commits does a user need to be a contributor?")
         answer = int(
             prompt(
                 makeColorPrompt("min_contributions_required_payout"),
@@ -188,7 +191,7 @@ def getConfigThroughWizard():
             )
         )
         print(
-            "A contributor will need at least %d contributions to be able to receive money"
+            "A contributor will need at least %d commits to be included for payout."
             % answer
         )
         answers["min_contributions_required_payout"] = answer
@@ -208,7 +211,7 @@ def getConfigThroughWizard():
             answers["included_dependency_contributor"] = answer
 
         printQuestion(
-            "To compute the contribution of a person to the project, there is a uniform weight attached equally to everybody who contributed to the project. How much should this weight be?"
+            "To evaluate the contribution of a user, there is a uniform weight attached equally to every contributor. What should this weight be?"
         )
         answer = int(
             prompt(
@@ -217,11 +220,11 @@ def getConfigThroughWizard():
                 validator=IntegerValidator(),
             )
         )
-        print("The uniform base weight is set to %d", answer)
+        print("The uniform base weight is set to %d" % answer)
         answers["uniform_weight"] = answer
 
         printQuestion(
-            "The activity (estimation of work) of a contributor is weighted as well. How much weight do you want to set for the activity?"
+            "The activity of a contributor is weighted as well. How much weight do you want to set for the activity?"
         )
         answer = int(
             prompt(
@@ -235,19 +238,33 @@ def getConfigThroughWizard():
             print("The activity won't have an affect on the salary.")
         else:
             print("The activity weight is %s" % answer)
+
             printQuestion(
                 "What activity do you want to take into consideration in payout calculation?"
             )
-            print("here are some example for valid values:")
-            print("tag_regex:<regex>")
-            print("commit:HEAD~1")  # last commit
-            print("commit:<sha>")  # specific commit
-            print("commit:<branch>")  # certain branch
-            print("all")
+            print("1: All commits.")
+            print("2: All commits since the last version tag.")
+            print("3: Last N commits.")  # last commit  # commit:HEAD~1
             ## weight for weighted git commits
-            answer = prompt(makeColorPrompt("activity_since_commit"), default="all",)
-            if answer != "all":
-                answers["activity_since_commit"] = answer
+            answer = prompt(
+                makeColorPrompt("activity_since_commit"),
+                default="1",
+                validator=IntegerValidator(min=1, max=3),
+            )
+            if answer == "1":
+                pass
+            elif answer == "2":
+                answers["activity_since_commit"] = "tag_regex:v?[0-9]+\.[0-9]+\.[0-9]+"
+                print(
+                    "Will use the following regex to find the last version tag: v?[0-9]+\.[0-9]+\.[0-9]+"
+                )
+            elif answer == "3":
+                printQuestion("How many commits do you want to take into account?")
+                answer = prompt(
+                    makeColorPrompt("N"), default="1", validator=IntegerValidator()
+                )
+                answers["activity_since_commit"] = "commit:HEAD~" + answer
+                print("Will use last " + answer + " commits")
 
         ## full_split: weighted split over all contributors
         ## random_split: random weighted split with equal payout per contributor
@@ -276,7 +293,7 @@ def getConfigThroughWizard():
         answers["split_strategy"] = answer
 
         if answer == "random_split":
-            printQuestion("How much money should a picked contributor get?")
+            printQuestion("How much should a picked contributor get?")
             answer = Decimal(
                 prompt(
                     makeColorPrompt("random_split_picked_contributors"),
@@ -298,7 +315,7 @@ def getConfigThroughWizard():
             )
             answers["random_split_picked_contributors"] = answer
 
-        printQuestion("How much money should be sent in each run of OpenSelery?")
+        printQuestion("How much should be sent in each run of OpenSelery?")
         answer = Decimal(
             prompt(
                 makeColorPrompt("payout_per_run"),
@@ -333,11 +350,11 @@ def getConfigThroughWizard():
         )
         answers["min_contributions_required_payout"] = answer
 
-        printQuestion("What is the Bitcoin address to take money from for payout?")
+        printQuestion("What is the source Bitcoin address payout?")
         answer = prompt(
             makeColorPrompt("bitcoin_address"), validator=BitcoinAddressValidator(),
         )
-        print("%s will be used to send money to contributores.")
+        print("%s will be used to pay out contributors." % answer)
         answers["bitcoin_address"] = answer
 
         printQuestion(
