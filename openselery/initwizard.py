@@ -309,6 +309,7 @@ def getConfigThroughWizard():
             answers["random_split_picked_contributors"] = answer
 
         printQuestion("How much should be sent in each run of OpenSelery?")
+        print("current bitcoin value: %s USD" % str(bitcoinPrice))
         answer = Decimal(
             prompt(
                 makeColorPrompt("payout_per_run"),
@@ -317,7 +318,7 @@ def getConfigThroughWizard():
             )
         )
         print("Each run of OpenSelery will send %s BTC" % str(answer))
-        print("Currently woth %s$" % str(answer * bitcoinPrice))
+        print("Currently woth %s USD" % str(answer * bitcoinPrice))
         answers["payout_per_run"] = answer
 
         printQuestion("What should be the minimum payment per contributor?")
