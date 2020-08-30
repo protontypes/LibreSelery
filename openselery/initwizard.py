@@ -83,22 +83,14 @@ class IntegerValidator(Validator):
 
 
 class DecimalValidator(Validator):
+    def __init__(self):
+        self.pattern = re.compile(r"[0-9]+(.[0-9]+)?")
+
     def validate(self, document):
         if len(document.text) == 0:
+            raise ValidationError(message="No Input")
+        if not re.fullmatch(self.pattern, document.text):
             raise ValidationError(message="Expected decimal number here")
-        try:
-            Decimal(document.text)
-        except ValueError:
-            raise ValidationError(message="Expected decimal number here")
-
-
-class WordValidator(Validator):
-    def __init__(self, words):
-        self.words = words
-
-    def validate(self, document):
-        if document.text not in self.words:
-            raise ValidationError(message="invalid input here", cursor_position=0)
 
 
 def answerStringToBool(arg):
