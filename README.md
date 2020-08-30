@@ -8,7 +8,7 @@ LibreSelery is a tool to distribute funding in free and open source projects. Wi
 [![Docker Pulls](https://img.shields.io/docker/pulls/protontypes/libreselery)](https://hub.docker.com/r/protontypes/libreselery/tags)
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 
-*This project is funded by LibreSelery itself. If you contribute to this repository, you will receive portation from the pool to your public email address.*
+*This project is funded by LibreSelery itself. If you contribute to this repository, you will receive amount from the pool to your public email address.*
 
 [![Actions Status](https://github.com/protontypes/libreselery/workflows/seleryaction/badge.svg)](https://github.com/protontypes/libreselery/actions?query=workflow%3Aseleryaction)
 ![Balance BTC](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/balance_badge.json&style=flat&logo=bitcoin)
@@ -18,7 +18,7 @@ LibreSelery is a tool to distribute funding in free and open source projects. Wi
 
 ## Concept
 
-LibreSelery is a simple command line tool that runs upon any git project manuely or automated by continuous integration. It creates as a donation pool collecting cryptocurrency in a wallet. At each run an amount is taken from the donation pool and distributed to the project's contributors and dependencies.
+LibreSelery is a simple command line tool that runs upon any git project manually or automated by continuous integration. It creates as a donation pool collecting cryptocurrency in a wallet. At each run an amount is taken from the donation pool and distributed to the project's contributors and dependencies.
 
 It is designed to run in a continuous integration pipeline like GitHub Actions. Donation transactions are automatically handled and transaction details are published for transparency into the wiki of your repository with a donation page of your project. 
 
@@ -45,7 +45,7 @@ LibreSelery ...
 1. is configured based on the selery.yml file and runs as a GitHub Action on your project.
 2. is triggered with every push on the main branch by the GitHub Action worflow file that is part of your project repository.
 3. gathers contributor information about the target project via the GitHub and Libraries.io API.
-4. filters out contributors with a hidden email address in the github profile and below the minimum contribution limit. LibreSelery will not send emails to the git commit email addresses in order to avoid spam.
+4. filters out contributors with a hidden email address in the GitHub profile and below the minimum contribution limit. LibreSelery will not send emails to the git commit email addresses in order to avoid spam.
 5. creates custom funding distribution weights based on the contribution rating of various projects: Minimum contribution, activity, ...
 6. adds the weights to the combined weight used for different distribution splitting behaviors.
 7. distributes the funding between the contributors based on the selected split behavior.
@@ -125,7 +125,7 @@ git clone <target_repository>
 9. Buy some cryptocurrency. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transferring money into the Coinbase account.
 10. Configure the [access control settings](https://github.com/protontypes/libreselery/wiki/Coinbase-Token-API-Permission-for-LibreSelery) of the automated Coinbase wallet.
 11. Never transfer or store large values with automated cryptocurrency wallets. Use [recurring automated buys](https://blog.coinbase.com/easier-recurring-buys-and-sells-on-coinbase-9a3cd7ea934e) to recharge you wallet on a regular base to avoid financial and security risks. Coinbase does not charge for transferring cryptocurrency from one Coinbase wallet to another.
-12. Add your coinbase API keys and secrets to the newly created file (`~/.libreselery/tokens.env`).  Never store these tokens in a public repository .
+12. Add your Coinbase API keys and secrets to the newly created file (`~/.libreselery/tokens.env`).  Never store these tokens in a public repository .
 
 ```bash
 COINBASE_TOKEN=<your_coinbase_token>
@@ -166,8 +166,9 @@ env $(cat ~/.libreselery/secrets/tokens.env) selery run -d ~/<target_repository>
 
 
 <p align="center">
-  <img src="https://github.com/protontypes/LibreSelery/wiki/roadmap.png" width="700">
+  <img src="https://github.com/protontypes/LibreSelery/wiki/roadmap.png" width="600">
 </p></a>
+
 
 
 

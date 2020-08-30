@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Never print SECRETS or TOKENS.
 
-OPENSELERY_TARGET_PROJECT=$1
-if [ -z ${OPENSELERY_TARGET_PROJECT} ]; then 
+LIBRESELERY_TARGET_PROJECT=$1
+if [ -z ${LIBRESELERY_TARGET_PROJECT} ]; then 
     echo "Please provide the directory path of the project you want to use with libreselery!"
     echo "run.sh <some_project_dir>"
     exit
@@ -23,7 +23,7 @@ docker run --rm -t \
 --env LIBRARIES_API_KEY=$LIBRARIES_API_KEY \
 --env COINBASE_TOKEN=$COINBASE_TOKEN \
 --env COINBASE_SECRET=$COINBASE_SECRET \
--v $OPENSELERY_TARGET_PROJECT:$DOCKER_PATH_TARGET_DIR \
+-v $LIBRESELERY_TARGET_PROJECT:$DOCKER_PATH_TARGET_DIR \
 -v $(realpath $RESULT_DIR):/home/selery/ \
 -v $(realpath $DOT_DIR/config):/home/selery/config \
 -u $(id -u $USER):$(id -g $USER) \

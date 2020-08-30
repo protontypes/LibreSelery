@@ -1,5 +1,5 @@
 # ./.github/workflows/libreselery
-# Use Openselery as a simple Github action on your project workflow.
+# Use LibreSelery as a simple Github action on your project workflow.
 # For configuration create an .libreselery.yml file in your project repo.
 name: seleryaction
 
@@ -59,8 +59,7 @@ jobs:
                cat ${TARGET_PROJECT}/selery.yml
                cp ${TARGET_PROJECT}/selery.yml $config_folder/selery.yml
 
-      # Run Openselery on the current folder.
-      - name: Run libreselery on its own sources
+      - name: Run LibreSelery on its own sources
         run:  >
                 docker run --rm
                 --env GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
