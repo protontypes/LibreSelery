@@ -70,6 +70,9 @@ your project running."""
 def _initCommand(args):
     print(WelcomeMessage)
 
+    # TODO, this should take the selery.yml from the LibreSelery
+    # project to have comments.
+
     if path.exists("./selery.yml"):
         print("ERROR: config.yml file already exists: Aborting.")
         print("Either delete local selery.yml or delete run reinit.")
@@ -97,8 +100,6 @@ def _reinitCommand(args):
         span = re.search(pattern, data, flags=re.MULTILINE).span(1)
         value = str(value) if type(value) is Decimal else json.dumps(value)
         data = data[: span[0]] + value + data[span[1] :]
-
-    print(data)
 
     configFile = open("./selery.yml", "wt")
     configFile.write(data)
