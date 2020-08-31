@@ -15,7 +15,7 @@ from prompt_toolkit.validation import Validator, ValidationError
 from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.formatted_text import ANSI, HTML
 
-from openselery.configuration import OpenSeleryConfig
+from libreselery.configuration import LibreSeleryConfig
 
 # /usr/bin/python3
 from decimal import Decimal, Context
@@ -112,14 +112,14 @@ def printQuestion(arg):
 
 def getConfigThroughWizard():
     # print(str(config))
-    config = OpenSeleryConfig()
+    config = LibreSeleryConfig()
 
     try:
         answers = {}
         printQuestion(
             """\
             Do you want to enable simulation? Setting `simulation` to `True`
-            allows you to run OpenSelery in a try state that does not
+            allows you to run LibreSelery in a try state that does not
             pay out. No Coinbase token is needed in simulation."""
         )
 
@@ -313,7 +313,7 @@ def getConfigThroughWizard():
             )
             answers["random_split_picked_contributors"] = answer
 
-        printQuestion("How much should be sent in each run of OpenSelery?")
+        printQuestion("How much should be sent in each run of LibreSelery?")
         answer = Decimal(
             prompt(
                 makeColorPrompt("payout_per_run"),
@@ -321,7 +321,7 @@ def getConfigThroughWizard():
                 validator=DecimalValidator(),
             )
         )
-        print("Each run of OpenSelery will send %s BTC" % str(answer))
+        print("Each run of LibreSelery will send %s BTC" % str(answer))
         print("Currently woth $%s (US)" % str(answer * bitcoinPrice))
         answers["payout_per_run"] = answer
 
@@ -356,7 +356,7 @@ def getConfigThroughWizard():
         answers["bitcoin_address"] = answer
 
         printQuestion(
-            "Should OpenSelery validate that the public bitcoin address matches the secret coinbase address?"
+            "Should LibreSelery validate that the public bitcoin address matches the secret coinbase address?"
         )
         answer = answerStringToBool(
             prompt(
@@ -396,7 +396,7 @@ def getConfigThroughWizard():
             else:
                 print("message in notifications disabled")
 
-        config = OpenSeleryConfig()
+        config = LibreSeleryConfig()
         config.__dict__ = answers
         return config
 

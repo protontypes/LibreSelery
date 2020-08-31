@@ -10,8 +10,8 @@ import matplotlib.dates as mdates
 import json
 import datetime
 
-from openselery.collection_utils import groupBy
-from openselery.github_connector import GithubConnector
+from libreselery.collection_utils import groupBy
+from libreselery.github_connector import GithubConnector
 
 
 def isoDateToDatetime(isodate):

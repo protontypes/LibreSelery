@@ -1,7 +1,7 @@
 import os
 import sys
 
-from openselery import selery_utils
+from libreselery import selery_utils
 
 
 class Project(object):

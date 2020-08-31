@@ -3,7 +3,7 @@ import yaml
 from urlextract import URLExtract
 
 
-class OpenSeleryConfig(object):
+class LibreSeleryConfig(object):
     __default_env_template__ = {
         "libraries_api_key": "LIBRARIES_API_KEY",
         "github_token": "GITHUB_TOKEN",
@@ -41,7 +41,7 @@ class OpenSeleryConfig(object):
     ]
 
     def __init__(self, d={}):
-        super(OpenSeleryConfig, self).__init__()
+        super(LibreSeleryConfig, self).__init__()
         self.apply(d)
 
     def apply(self, d):

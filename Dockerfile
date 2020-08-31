@@ -19,19 +19,19 @@ COPY Gemfile .
 RUN bundle install
 
 ########### P R E P ###########
-### Copy openselery into the image for installation
-COPY . /home/selery/openselery/
+### Copy libreselery into the image for installation
+COPY . /home/selery/libreselery/
 ### create other useful dirs
 RUN mkdir -p /home/selery/results
 
-WORKDIR /home/selery/openselery
+WORKDIR /home/selery/libreselery
 
 
-### permissions so someone can reinstall openselery from inside the container
+### permissions so someone can reinstall libreselery from inside the container
 RUN chown -R selery:selery /usr/local/lib/python3.7/site-packages/
 RUN chown -R selery:selery /usr/local/bin
 ### prepare selery user permissions
-RUN chown -R selery:selery /home/selery/openselery
+RUN chown -R selery:selery /home/selery/libreselery
 RUN chown -R selery:selery /home/selery/results
 
 ### change user
@@ -39,10 +39,10 @@ USER selery
 
 
 ########### I N S T A L L ###########
-### Install openselery and it's dependencies
+### Install libreselery and it's dependencies
 RUN python setup.py install
 
 
 ########### P O S T ###########
-### set image entrypoint to be openselery executable
+### set image entrypoint to be libreselery executable
 ENTRYPOINT ["selery", "run"]

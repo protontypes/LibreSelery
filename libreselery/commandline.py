@@ -1,9 +1,9 @@
 import argparse
 import sys
 
-from openselery.configuration import OpenSeleryConfig
-from openselery import openselery
-from openselery.initwizard import getConfigThroughWizard
+from libreselery.configuration import LibreSeleryConfig
+from libreselery import libreselery
+from libreselery.initwizard import getConfigThroughWizard
 
 
 def runCli():
@@ -13,17 +13,17 @@ def runCli():
 
 def _runCommand(args):
     # apply args dict to config
-    config = OpenSeleryConfig()
+    config = LibreSeleryConfig()
     config.apply(vars(args).items())
-    # instantiate openselery and
+    # instantiate libreselery and
     # let it initialize configurations,
     # arguments and environments
-    selery = openselery.OpenSelery(config)
-    # let openselery connect to
+    selery = libreselery.LibreSelery(config)
+    # let libreselery connect to
     # various APIs and servers to
     # allow data gathering
     selery.connect()
-    # let openselery gather data
+    # let libreselery gather data
     # of all involved projects,
     # dependencies and contributors
     (
@@ -42,7 +42,7 @@ def _runCommand(args):
     recipients, contributor_payout_split = selery.split(
         combined_contributors, combined_weights
     )
-    # let openselery use the given
+    # let libreselery use the given
     # address containing virtual currency
     # to pay out the selected contributors
     receipt, transaction = selery.payout(recipients, contributor_payout_split)
@@ -50,14 +50,14 @@ def _runCommand(args):
     # generates images with charts/diagram in
     # the results folder
     selery.visualize(receipt, transaction)
-    ### finish openselery by checking processed information
+    ### finish libreselery by checking processed information
     selery.finish(receipt)
     # Done.
 
 
-WelcomeMessage = """Initializing new OpenSelery project.
+WelcomeMessage = """Initializing new LibreSelery project.
 
-OpenSelery is a tool to distribute funding in free and open source
+LibreSelery is a tool to distribute funding in free and open source
 projects. This Wizard will guide you through a few question to get
 your project running."""
 
@@ -69,7 +69,7 @@ def _initCommand(args):
 
 
 def _parseArgs():
-    parser = argparse.ArgumentParser(description="openselery - Automated Funding")
+    parser = argparse.ArgumentParser(description="libreselery - Automated Funding")
     subparsers = parser.add_subparsers()
 
     # create the parser for the "init" command

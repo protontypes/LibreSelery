@@ -2,7 +2,7 @@ import time
 import re
 from github import Github, StatsContributor
 
-from openselery import selery_utils
+from libreselery import selery_utils
 
 
 class Contributor(object):
@@ -32,8 +32,8 @@ class GithubConnector(selery_utils.Connector):
 
     def parseRemoteToOwnerProjectName(self, url):
         # These urls need to be parsable:
-        # https://github.com/protontypes/openselery
-        # https://github.com/protontypes/openselery.git
+        # https://github.com/protontypes/libreselery
+        # https://github.com/protontypes/libreselery.git
         # git@github.com:protontypes/protontypes.git
 
         matchObj = re.match(

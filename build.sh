@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker build -t openselery .
+docker build -t libreselery .
