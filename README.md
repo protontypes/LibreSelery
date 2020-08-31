@@ -33,7 +33,7 @@ The amount distributed to each contributor is calculated from an accumulation of
 It is sent via the cryptocurrency market API to the public email address of the git platform user profile.
 You can also configure the compensatation of contributors from your own dependencies, therefore donating money back to open source platforms which play an integral role in your repository.
 
-The mwtrics and weights are under active development and will be modified in the future. We are always open for concerns and are actively pursuing options for fair and considerate metrics regarding payout weights. The goal is to have a system which is fair and represents the contributions done but is also not as prone to abuse. 
+The weights calculations are under active development and will be modified in the future. We are always open for concerns and are actively pursuing options for fair and considerate metrics regarding payout weights. The goal is to have a system which is fair and represents the contributions done but is also not as prone to abuse. 
 because of that, the issue of 'morality' is still open and any issues, concerns or ideas, regarding the following questions, are always welcome:
 - "What should give some contributions more weight than others?" 
 - "How can we design metrics, which do represent and reward more helpful contributors"
@@ -44,7 +44,6 @@ because of that, the issue of 'morality' is still open and any issues, concerns 
 ## Implementation
 
 LibreSelery ...
-
 
 1. is configured based on the selery.yml file and runs as a GitHub Action on your project.
 2. is triggered with every push on the main branch by the GitHub Action worflow file that is part of your project repository.
