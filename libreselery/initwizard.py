@@ -2,6 +2,7 @@
 """
 Example of a progress bar dialog.
 """
+
 import os
 import time
 import re
@@ -61,9 +62,9 @@ class IntegerValidator(Validator):
     def __init__(self, min=None, max=None):
         self.pattern = re.compile(r"[0-9]+")
         self.negativePattern = re.compile(r"[^0-9]")
-        if min != None:
+        if min is not None:
             self.min = min
-        if max != None:
+        if max is not None:
             self.max = max
 
     def validate(self, document):
@@ -110,10 +111,29 @@ def printQuestion(arg):
     print("\n" + COLOR_GREEN + textwrap.fill(textwrap.dedent(arg)) + COLOR_DEFAULT)
 
 
-def getConfigThroughWizard():
-    # print(str(config))
-    config = LibreSeleryConfig()
+ConfigDefaults = {
+    "simulation": True,
+    "include_main_repository": True,
+    "include_dependencies": True,
+    "include_tooling_and_runtime": False,
+    "min_contributions_required_payout": 1,
+    "included_dependency_contributor": 2,
+    "uniform_weight": 30,
+    "activity_weight": 70,
+    # omit activity_since_commit
+    "split_strategy": "full_split",
+    "random_split_btc_per_picked_contributor": Decimal("0.0001"),
+    "random_split_picked_contributors": 1,
+    "payout_per_run": Decimal("0.002"),
+    "min_payout_per_contributor": Decimal(0.0),
+    "min_contributions_required_payout": 1,
+    "perform_wallet_validation": True,
+    "send_email_notification": False,
+    "optional_email_message": "You are part of a new experimental funding concept for free and open projects. Enjoy your fresh Selery.",
+}
 
+
+def getConfigThroughWizard(defaultsDict=ConfigDefaults):
     try:
         answers = {}
         printQuestion(
@@ -122,11 +142,10 @@ def getConfigThroughWizard():
             allows you to run LibreSelery in a try state that does not
             pay out. No Coinbase token is needed in simulation."""
         )
-
         answer = answerStringToBool(
             prompt(
                 makeColorPrompt("simulation"),
-                default="True",
+                default=str(defaultsDict.get("simulation", "")),
                 validator=BoolValidator(),
             )
         )
@@ -141,7 +160,7 @@ def getConfigThroughWizard():
         answer = answerStringToBool(
             prompt(
                 makeColorPrompt("include_main_repository"),
-                default="True",
+                default=str(defaultsDict.get("include_main_repository", "")),
                 validator=BoolValidator(),
             )
         )
@@ -155,7 +174,7 @@ def getConfigThroughWizard():
         answer = answerStringToBool(
             prompt(
                 makeColorPrompt("include_dependencies"),
-                default="True",
+                default=str(defaultsDict.get("include_dependencies", "")),
                 validator=BoolValidator(),
             )
         )
@@ -169,7 +188,10 @@ def getConfigThroughWizard():
             "Do you want to invest in your tools listed in `tooling_repos.yml`?"
         )
         answer = answerStringToBool(
-            prompt(makeColorPrompt("include_tooling_and_runtime"), default="False")
+            prompt(
+                makeColorPrompt("include_tooling_and_runtime"),
+                default=str(defaultsDict.get("include_tooling_and_runtime", "")),
+            )
         )
         if answer:
             print("Tooling and Runtime will be included.")
@@ -181,7 +203,7 @@ def getConfigThroughWizard():
         answer = int(
             prompt(
                 makeColorPrompt("min_contributions_required_payout"),
-                default="1",
+                default=str(defaultsDict.get("min_contributions_required_payout", "")),
                 validator=IntegerValidator(),
             )
         )
@@ -198,7 +220,9 @@ def getConfigThroughWizard():
             answer = int(
                 prompt(
                     makeColorPrompt("included_dependency_contributor"),
-                    default="2",
+                    default=str(
+                        defaultsDict.get("included_dependency_contributor"), ""
+                    ),
                     validator=IntegerValidator(),
                 )
             )
@@ -211,7 +235,7 @@ def getConfigThroughWizard():
         answer = int(
             prompt(
                 makeColorPrompt("uniform_weight"),
-                default="30",
+                default=str(defaultsDict.get("uniform_weight", "")),
                 validator=IntegerValidator(),
             )
         )
@@ -224,7 +248,7 @@ def getConfigThroughWizard():
         answer = int(
             prompt(
                 makeColorPrompt("activity_weight"),
-                default="70",
+                default=str(defaultsDict.get("activity_weight", "")),
                 validator=IntegerValidator(),
             )
         )
@@ -235,34 +259,58 @@ def getConfigThroughWizard():
             print("The activity weight is %s" % answer)
 
             printQuestion(
-                "What activity do you want to take into consideration in payout calculation?"
+                "What activity do you want to take into consideration in "
+                "payout calculation?"
             )
             print("1: All commits.")
             print("2: All commits since the last version tag.")
             print("3: Last N commits.")  # last commit  # commit:HEAD~1
-            ## weight for weighted git commits
+            print("4: custom string")
+            # weight for weighted git commits
+
+            activity_since_commit_value = defaultsDict.get("activity_since_commit", "")
+            defaultN = "1"
+            defaultCustomStr = ""
+            if activity_since_commit_value == "":
+                default = "1"
+            elif activity_since_commit_value == r"tag_regex:v?[0-9]+\.[0-9]+\.[0-9]+":
+                default = "2"
+            elif match := re.fullmatch(
+                r"commit:HEAD~(\d+)", activity_since_commit_value
+            ):
+                default = "3"
+                defaultN = match[1]
+            else:
+                default = "4"
+                defaultCustomStr = "activity_since_commit_value"
+
             answer = prompt(
                 makeColorPrompt("activity_since_commit"),
-                default="1",
-                validator=IntegerValidator(min=1, max=3),
+                default=default,
+                validator=IntegerValidator(min=1, max=4),
             )
             if answer == "1":
                 pass
             elif answer == "2":
-                answers["activity_since_commit"] = "tag_regex:v?[0-9]+\.[0-9]+\.[0-9]+"
-                print(
-                    "Will use the following regex to find the last version tag: v?[0-9]+\.[0-9]+\.[0-9]+"
-                )
+                answers["activity_since_commit"] = r"tag_regex:v?[0-9]+\.[0-9]+\.[0-9]+"
+                print(r"Will use the following regex for tag:")
+                print(r"v?[0-9]+\.[0-9]+\.[0-9]+")
             elif answer == "3":
                 printQuestion("How many commits do you want to take into account?")
                 answer = prompt(
-                    makeColorPrompt("N"), default="1", validator=IntegerValidator()
+                    makeColorPrompt("N"), default=defaultN, validator=IntegerValidator()
                 )
                 answers["activity_since_commit"] = "commit:HEAD~" + answer
                 print("Will use last " + answer + " commits")
+            elif answer == "4":
+                printQuestion("What is the custom string that you want to use?")
+                answer = prompt(
+                    makeColorPrompt("activity_since_commit"), default=defaultCustomStr
+                )
+                answers["activity_since_commit"] = answer
 
-        ## full_split: weighted split over all contributors
-        ## random_split: random weighted split with equal payout per contributor
+        # full_split: weighted split over all contributors
+        # random_split: random weighted split with equal payout per contributor
         printQuestion(
             """\
             For some payment services the fees can become significant if a
@@ -275,10 +323,13 @@ def getConfigThroughWizard():
         print("1: full_split")
         print("2: random_split")
 
-        options = ["full", "random"]
+        default = {"full_split": "1", "random_split": "2"}.get(
+            defaultsDict.get("split_strategy"), ""
+        )
+
         answer = prompt(
             makeColorPrompt("split_strategy"),
-            default="1",
+            default=default,
             validator=IntegerValidator(min=1, max=2),
         )
         answer = [None, "full_split", "random_split"][int(answer)]
@@ -287,28 +338,32 @@ def getConfigThroughWizard():
 
         print("current bitcoin value: $%s (US)" % str(bitcoinPrice))
         print(
-            "you need %.10f BTC for $1 (US)" % Context(prec=6).divide(1, bitcoinPrice)
+            "you need %s BTC for $1 (US)" % str(Context(prec=6).divide(1, bitcoinPrice))
         )
 
         if answer == "random_split":
             printQuestion("How much should a picked contributor get?")
             answer = Decimal(
                 prompt(
-                    makeColorPrompt("random_split_picked_contributors"),
-                    default="0.0001",
+                    makeColorPrompt("random_split_btc_per_picked_contributor"),
+                    default=str(
+                        defaultsDict.get("random_split_btc_per_picked_contributor", "")
+                    ),
                     validator=DecimalValidator(),
                 )
             )
             print("Each picked contributor will receive %s BTC." % str(answer))
             print("Currently woth $%s (US)" % str(answer * bitcoinPrice))
-            answers["random_split_picked_contributors"] = answer
+            answers["random_split_btc_per_picked_contributor"] = answer
 
             printQuestion("How many contributors should get picked at random picking?")
             answer = int(
                 prompt(
                     makeColorPrompt("random_split_picked_contributors"),
-                    default="1",
-                    validator=BoolValidator(),
+                    default=str(
+                        defaultsDict.get("random_split_picked_contributors", "")
+                    ),
+                    validator=IntegerValidator(),
                 )
             )
             answers["random_split_picked_contributors"] = answer
@@ -317,7 +372,7 @@ def getConfigThroughWizard():
         answer = Decimal(
             prompt(
                 makeColorPrompt("payout_per_run"),
-                default="0.002",
+                default=str(defaultsDict.get("payout_per_run", "")),
                 validator=DecimalValidator(),
             )
         )
@@ -329,7 +384,7 @@ def getConfigThroughWizard():
         answer = Decimal(
             prompt(
                 makeColorPrompt("min_payout_per_contributor"),
-                default="0.0",
+                default=str(defaultsDict.get("min_payout_per_contributor", "")),
                 validator=DecimalValidator(),
             )
         )
@@ -342,7 +397,7 @@ def getConfigThroughWizard():
         answer = int(
             prompt(
                 makeColorPrompt("min_contributions_required_payout"),
-                default="1",
+                default=str(defaultsDict.get("min_contributions_required_payout", "")),
                 validator=IntegerValidator(),
             )
         )
@@ -350,7 +405,9 @@ def getConfigThroughWizard():
 
         printQuestion("What is the source Bitcoin address payout?")
         answer = prompt(
-            makeColorPrompt("bitcoin_address"), validator=BitcoinAddressValidator(),
+            makeColorPrompt("bitcoin_address"),
+            default=str(defaultsDict.get("bitcoin_address", "")),
+            validator=BitcoinAddressValidator(),
         )
         print("%s will be used to pay out contributors." % answer)
         answers["bitcoin_address"] = answer
@@ -361,7 +418,7 @@ def getConfigThroughWizard():
         answer = answerStringToBool(
             prompt(
                 makeColorPrompt("perform_wallet_validation"),
-                default="True",
+                default=str(defaultsDict.get("perform_wallet_validation", "")),
                 validator=BoolValidator(),
             )
         )
@@ -375,7 +432,7 @@ def getConfigThroughWizard():
         answer = answerStringToBool(
             prompt(
                 makeColorPrompt("send_email_notification"),
-                default="False",
+                default=str(defaultsDict.get("send_email_notification", "")),
                 validator=BoolValidator(),
             )
         )
@@ -388,7 +445,8 @@ def getConfigThroughWizard():
         if answer:
             printQuestion("What message to you want to attach in each coinbase email?")
             answer = prompt(
-                makeColorPrompt("optional_email_message"), default="Have a nice day.",
+                makeColorPrompt("optional_email_message"),
+                default=str(defaultsDict.get("optional_email_message", "")),
             )
             if len(answer) > 0:
                 print("message in notifications: " + answer)
@@ -396,9 +454,7 @@ def getConfigThroughWizard():
             else:
                 print("message in notifications disabled")
 
-        config = LibreSeleryConfig()
-        config.__dict__ = answers
-        return config
+        return answers
 
     except KeyboardInterrupt:
         print("Setup canceled, nothing is safed.")
@@ -407,6 +463,7 @@ def getConfigThroughWizard():
 
 
 if __name__ == "__main__":
-    config = getConfigThroughWizard()
-    if config:
-        pprint.pprint(config.__dict__, sort_dicts=False)
+    answers = getConfigThroughWizard()
+    while answers:
+        pprint.pprint(answers, sort_dicts=False)
+        answers = getConfigThroughWizard(answers)
