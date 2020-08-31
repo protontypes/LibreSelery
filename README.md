@@ -2,13 +2,13 @@
 
 ### Continuous Funding
 
-LibreSelery is a tool to distribute funding in free and open source projects. With a new funding model it offers transparent, automated and adaptable compensation of contributors. The aim is to replace the middleman of donation distribution as far as possible with a free and transparent algorithm.
+LibreSelery is a tool to distribute funding in free and open source projects. With a new funding model, it offers transparent, automated and adaptable compensation of contributors. The aim is to replace the middleman in donation based money distribution as far as possible with a free and transparent algorithm.
 
 [![Join the chat at https://gitter.im/protontypes/LibreSelery](https://badges.gitter.im/protontypes/LibreSelery.svg)](https://gitter.im/protontypes/LibreSelery?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Docker Pulls](https://img.shields.io/docker/pulls/protontypes/libreselery)](https://hub.docker.com/r/protontypes/libreselery/tags)
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 
-*This project is funded by LibreSelery itself. If you contribute to this repository, you will receive amount from the pool to your public email address.*
+*This project is funded by LibreSelery itself. If you contribute to this repository, you will receive a small amount from the pool to your public email address.*
 
 [![Actions Status](https://github.com/protontypes/libreselery/workflows/seleryaction/badge.svg)](https://github.com/protontypes/libreselery/actions?query=workflow%3Aseleryaction)
 ![Balance BTC](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/balance_badge.json&style=flat&logo=bitcoin)
@@ -18,24 +18,28 @@ LibreSelery is a tool to distribute funding in free and open source projects. Wi
 
 ## Concept
 
-LibreSelery is a simple command line tool that runs upon any git project manually or automated by continuous integration. It creates as a donation pool collecting cryptocurrency in a wallet. At each run an amount is taken from the donation pool and distributed to the project's contributors and dependencies.
+LibreSelery is a simple command line tool that runs upon any git project manually or automated by continuous integration. It works with a donation pool containing cryptocurrency in a wallet. With each run a small amount is taken from the donation pool and is distributed to the project's contributors and dependencies.
 
 It is designed to run in a continuous integration pipeline like GitHub Actions. Donation transactions are automatically handled and transaction details are published for transparency into the wiki of your repository with a donation page of your project. 
 
-Donations are divided between contributors based on a public and transparent metric.
-The metric can be configured per repository and is based on the following weights:
+Donations are divided between contributors based on public and transparent metric.
+The metrics can be configured per repository and are based on the following weights:
 
 - *Uniform Weight*: Everyone who contributed a minimum number of commits to the main branch is considered
 - *Activity Weight*: Everyone who contributed in the last X commits
 - *Service Weight*: Everyone who contributed to successful pull requests based on issues in the last X commits (not implemented yet [#132](https://github.com/protontypes/LibreSelery/issues/132))
 
-More weights are under active development and will be added in the future.
-
 The amount distributed to each contributor is calculated from an accumulation of these weights.
 It is sent via the cryptocurrency market API to the public email address of the git platform user profile.
-You can even activate to compensate contributors from your dependencies.
+You can also configure the compensatation of contributors from your own dependencies, therefore donating money back to open source platforms which play an integral role in your repository.
 
-<p align="center"><img src="docs/concept.png"></p>
+The mwtrics and weights are under active development and will be modified in the future. We are always open for concerns and are actively pursuing options for fair and considerate metrics regarding payout weights. The goal is to have a system which is fair and represents the contributions done but is also not as prone to abuse. 
+because of that, the issue of 'morality' is still open and any issues, concerns or ideas, regarding the following questions, are always welcome:
+- "What should give some contributions more weight than others?" 
+- "How can we design metrics, which do represent and reward more helpful contributors"
+- "This metric seems wrong, this is how you fix it"
+
+<p align="center"><img src="docs/concept.png"></p
 
 ## Implementation
 
@@ -49,8 +53,8 @@ LibreSelery ...
 5. creates custom funding distribution weights based on the contribution rating of various projects: Minimum contribution, activity, ...
 6. adds the weights to the combined weight used for different distribution splitting behaviors.
 7. distributes the funding between the contributors based on the selected split behavior.
-8. pays out cryptocurrency to the selected contributors' email addresses via the Coinbase API. Contributors without a Coinbase account will receive an email to claim the donation.
-9. generates automatically a dotation and transaction visualization website in your GitHub wiki.
+8. pays out cryptocurrency to the selected contributor's email addresses via the Coinbase API. Contributors without a Coinbase account will receive an email to claim the donation.
+9. automatically generates a dotation and transaction visualization website in your GitHub wiki.
 
 
 <a href="https://asciinema.org/a/353518">
@@ -61,10 +65,10 @@ LibreSelery ...
 ## Features
 
 * **Transparent** payout of GitHub project contributors with every push you make to your main (master) branch.
-* Minimal changes to your GitHub project shown in the [seleryexample](https://github.com/protontypes/seleryexample) to adapt LibreSelery with just a view steps.
+* Minimal changes to your GitHub project as shown in the [seleryexample](https://github.com/protontypes/seleryexample) to adapt LibreSelery with just a few steps.
 * Detailed [transaction history](https://github.com/protontypes/libreselery/wiki/Transaction-History) is regenerated in your github wiki every time you run LibreSelery.
 * **User defined payout configuration** by the [selery.yml](https://github.com/protontypes/libreselery/blob/master/selery.yml).
-* Dependency scanning for most languages to **even include developers of your dependencies** using [Libraries.io](https://libraries.io/).
+* Dependency scanning for most languages to **include developers of your dependencies** using [Libraries.io](https://libraries.io/).
 * The money is distributed via Coinbase. Other payment methods like Uphold are currently work in progress.
 * Donators can see transparent payout logs in [GitHub Action](https://github.com/protontypes/libreselery/actions?query=workflow%3Alibreselery).
 * Self-hosted [donation website](https://github.com/protontypes/libreselery/wiki/Donation) for secure donations is automatically stored in the Wiki of your repository.
