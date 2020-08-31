@@ -75,9 +75,9 @@ def _initCommand(args):
         print("Either delete local selery.yml or delete run reinit.")
         sys.exit()
 
-    config = LibreSeleryConfig(getConfigThroughWizard())
+    config = getConfigThroughWizard()
     LibreSeleryConfig.validateConfig(config, "./selery.yml")
-    config.writeYaml("./selery.yml")
+    LibreSeleryConfig(config).writeYaml("./selery.yml")
 
 
 def _reinitCommand(args):
@@ -96,7 +96,7 @@ def _reinitCommand(args):
         pattern = "^" + key + ": (.*)$"
         span = re.search(pattern, data, flags=re.MULTILINE).span(1)
         value = str(value) if type(value) is Decimal else json.dumps(value)
-        data = data = data[: span[0]] + value + data[span[1] :]
+        data = data[: span[0]] + value + data[span[1] :]
 
     print(data)
 

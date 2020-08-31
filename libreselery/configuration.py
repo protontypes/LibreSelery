@@ -2,6 +2,8 @@ import os
 import yaml
 from urlextract import URLExtract
 
+from decimal import Decimal
+
 
 class LibreSeleryConfig(object):
     __default_env_template__ = {
@@ -63,19 +65,26 @@ class LibreSeleryConfig(object):
 
     @staticmethod
     def validateConfig(d, path):
-        ### will check a given dictionary config for non relevant keys or wrong value types
+        # will check a given dictionary config for non relevant keys
+        # or wrong value types
         for k, v in d.items():
             type_ = LibreSeleryConfig.__default_config_template__.get(k, None)
-            ### check if config entry (key) is actually valid
-            if type_ == None:
+            # check if config entry (key) is actually valid
+            if type_ is None:
                 raise AttributeError(
                     "Error in config: '%s'\n'%s:' Invalid attribute '%s'"
                     % (path, LibreSeleryConfig.__name__, k)
                 )
-            ### check if type of config entry is valid
+            # hack to work with the fact that the init wizard uses the
+            # Decimal type, but LibreSelery doesn't.
+            if type(v) == Decimal:
+                v = float(v)
+                d[k] = v
+            # check if type of config entry is valid
             if type(v) != type_:
                 raise ValueError(
-                    "Error in config: '%s'\n'%s:' Configuration parameter '%s' has failed type check! <'%s'> should be <'%s'>"
+                    "Error in config: '%s'\n'%s:' Configuration parameter '%s'"
+                    " has failed type check! <'%s'> should be <'%s'>"
                     % (path, LibreSeleryConfig.__name__, k, type(v), type_)
                 )
         return True
