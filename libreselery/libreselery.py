@@ -573,6 +573,7 @@ class LibreSelery(object):
             donation_website = (
                 "<p align='center'><b>Donate to this address to support LibreSelery:</b><br><b></b><br><b>BTC address:</b><br><b>"
                 + self.config.bitcoin_address
+                + "<br><br><b>To get on the auto generated thank you website add a message in the following format to your message<br><b>selery:Your Name:Your Public Message.</b>"
                 + "</b><br><img src='libreselery/wallet_qrcode.png'></p>"
             )
 
