@@ -583,6 +583,16 @@ class LibreSelery(object):
             with open(donationPagePath, "w") as write_file:
                 print(donation_website, file=write_file)
 
+            self.log("Creating transaction history website")
+            transaction_history = "<img src='libreselery/wallet_balance_per_day.png'><img src='libreselery/transactions_per_day.png'><img src='libreselery/transactions_per_month.png'><img src='libreselery/transactions_per_user.png'>"
+
+            transactionPagePath = os.path.join(
+                self.config.result_dir, "public", "Transaction-History.md"
+            )
+
+            with open(transactionPagePath, "w") as write_file:
+                print(transaction_history, file=write_file)
+
         else:
             ### simulate a receipt
             receiptFilePath = os.path.join(
@@ -637,9 +647,7 @@ class LibreSelery(object):
         except Exception as e:
             print("Cannot detect remote url of git repo", e)
 
-        prefix = (
-            "@" + login_name + ": Thank you for contributing to " + repo_message
-        )
+        prefix = "@" + login_name + ": Thank you for contributing to " + repo_message
         postfix = "Find out more about LibreSelery at https://github.com/protontypes/libreselery."
         inner = (
             ": " + self.config.optional_email_message
