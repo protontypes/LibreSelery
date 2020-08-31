@@ -85,7 +85,7 @@ class IntegerValidator(Validator):
 
 class DecimalValidator(Validator):
     def __init__(self):
-        self.pattern = re.compile(r"[0-9]+(.[0-9]+)?")
+        self.pattern = re.compile(r"[0-9]+(.[0-9]+)?(e[+-]?[0-9]+)?")
 
     def validate(self, document):
         if len(document.text) == 0:
@@ -282,7 +282,7 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
                 defaultN = match[1]
             else:
                 default = "4"
-                defaultCustomStr = "activity_since_commit_value"
+                defaultCustomStr = activity_since_commit_value
 
             answer = prompt(
                 makeColorPrompt("activity_since_commit"),

@@ -4,6 +4,11 @@ import sys
 from libreselery.configuration import LibreSeleryConfig
 from libreselery import libreselery
 from libreselery.initwizard import getConfigThroughWizard
+from os import path
+from pathlib import Path
+import json, yaml
+from decimal import Decimal
+import re
 
 
 def runCli():
@@ -64,8 +69,40 @@ your project running."""
 
 def _initCommand(args):
     print(WelcomeMessage)
-    config = getConfigThroughWizard()
+
+    if path.exists("./selery.yml"):
+        print("ERROR: config.yml file already exists: Aborting.")
+        print("Either delete local selery.yml or delete run reinit.")
+        sys.exit()
+
+    config = LibreSeleryConfig(getConfigThroughWizard())
+    LibreSeleryConfig.validateConfig(config, "./selery.yml")
     config.writeYaml("./selery.yml")
+
+
+def _reinitCommand(args):
+    print(WelcomeMessage)
+    if not path.exists("./selery.yml"):
+        print("ERROR: config.yml file does not exist: Aborting.")
+        print("Pleas run init command first.")
+        sys.exit()
+
+    data = Path("./selery.yml").read_text()
+    oldConfig = yaml.safe_load(data)
+    newConfig = getConfigThroughWizard(oldConfig)
+    # updateYaml(data, oldConfig, newConfig)
+
+    for (key, value) in newConfig.items():
+        pattern = "^" + key + ": (.*)$"
+        span = re.search(pattern, data, flags=re.MULTILINE).span(1)
+        value = str(value) if type(value) is Decimal else json.dumps(value)
+        data = data = data[: span[0]] + value + data[span[1] :]
+
+    print(data)
+
+    configFile = open("./selery.yml", "wt")
+    configFile.write(data)
+    configFile.close()
 
 
 def _parseArgs():
@@ -75,6 +112,9 @@ def _parseArgs():
     # create the parser for the "init" command
     parser_init = subparsers.add_parser("init", help="init --help")
     parser_init.set_defaults(func=_initCommand)
+
+    parser_reinit = subparsers.add_parser("reinit", help="reinit --help")
+    parser_reinit.set_defaults(func=_reinitCommand)
 
     # create the parser for the "run" command
     parser_run = subparsers.add_parser("run", help="run --help")

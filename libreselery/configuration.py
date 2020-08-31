@@ -50,7 +50,7 @@ class LibreSeleryConfig(object):
     def finalize(self):
         ### should be called after a configuration was applied
         ### will check if all necessary configuration options are set and all types are matched
-        for k, t in self.__default_config_template__.items():
+        for k, t in LibreSeleryConfig.__default_config_template__.items():
             v = self.__dict__.get(k, None)
             if v == None:
                 raise AttributeError(
@@ -61,21 +61,22 @@ class LibreSeleryConfig(object):
                     "Error when finalizing config: Attribute '%s' has wrong type" % (k)
                 )
 
-    def validateConfig(self, d, path=""):
+    @staticmethod
+    def validateConfig(d, path):
         ### will check a given dictionary config for non relevant keys or wrong value types
         for k, v in d.items():
-            type_ = self.__default_config_template__.get(k, None)
+            type_ = LibreSeleryConfig.__default_config_template__.get(k, None)
             ### check if config entry (key) is actually valid
             if type_ == None:
                 raise AttributeError(
                     "Error in config: '%s'\n'%s:' Invalid attribute '%s'"
-                    % (path, self.__class__.__name__, k)
+                    % (path, LibreSeleryConfig.__name__, k)
                 )
             ### check if type of config entry is valid
             if type(v) != type_:
                 raise ValueError(
                     "Error in config: '%s'\n'%s:' Configuration parameter '%s' has failed type check! <'%s'> should be <'%s'>"
-                    % (path, self.__class__.__name__, k, type(v), type_)
+                    % (path, LibreSeleryConfig.__name__, k, type(v), type_)
                 )
         return True
 
@@ -91,7 +92,7 @@ class LibreSeleryConfig(object):
     def applyYaml(self, path):
         yamlDict = yaml.safe_load(open(path))
         ### ensure validity of provided yaml
-        if self.validateConfig(yamlDict, path=path):
+        if validateConfig(yamlDict, path=path):
             ### apply config because it is valid
             self.apply(yamlDict)
 
