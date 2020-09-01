@@ -166,7 +166,7 @@ pip3 install .
 export PATH=$HOME/.local/bin:$PATH
 ```
 
-4. Follow Step 3 to 14 of the [Running with Docker](Running-with-Docker) instructions. They should not differ at this steps.
+4. Follow Step 3 to 14 of the [Running with Docker](#Running-with-Docker) instructions. They should not differ at this steps.
 
 5. Run LibreSelery on your target project and enjoy fresh Selery.
 
