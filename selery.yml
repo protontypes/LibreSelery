@@ -66,7 +66,7 @@ bitcoin_address: "3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w"
 ## automatically check that the configured `bitcoin_address` matches the coinbase wallet address
 perform_wallet_validation: True
 
-## Send payout notification emails by coinbase to contributors?
+## Send payout notification emails from coinbase to contributors
 send_email_notification: False
 
 ## message included in every coinbase email. (after the automatically generated thank you message.)
