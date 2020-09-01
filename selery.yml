@@ -53,7 +53,7 @@ min_payout_per_contributor: 0.00005
 ## LibreSelery does fail if this does not apply.
 
 ## numbers of total contributors payout per run at random split
-random_split_picked_contributors: 3
+random_split_picked_contributors: 0
 
 ## the amount of btc send per user at random_split
 random_split_btc_per_picked_contributor: 0.000000

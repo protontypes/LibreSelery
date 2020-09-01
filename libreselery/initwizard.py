@@ -275,7 +275,7 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
                 default = "1"
             elif activity_since_commit_value == r"tag_regex:v?[0-9]+\.[0-9]+\.[0-9]+":
                 default = "2"
-            elif match := re.fullmatch(
+            elif match == re.fullmatch(
                 r"commit:HEAD~(\d+)", activity_since_commit_value
             ):
                 default = "3"
