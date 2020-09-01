@@ -66,7 +66,7 @@ class LibreSelery(object):
             for root, dirs, files in os.walk(self.config.config_dir):
                 for f in files:
                     ext = os.path.splitext(f)[1]
-                    if ext == ".yml" or ext == ".yaml":
+                    if ext == ".yml":
                         foundConfigs.append(os.path.join(root, f))
         # group all found configs together with individually given configuration paths from user on top
         self.config.config_paths = foundConfigs + self.config.config_paths
@@ -245,10 +245,8 @@ class LibreSelery(object):
                         libIoRepository = self.librariesIoConnector.findRepository(
                             libIoProject
                         )
-                        libIoDependencies = (
-                            self.librariesIoConnector.findProjectDependencies(
-                                libIoProject
-                            )
+                        libIoDependencies = self.librariesIoConnector.findProjectDependencies(
+                            libIoProject
                         )
                         # print("  > %s" %
                         #      [dep.project_name for dep in libIoDependencies])
@@ -510,8 +508,8 @@ class LibreSelery(object):
                 receipt = self.coinConnector.payout(
                     contributor.stats.author.email,
                     send_amount,
-                    not self.config.send_email_notification,
-                    self._getEmailNote(
+                    skip_email=not self.config.send_email_notification,
+                    description=self._getEmailNote(
                         contributor.stats.author.login, contributor.fromProject
                     ),
                 )
