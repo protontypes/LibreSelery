@@ -18,7 +18,7 @@ LibreSelery is a tool to distribute funding in free and open source projects. Wi
 
 ## Concept
 
-LibreSelery is a simple command line tool that runs upon any Github hosted project manually or automated by continuous integration. It works with a donation pool containing cryptocurrency in a wallet. With each run a small amount is taken from the donation pool and is distributed to the project's contributors and dependencies.
+LibreSelery is a simple command line tool that runs upon any GitHub hosted project manually or automated by continuous integration. It works with a donation pool containing cryptocurrency in a wallet. With each run a small amount is taken from the donation pool and is distributed to the project's contributors and dependencies.
 
 It is designed to run in a continuous integration pipeline like GitHub Actions. Donation transactions are automatically handled and transaction details are published for transparency into the wiki of your repository. Even the donation website is automatically created in your Wiki.
 
@@ -57,9 +57,9 @@ LibreSelery ...
 9. automatically generates a dotation and transaction visualization website in your GitHub wiki.
 
 
-<a href="https://asciinema.org/a/353518">
+<a href="https://asciinema.org/a/X0eONfhRtPAevNLPueyZ5Tamq" target="_blank">
 <p align="center">
-  <img src="https://asciinema.org/a/353518.svg" width="500">
+  <img src="https://asciinema.org/a/X0eONfhRtPAevNLPueyZ5Tamq.svg" width="500">
 </p></a>
 
 ## Features
@@ -78,7 +78,6 @@ LibreSelery ...
    - **full split** - All contributors receive a payout according to their weight.
    - **random split** - X contributors are randomly picked using the weight as probability.
 
-<a href="https://asciinema.org/a/353518">
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/transactions_per_user.png" width="500">
