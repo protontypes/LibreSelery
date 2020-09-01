@@ -245,8 +245,10 @@ class LibreSelery(object):
                         libIoRepository = self.librariesIoConnector.findRepository(
                             libIoProject
                         )
-                        libIoDependencies = self.librariesIoConnector.findProjectDependencies(
-                            libIoProject
+                        libIoDependencies = (
+                            self.librariesIoConnector.findProjectDependencies(
+                                libIoProject
+                            )
                         )
                         # print("  > %s" %
                         #      [dep.project_name for dep in libIoDependencies])

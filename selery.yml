@@ -7,7 +7,7 @@ simulation: False
 include_main_repository: True
 
 ## include the dependencies of the target folder. This requires a libraries.io token.
-include_dependencies: True
+include_dependencies: False
 
 ## include the tooling and runtime from file tooling_repos.yml
 ## You can add tools, which will not be detected by the dependency scanner.

@@ -33,14 +33,14 @@ The amount distributed to each contributor is calculated from an accumulation of
 It is sent via the cryptocurrency market API to the public email address of the git platform user profile.
 You can even configure the compensation of contributors from your own dependencies, therefore donating money back to open source platforms which play an integral role in your project.
 
-The weights calculations are under active development and will be extended in the future in cooperation with the community. We are always open for concerns and are actively pursuing options for fair and considerate metrics regarding payout weights. The goal is to have a system which is fair and represents the contributions done but without prone to abuse.. 
+The weights calculations are under active development and will be extended in the future in cooperation with the community. We are always open for concerns and are actively pursuing options for fair and considerate metrics regarding payout weights. The goal is to have a system which is fair and represents the contributions done but without prone to abuse. 
 Furthermore the issue of 'morality' is still open and any issues, concerns or ideas, regarding the following questions, are always welcome:
 
 - What should give contributions more weight than others?" 
 - How can we design metrics, which do represent and reward more helpful contributors?
 - Feedback on how we can improve the metrics.
 
-<p align="center"><img src="docs/concept.png"></p
+<p align="center"><img src="docs/concept.png"></p>
 
 ## Implementation
 
@@ -115,22 +115,17 @@ touch ~/.libreselery/secrets/tokens.env
 4. LibreSelery just needs API tokens from [GitHub](https://github.com/settings/tokens) when `simulation = True` and `include_dependencies = False` in your `selery.yml`. The scope of your github token should not include any additional permissions beyond the standard minimum scope. Find out more about how to create GitHub tokens [here](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Replace XXXXX with the Coinbase and [Libraries.io](https://libraries.io/api) tokens to get started without creating an actual accounts for these APIs.
 
 
-5. Make the token file read only.
-```bash
-chmod 400 ~/.libreselery/secrets/tokens.env
-```
-
-6. Clone your target repository.
+5. Clone your target repository.
 ```bash
 git clone <target_repository>
 ```
-7. Copy a [selery.yml](https://github.com/protontypes/seleryexample) into your <target_repository>.  Set `simulation: False` in your selery.yml to enable payouts with LibreSelery.
-8. Adjust and test different configurations in simulation mode on your repository project.
-9. Create a dedicated Coinbase account with limited amounts. Coinbase does not support sending emails to yourself. That's why you should use a dedicated email address when you are the owner of the Coinbase account and contributor of the project. Otherwise LibreSelery will skip these payouts.
-10. Buy some cryptocurrency. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transferring money into the Coinbase account.
-11. Configure the [access control settings](https://github.com/protontypes/libreselery/wiki/Coinbase-Token-API-Permission-for-LibreSelery) of the automated Coinbase wallet.
-12. Never transfer or store large values with automated cryptocurrency wallets. Use [recurring automated buys](https://blog.coinbase.com/easier-recurring-buys-and-sells-on-coinbase-9a3cd7ea934e) to recharge you wallet on a regular base to avoid financial and security risks. Coinbase does not charge for transferring cryptocurrency from one Coinbase wallet to another.
-13. Add your Coinbase API keys and secrets to the newly created file (`~/.libreselery/tokens.env`).  Never store these tokens in a public repository .
+6. Copy a [selery.yml](https://github.com/protontypes/seleryexample) into your <target_repository>.  Set `simulation: False` in your selery.yml to enable payouts with LibreSelery.
+7. Adjust and test different configurations in simulation mode on your repository project.
+8. Create a dedicated Coinbase account with limited amounts. Coinbase does not support sending emails to yourself. That's why you should use a dedicated email address when you are the owner of the Coinbase account and contributor of the project. Otherwise LibreSelery will skip these payouts.
+9. Buy some cryptocurrency. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transferring money into the Coinbase account.
+10. Configure the [access control settings](https://github.com/protontypes/libreselery/wiki/Coinbase-Token-API-Permission-for-LibreSelery) of the automated Coinbase wallet.
+11. Never transfer or store large values with automated cryptocurrency wallets. Use [recurring automated buys](https://blog.coinbase.com/easier-recurring-buys-and-sells-on-coinbase-9a3cd7ea934e) to recharge you wallet on a regular base to avoid financial and security risks. Coinbase does not charge for transferring cryptocurrency from one Coinbase wallet to another.
+12. Add your Coinbase API keys and secrets to the newly created file (`~/.libreselery/tokens.env`).  Never store these tokens in a public repository .
 
 ```bash
 COINBASE_TOKEN=<your_coinbase_token>
@@ -138,6 +133,12 @@ COINBASE_SECRET=<your_coinbase_secret>
 GITHUB_TOKEN=<your_github_tokens>
 LIBRARIES_API_KEY=<your_libaries_io_tokens>
 ```
+
+13. Make the token file read only.
+```bash
+chmod 400 ~/.libreselery/secrets/tokens.env
+```
+
 14. Send cryptocurrency to weighted random product contributors with a valid visible email address on GitHub:
 
 ```bash
