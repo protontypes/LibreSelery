@@ -24,7 +24,7 @@ class CoinbaseConnector(selery_utils.Connector):
             to=target_email,
             amount=float(target_amount),
             currency="btc",
-            skip_notification=skip_notifications,
+            skip_notifications=skip_notifications,
             description=description,
         )
         return tx

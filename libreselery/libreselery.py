@@ -508,7 +508,7 @@ class LibreSelery(object):
                 receipt = self.coinConnector.payout(
                     contributor.stats.author.email,
                     send_amount,
-                    skip_email=not self.config.send_email_notification,
+                    not self.config.send_email_notification,
                     description=self._getEmailNote(
                         contributor.stats.author.login, contributor.fromProject
                     ),
