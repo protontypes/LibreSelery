@@ -7,7 +7,7 @@ simulation: False
 include_main_repository: True
 
 ## include the dependencies of the target folder. This requires a libraries.io token.
-include_dependencies: False
+include_dependencies: True
 
 ## include the tooling and runtime from file tooling_repos.yml
 ## You can add tools, which will not be detected by the dependency scanner.
@@ -66,8 +66,8 @@ bitcoin_address: "3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w"
 ## automatically check that the configured `bitcoin_address` matches the coinbase wallet address
 perform_wallet_validation: True
 
-## Send payout notification emails from coinbase to contributors
-send_email_notification: False
+## Send payout notification emails by coinbase to contributors?
+send_email_notification: True
 
 ## message included in every coinbase email. (after the automatically generated thank you message.)
 optional_email_message: "You are part of a new experimental funding concept for free and open projects. Enjoy your fresh Selery."
