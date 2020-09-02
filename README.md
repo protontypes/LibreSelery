@@ -2,7 +2,7 @@
 
 ### Continuous Funding
 
-LibreSelery is a tool to distribute funding in free and open source projects. With a new funding model, it offers transparent, automated and adaptable compensation of contributors. The aim is to replace the middleman in donation distribution as far as possible with a free and transparent algorithm.
+LibreSelery is a tool to distribute funding in free and open source projects. With a new funding model, it offers transparent, automated and adaptable compensation of contributors. The aim is to replace the middleman in donation distribution as far as possible with a free and transparent algorithm. Unlike most other donation systems LibreSelery offers only a decentralized tool and no platform.
 
 [![Join the chat at https://gitter.im/protontypes/LibreSelery](https://badges.gitter.im/protontypes/LibreSelery.svg)](https://gitter.im/protontypes/LibreSelery?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Docker Pulls](https://img.shields.io/docker/pulls/protontypes/libreselery)](https://hub.docker.com/r/protontypes/libreselery/tags)
@@ -207,7 +207,7 @@ Those who have contributed to the master branch receive emails with cryptocurren
 Find out more in the [contribution guide](https://github.com/protontypes/libreselery/wiki/Contribution-Guide) or look into the [good first issue]( https://github.com/protontypes/libreselery/labels/good%20first%20issue) labels to get into the project with some first simple tasks.
 
 ## Contact and Feedback
-For further information please contact us at `team_at_protontypes.eu`, join our [Gitter chat](https://gitter.im/protontypes/libreselery) or check out our [wiki](https://github.com/protontypes/libreselery/wiki).
+For further information please contact us at `team_at_protontypes.eu`, join our [Gitter chat](https://gitter.im/protontypes/libreselery) or check out our [wiki](https://github.com/protontypes/libreselery/wiki). The organisation behind LibreSelery is `protontypes`. We are bulding an "Open Accelerator for Free and Sustainable Innovation" based on LibreSelery. Find out more on https://protontypes.eu/.
 
 <p align="center">
   <img src="docs/selery_workflow.png" width="500">
