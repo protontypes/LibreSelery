@@ -1,14 +1,17 @@
 <img align="center" src="./docs/logo_LibreSelery-04.png" width="400">
 
+
+**We just launched! :tada:  Please read our [introductory blog post](https://protontypes.eu/blog/2020/09/01/launch-of-protontypes/).** 
+
 ### Continuous Funding
 
-LibreSelery is a tool to distribute funding in free and open source projects. With a new funding model, it offers transparent, automated and adaptable compensation of contributors. The aim is to replace the middleman in donation distribution as far as possible with a free and transparent algorithm. Unlike most other donation systems LibreSelery offers only a decentralized tool and no platform.
+LibreSelery is a tool to distribute funding in free and open source projects. With a new funding model, it offers transparent, automated and adaptable compensation of contributors. The aim is to replace the middleman in donation distribution as far as possible with a free and transparent algorithm. Unlike most other donation systems LibreSelery only offers a decentralized tool and **not a platform**.
 
 [![Join the chat at https://gitter.im/protontypes/LibreSelery](https://badges.gitter.im/protontypes/LibreSelery.svg)](https://gitter.im/protontypes/LibreSelery?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Docker Pulls](https://img.shields.io/docker/pulls/protontypes/libreselery)](https://hub.docker.com/r/protontypes/libreselery/tags)
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 
-*This project is funded by LibreSelery itself. If you contribute to this repository, you will receive a small amount from the pool to your public email address on GitHub.*
+*This project is funded by LibreSelery itself. If you actively contribute to this repository, you will receive a small amount of cryptocurrency from the donation pool to your public email address on GitHub.*
 
 [![Actions Status](https://github.com/protontypes/libreselery/workflows/seleryaction/badge.svg)](https://github.com/protontypes/libreselery/actions?query=workflow%3Aseleryaction)
 ![Balance BTC](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/balance_badge.json&style=flat&logo=bitcoin)
@@ -33,10 +36,9 @@ The amount distributed to each contributor is calculated from an accumulation of
 It is sent via the cryptocurrency market API to the public email address of the git platform user profile.
 You can even configure the compensation of contributors from your own dependencies, therefore donating money back to open source platforms which play an integral role in your project.
 
-The weights calculations are under active development and will be extended in the future in cooperation with the community. We are always open for concerns and are actively pursuing options for fair and considerate metrics regarding payout weights. The goal is to have a system which is fair and represents the contributions done but without prone to abuse. 
-Furthermore the issue of 'morality' is still open and any issues, concerns or ideas, regarding the following questions, are always welcome:
+The weights calculations are under active development and will be extended in the future in cooperation with the community. We always listen to concerns and actively seek options for fair and appropriate measures of payout weights. The goal is a system that is fair and recognizes the contributions made without being susceptible to abuse. urthermore the issue of 'morality' is still open and any issues, concerns or ideas, regarding the following questions, are always welcome:
 
-- What should give contributions more weight than others?" 
+- Which metric should give contributions more weight than others? 
 - How can we design metrics, which do represent and reward more helpful contributors?
 - Feedback on how we can improve the metrics.
 
@@ -198,22 +200,22 @@ LibreSelery is gone support multiple APIs and assets in the near future like:
 ## Frequently Asked Questions
 
 ### What are the transaction fees?
-Since LibreSelery is just a tool. We do not charge fees since it is not a platform. Only buying and selling cryptocurrency on Coinbase has [fees](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees). Transactions between Coinbase wallets have no fees. 
+Since LibreSelery is only a tool and not a platform, we do not and cannot charge any fees. Only buying and selling cryptocurrency on Coinbase has [fees](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees). Transactions between Coinbase wallets have no fees. 
 
-### Can I do microtransaction?
-Yes, you can do that but try to avoid spamming people with email. Every payout will result in one email. Set `send_email_notification: False` for microtransactions to users that already have an account on the email address you are using. Sending cryptocurrency between Coinbase wallets is for free. The API allows you to send a minimum of 0.000001 BTC. 
+### Can I do micro transactions?
+Yes, you can do that. But please try to avoid spamming people with emails. Every payout results in an email. To disable notification emails, set `send_email_notification: False`. Users without a Coinbase account on their github profile email address will still receive emails. Sending cryptocurrency between Coinbase wallets is for free. The Coinbase API allows you to send a minimum of 0.000001 BTC. 
 [Coinbase Help:](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees)
 > We do not charge for transferring cryptocurrency from one Coinbase wallet to another 
 
-### When should I use the "random split" function?
-Let's assume you have a small donation that you want to distribute to a larger project. Full_Split might cause you to go below the allowed limit of 0.000001 BTC. Maybe not many people in your project have a Coinbase account. Only a few people would open their accounts for 10 cents. With Random Split individual contributors are randomly selected based on their weight and receive a larger donation. Over a longer period of time the same distribution as with full split should result.
+### When should I use the `random_split` strategy?
+Let's assume you have a small donation that you want to distribute within a larger project. `full_split` could cause your transaction to fall below the allowed limit of 0.000001 BTC. Not many people in your project may have a Coinbase account. Only few people would open an account for 10 cents. With the random distribution, individual donors are randomly selected based on their weight and receive a larger donation. Over a longer period of time, the same distribution should emerge as it would with the `full_split` distribution.
 
-### When does my credit expire at Coinbase if I do not create an account?
+### When does my credit expire at Coinbase if I do not open an account?
 [Coinbase Help:](https://help.coinbase.com/en/coinbase/trading-and-funding/sending-or-receiving-cryptocurrency/i-sent-funds-to-the-wrong-address-how-do-i-get-them-back.html)
 > After 30 days, any cryptocurrency sent via email that has not been claimed by the recipient will be returned to the sender.     
 
 ### My Country is not supported by Coinbase. How do I withdraw my donation? 
-[Offical Supported Countries](https://www.coinbase.com/places)
+[Coinbase Offically Supported Countries:](https://www.coinbase.com/places)
 > You can always use Paypal as a transaction bridge. Find more information on the the Paypal integration into Coinbase [here](https://help.coinbase.com/en/coinbase/getting-started/adding-a-payment-method/paypal-faq)
 
  
