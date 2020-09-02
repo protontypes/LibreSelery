@@ -195,6 +195,28 @@ LibreSelery is gone support multiple APIs and assets in the near future like:
 - [x] Coinbase
 - [ ] Uphold
 
+## Frequently Asked Questions
+
+### What are the transaction fees?
+Since LibreSelery is just a tool. We do not charge fees since it is not a platform. Only buying and selling cryptocurrency on Coinbase has [fees](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees). Transactions between Coinbase wallets have no fees. 
+
+### Can I do microtransaction?
+Yes, you can do that but try to avoid spamming people with email. Every payout will result in one email. Set `send_email_notification: False` for microtransactions to users that already have an account on the email address you are using. Sending cryptocurrency between Coinbase wallets is for free. The API allows you to send a minimum of 0.000001 BTC. 
+[Coinbase Help:](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees)
+> We do not charge for transferring cryptocurrency from one Coinbase wallet to another 
+
+### When should I use the "random split" function?
+Let's assume you have a small donation that you want to distribute to a larger project. Full_Split might cause you to go below the allowed limit of 0.000001 BTC. Maybe not many people in your project have a Coinbase account. Only a few people would open their accounts for 10 cents. With Random Split individual contributors are randomly selected based on their weight and receive a larger donation. Over a longer period of time the same distribution as with full split should result.
+
+### When does my credit expire at Coinbase if I do not create an account?
+[Coinbase Help:](https://help.coinbase.com/en/coinbase/trading-and-funding/sending-or-receiving-cryptocurrency/i-sent-funds-to-the-wrong-address-how-do-i-get-them-back.html)
+> After 30 days, any cryptocurrency sent via email that has not been claimed by the recipient will be returned to the sender.     
+
+### My Country is not supported by Coinbase. How do I withdraw my donation? 
+[Offical Supported Countries](https://www.coinbase.com/places)
+> You can always use Paypal as a transaction bridge. Find more information on the the Paypal integration into Coinbase [here](https://help.coinbase.com/en/coinbase/getting-started/adding-a-payment-method/paypal-faq)
+
+ 
 
 
 ## Support LibreSelery
