@@ -111,7 +111,7 @@ mkdir -p ~/.libreselery/secrets ~/.libreselery/results/public
 touch ~/.libreselery/secrets/tokens.env
 ```
 
-4. LibreSelery just needs API tokens from [GitHub](https://github.com/settings/tokens) when `simulation = True` and `include_dependencies = False` in your `selery.yml`. The scope of your github token should not include any additional permissions beyond the standard minimum scope. Find out more about how to create GitHub tokens [here](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Replace XXXXX with the Coinbase and [Libraries.io](https://libraries.io/api) tokens to get started without creating an actual accounts for these APIs.
+4. LibreSelery just needs API tokens from [GitHub](https://github.com/settings/tokens) when `simulation: True` and `include_dependencies: False` in your `selery.yml`. The scope of your github token should not include any additional permissions beyond the standard minimum scope. Find out more about how to create GitHub tokens [here](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Replace XXXXX with the Coinbase and [Libraries.io](https://libraries.io/api) tokens to get started without creating an actual accounts for these APIs.
 
 
 5. Clone your target repository.
@@ -200,7 +200,8 @@ LibreSelery is gone support multiple APIs and assets in the near future like:
 ## Support LibreSelery
 
 ### Donations
-Certainly we are funded by LibreSelery over direct donations via our [`donation website`](https://github.com/protontypes/libreselery/wiki/Donation). The usage and development of LibreSelery will always be free and without any charges. If you want to support us by using LibreSelery you need to add us to the [`tooling_repos.yml`](https://github.com/protontypes/seleryexample/blob/master/selery.yml).
+Certainly we are funded by LibreSelery with our [`donation website`](https://github.com/protontypes/libreselery/wiki/Donation). The usage and development of LibreSelery will always be free and without any charges. If you want to support us by using LibreSelery on a regular base you just need to add us to the [`tooling_repos.yml`](https://github.com/protontypes/seleryexample/blob/master/selery.yml) of your project. The donations are distributed among the developers of LibreSelery, how else?
+
 
 ### Contributions
 Those who have contributed to the master branch receive emails with cryptocurrency from Coinbase. Only git profiles with emails on the GitHub profile page will be considered.
