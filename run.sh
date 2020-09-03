@@ -18,7 +18,7 @@ DOCKER_PATH_TARGET_DIR="/home/selery/runningrepo"
 chmod 777 $RESULT_DIR
 
 # Mount the argument folder into the container \
-docker run --rm -t \
+docker run --rm -it \
 --env GITHUB_TOKEN=$GITHUB_TOKEN \
 --env LIBRARIES_API_KEY=$LIBRARIES_API_KEY \
 --env COINBASE_TOKEN=$COINBASE_TOKEN \
@@ -31,5 +31,5 @@ docker run --rm -t \
     --config $DOCKER_PATH_TARGET_DIR/selery.yml \
     --directory $DOCKER_PATH_TARGET_DIR \
     --result /home/selery/results \
-    --tooling /home/config/tooling_repos.yml
+    --tooling /home/selery/config/tooling_repos.yml
 

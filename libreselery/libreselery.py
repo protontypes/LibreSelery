@@ -285,7 +285,7 @@ class LibreSelery(object):
                 self.log(" -- %s" % toolingProject.html_url)
 
                 # safe tooling information
-                dependencyProjects.append(toolingProject)
+                toolingProjects.append(toolingProject)
 
             self.log("Gathering toolchain contributor information")
 
