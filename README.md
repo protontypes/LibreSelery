@@ -1,7 +1,7 @@
 <img align="center" src="./docs/logo_LibreSelery-04.png" width="400">
 
 
-**We just launched! :tada:  Please read our [introductory blog post](https://protontypes.eu/blog/2020/09/01/launch-of-protontypes/).** 
+**We just launched! :tada:  Please read our [introductory blog post](https://protontypes.eu/blog/2020/09/02/launch-of-protontypes/).** 
 
 ### Continuous Funding
 
