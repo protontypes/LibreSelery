@@ -199,6 +199,13 @@ LibreSelery is gone support multiple APIs and assets in the near future like:
 
 ## Frequently Asked Questions
 
+### What about [Goodhart's Law](https://en.wikipedia.org/wiki/Goodhart%27s_law) ("any measure which becomes a metric ceases to be a useful measure") 
+
+Solving this problem that is one of the core challenges of LibreSelery. We combine multiple weights calculated based on different project data. Via the GitHub API we can even create weights based on projects activity like merging, code review, issue creation, etc...
+By the accumulation of all weights, we try to avoid rewarding just one behavior. One of the most important metrics will be how much pull requests X have been solved based on the Y issues. We also have a minimum contribution limit that you can adjust for your project. By making all payments transparent, everyone involved can see what the distribution looked like in the past. In principle, every company has metrics for the distribution of funds. Unfortunately, these are often very non-transparent. In contrast, we try to solve the whole thing with the community. That is why our architecture allows you to add more and more weights. These weights can be balanced between each other depending on your project and community. There will never be one ideal metric that can determine the performance of totally different people. We even have a simulator on our roadmap to fine tune the weights. 
+
+Find more information on this discussion in our issue board: https://github.com/protontypes/libreselery/issues/159 https://github.com/protontypes/libreselery/issues/132
+
 ### What are the transaction fees?
 Since LibreSelery is only a tool and not a platform, we do not and cannot charge any fees. Only buying and selling cryptocurrency on Coinbase has [fees](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees). Transactions between Coinbase wallets have no fees. 
 
