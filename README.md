@@ -67,7 +67,7 @@ LibreSelery ...
 ## Features
 
 * **Transparent** payout of GitHub project contributors with every push you make to your main (master) branch.
-* Minimal changes to your GitHub project as shown in the [seleryexample](https://github.com/protontypes/seleryexample) to adapt LibreSelery with just a few steps.
+* Minimal changes to your GitHub project as shown in the [seleryaction](https://github.com/protontypes/seleryaction) to adapt LibreSelery with just a few steps.
 * Detailed [transaction history](https://github.com/protontypes/libreselery/wiki/Transaction-History) is regenerated in your github wiki every time you run LibreSelery.
 * **User defined payout configuration** by the [selery.yml](https://github.com/protontypes/libreselery/blob/master/selery.yml).
 * Dependency scanning for most languages to **include developers of your dependencies** using [Libraries.io](https://libraries.io/).
