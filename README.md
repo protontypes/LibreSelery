@@ -72,7 +72,7 @@ LibreSelery ...
 * **User defined payout configuration** by the [selery.yml](https://github.com/protontypes/libreselery/blob/master/selery.yml).
 * Dependency scanning for most languages to **include developers of your dependencies** using [Libraries.io](https://libraries.io/).
 * The money is distributed via Coinbase. Other payment methods like Uphold are currently work in progress.
-* Donators can see transparent payout logs in [GitHub Action](https://github.com/protontypes/libreselery/actions?query=workflow%3Alibreselery).
+* Donators can see transparent payout logs in [GitHub Action](https://github.com/protontypes/libreselery/actions?query=workflow%3Aseleryaction).
 * Self-hosted [donation website](https://github.com/protontypes/libreselery/wiki/Donation) for secure donations is automatically stored in the Wiki of your repository.
 * Simulate the money distribution for your repository without actually transferring money to see how the money would be distributed.
 * Automated statistic generation on how much money was paid out to which contributor.
@@ -228,7 +228,7 @@ Let's assume you have a small donation that you want to distribute within a larg
 ### Is this part of the Coinbase referral program?
 [Coinbase Help:](https://help.coinbase.com/en/coinbase/other-topics/other/the-coinbase-referral-program)
 > The Coinbase referral program lets you earn a bonus for each successful referral registered to your account! If your friend visits coinbase.com/trade and   initiates a buy or sell of $100 USD or more (or 100 USD equivalent of your domestic currency) within 180 days of opening his or her account, you both will receive a 10 USD (or 10 USD equivalent of your domestic currency) referral bonus when the order completes. Orders can take up to 4 business days to complete.
-> You can also send funds to an email address. This will register as a referral as well. 
+[...] You can also send funds to an email address. This will register as a referral as well. 
 
 LibreSelery is working on a way to make even this referral income transparent for the sending account. 
 
