@@ -638,18 +638,19 @@ class LibreSelery(object):
 
             if main_project_name.full_name != dependency_project_name.full_name:
                 repo_message = (
-                    dependency_project_name.full_name
+                    " to "
+                    + dependency_project_name.full_name
                     + ". We are using it at "
                     + main_project_name.full_name
                 )
             else:
-                repo_message = main_project_name.full_name
+                repo_message = " to " + main_project_name.full_name
 
         except Exception as e:
             print("Cannot detect remote url of git repo", e)
 
-        prefix = "@" + login_name + ": Thank you for contributing to " + repo_message
-        postfix = "Find out more about LibreSelery at https://github.com/protontypes/libreselery."
+        prefix = "@" + login_name + ": Thank you for contributing" + repo_message
+        postfix = " Find out more about LibreSelery at https://github.com/protontypes/libreselery."
         inner = (
             ": " + self.config.optional_email_message
             if self.config.optional_email_message
