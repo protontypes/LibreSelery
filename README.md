@@ -225,8 +225,12 @@ Let's assume you have a small donation that you want to distribute within a larg
 [Coinbase Offically Supported Countries:](https://www.coinbase.com/places)
 > You can always use Paypal as a transaction bridge. Find more information on the the Paypal integration into Coinbase [here](https://help.coinbase.com/en/coinbase/getting-started/adding-a-payment-method/paypal-faq)
 
- 
+### Is this part of the Coinbase referral program?
+[Coinbase Help:](https://help.coinbase.com/en/coinbase/other-topics/other/the-coinbase-referral-program)
+> The Coinbase referral program lets you earn a bonus for each successful referral registered to your account! If your friend visits coinbase.com/trade and   initiates a buy or sell of $100 USD or more (or 100 USD equivalent of your domestic currency) within 180 days of opening his or her account, you both will receive a 10 USD (or 10 USD equivalent of your domestic currency) referral bonus when the order completes. Orders can take up to 4 business days to complete.
+> You can also send funds to an email address. This will register as a referral as well. 
 
+LibreSelery is working on a way to make even this referral income transparent for the sending account. 
 
 ## Support LibreSelery
 
