@@ -12,6 +12,8 @@ class LibreSeleryConfig(object):
     }
 
     __default_config_template__ = {
+        "contribution_domains": list,
+
         "simulation": bool,
         "include_dependencies": bool,
         "include_main_repository": bool,

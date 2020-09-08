@@ -1,3 +1,6 @@
+#! /usr/bin/python3
+
+import yaml
 import subprocess
 import os
 import re
@@ -18,7 +21,7 @@ from libreselery import selery_utils
 from libreselery import os_utils
 from libreselery.visualization import visualizeTransactions
 from libreselery.commit_identifier import CommitIdentifierFromString
-
+from libreselery.contribution_distribution_engine import ContributionDistributionEngine as CDE
 
 class LibreSelery(object):
     def __init__(self, config, silent=False):
@@ -32,6 +35,8 @@ class LibreSelery(object):
         self.config = config
         # start initialization of configs
         self.initialize()
+        # kickstart cde
+        self.cde = CDE(self.config)
 
     def __del__(self):
         self.logNotify(
@@ -83,7 +88,7 @@ class LibreSelery(object):
         fundingPath = self._getFile("README.md")
         if fundingPath is not None:
             self.log("Loading funding file [%s] for bitcoin wallet" % fundingPath)
-            mdfile = open("README.md", "r")
+            mdfile = open(fundingPath, "r")
             mdstring = mdfile.read()
             urls = extractor.find_urls(mdstring)
             badge_string = "https://badgen.net/badge/LibreSelery-Donation/"
@@ -98,15 +103,15 @@ class LibreSelery(object):
             )
 
         # Create a new QR code based on the configured wallet address
-        self.log("Creating QR code PNG image for funders")
-        wallet_qrcode = QRCode(error_correction=1)
-        wallet_qrcode.add_data(self.config.bitcoin_address)
-        wallet_qrcode.best_fit()
-        wallet_qrcode.makeImpl(False, 6)
-        wallet_image = wallet_qrcode.make_image()
-        wallet_image.save(
-            os.path.join(self.config.result_dir, "public", "wallet_qrcode.png")
-        )
+        # self.log("Creating QR code PNG image for funders")
+        # wallet_qrcode = QRCode(error_correction=1)
+        # wallet_qrcode.add_data(self.config.bitcoin_address)
+        # wallet_qrcode.best_fit()
+        # wallet_qrcode.makeImpl(False, 6)
+        # wallet_image = wallet_qrcode.make_image()
+        # wallet_image.save(
+        #     os.path.join(self.config.result_dir, "public", "wallet_qrcode.png")
+        # )
 
         # load tooling url
         if self.config.include_tooling_and_runtime and self.config.tooling_path:
@@ -173,147 +178,164 @@ class LibreSelery(object):
         toolingProjects = []
         toolingContributors = []
 
-        projectUrl = git_utils.grabLocalProject(self.config.directory)
 
-        localProject = self.githubConnector.grabRemoteProjectByUrl(projectUrl)
-        self.log(
-            "Gathering project information of '%s' at  local folder '%s"
-            % (projectUrl, self.config.directory)
-        )
 
-        print("=======================================================")
-        if self.config.include_main_repository:
-            # find official repositories
-            self.log(
-                "Including contributors of root project '%s'" % localProject.full_name
-            )
 
-            self.log(" -- %s" % localProject.html_url)
-            # print(" -- %s" % [c.author.email for c in localContributors])
 
-            # safe dependency information
-            mainProjects.append(localProject)
+        contributorData_scored = self.cde.gather_()
+        print("1________________")
+        print(contributorData_scored["gather"])
+        print("2________________")
+        domainContributors_weighted = self.cde.weight_(contributorData_scored)
+        print(domainContributors_weighted["weight"])
+        print("3________________")
+        domainContributors_merged = self.cde.merge_(domainContributors_weighted)
+        print(domainContributors_merged["merge"])
+        print(domainContributors_merged["merge_norm"])
 
-            for p in mainProjects:
-                # grab contributors
-                mainContributor = self.githubConnector.grabRemoteProjectContributors(p)
-                # filter contributors
-                mainContributor = selery_utils.validateContributors(
-                    mainContributor, self.config.min_contributions_required_payout
-                )
-                # safe contributor information
-                mainContributors.extend(mainContributor)
 
-        if self.config.include_dependencies:
-            self.log(
-                "Searching for dependencies of project '%s' " % localProject.full_name
-            )
-            # scan for dependencies repositories
-            rubyScanScriptPath = os.path.join(
-                self.seleryDir, "libreselery", "ruby_extensions", "scan.rb"
-            )
-            process = subprocess.run(
-                ["ruby", rubyScanScriptPath, "--project=%s" % self.config.directory],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                universal_newlines=True,
-            )
-            # exec and evaluate stdout
-            if process.returncode == 0:
-                dependencies_json = json.loads(process.stdout)
-            else:
-                self.logError("Could not find project manifesto")
-                print(process.stderr)
-                raise Exception("Aborting")
 
-            # process dependency json
-            unique_dependency_dict = selery_utils.getUniqueDependencies(
-                dependencies_json
-            )
-            for platform, depList in unique_dependency_dict.items():
-                for dep in depList:
-                    d = dep["name"]
-                    r = dep["requirement"]
-                    print(" -- %s: %s [%s]" % (platform, d, r))
-                    libIoProject = self.librariesIoConnector.findProject(platform, d)
-                    print(
-                        "  > %s"
-                        % ("FOUND %s" % libIoProject if libIoProject else "NOT FOUND")
-                    )
-                    # gather more information for project dependency
-                    if libIoProject:
-                        libIoRepository = self.librariesIoConnector.findRepository(
-                            libIoProject
-                        )
-                        libIoDependencies = (
-                            self.librariesIoConnector.findProjectDependencies(
-                                libIoProject
-                            )
-                        )
-                        # print("  > %s" %
-                        #      [dep.project_name for dep in libIoDependencies])
-                        #    libIoProject
-                        # )
+        # projectUrl = git_utils.grabLocalProject(self.config.directory)
 
-                        if libIoRepository:
-                            gitproject = self.githubConnector.grabRemoteProject(
-                                libIoRepository.github_id
-                            )
+        # localProject = self.githubConnector.grabRemoteProjectByUrl(projectUrl)
+        # self.log(
+        #     "Gathering project information of '%s' at  local folder '%s"
+        #     % (projectUrl, self.config.directory)
+        # )
 
-                            # safe project / dependency information
-                            dependencyProjects.append(gitproject)
+        # print("=======================================================")
+        # if self.config.include_main_repository:
+        #     # find official repositories
+        #     self.log(
+        #         "Including contributors of root project '%s'" % localProject.full_name
+        #     )
 
-            self.log(
-                "Gathering dependency contributor information from Github. This will take some time for larger projects."
-            )
-            for p in dependencyProjects:
-                # grab contributors
-                depContributors = self.githubConnector.grabRemoteProjectContributors(p)
-                # filter contributors based min contribution
-                depContributors = selery_utils.validateContributors(
-                    depContributors, self.config.min_contributions_required_payout
-                )
-                # safe contributor information
-                dependencyContributors.extend(depContributors)
+        #     self.log(" -- %s" % localProject.html_url)
+        #     # print(" -- %s" % [c.author.email for c in localContributors])
 
-        if self.config.include_tooling_and_runtime and self.config.tooling_path:
-            # tooling projects will be treated as dependency projects
-            self.log("Searching for tooling of project '%s' " % localProject.full_name)
-            for toolurl in self.config.toolrepos["github"]:
-                toolingProject = self.githubConnector.grabRemoteProjectByUrl(toolurl)
-                self.log(" -- %s" % toolingProject)
-                self.log(" -- %s" % toolingProject.html_url)
+        #     # safe dependency information
+        #     mainProjects.append(localProject)
 
-                # safe tooling information
-                toolingProjects.append(toolingProject)
+        #     for p in mainProjects:
+        #         # grab contributors
+        #         mainContributor = self.githubConnector.grabRemoteProjectContributors(p)
+        #         # filter contributors
+        #         mainContributor = selery_utils.validateContributors(
+        #             mainContributor, self.config.min_contributions_required_payout
+        #         )
+        #         # safe contributor information
+        #         mainContributors.extend(mainContributor)
 
-            self.log("Gathering toolchain contributor information")
+        # if self.config.include_dependencies:
+        #     self.log(
+        #         "Searching for dependencies of project '%s' " % localProject.full_name
+        #     )
+        #     # scan for dependencies repositories
+        #     rubyScanScriptPath = os.path.join(
+        #         self.seleryDir, "libreselery", "ruby_extensions", "scan.rb"
+        #     )
+        #     process = subprocess.run(
+        #         ["ruby", rubyScanScriptPath, "--project=%s" % self.config.directory],
+        #         stdout=subprocess.PIPE,
+        #         stderr=subprocess.PIPE,
+        #         universal_newlines=True,
+        #     )
+        #     # exec and evaluate stdout
+        #     if process.returncode == 0:
+        #         dependencies_json = json.loads(process.stdout)
+        #     else:
+        #         self.logError("Could not find project manifesto")
+        #         print(process.stderr)
+        #         raise Exception("Aborting")
 
-            # scan for project contributors
-            for p in toolingProjects:
-                # grab contributors
-                toolingContributor = self.githubConnector.grabRemoteProjectContributors(
-                    p
-                )
-                # filter contributors
-                toolingContributor = selery_utils.validateContributors(
-                    toolingContributor, self.config.min_contributions_required_payout
-                )
-                # safe contributor information
-                dependencyContributors.extend(toolingContributor)
+        #     # process dependency json
+        #     unique_dependency_dict = selery_utils.getUniqueDependencies(
+        #         dependencies_json
+        #     )
+        #     for platform, depList in unique_dependency_dict.items():
+        #         for dep in depList:
+        #             d = dep["name"]
+        #             r = dep["requirement"]
+        #             print(" -- %s: %s [%s]" % (platform, d, r))
+        #             libIoProject = self.librariesIoConnector.findProject(platform, d)
+        #             print(
+        #                 "  > %s"
+        #                 % ("FOUND %s" % libIoProject if libIoProject else "NOT FOUND")
+        #             )
+        #             # gather more information for project dependency
+        #             if libIoProject:
+        #                 libIoRepository = self.librariesIoConnector.findRepository(
+        #                     libIoProject
+        #                 )
+        #                 libIoDependencies = (
+        #                     self.librariesIoConnector.findProjectDependencies(
+        #                         libIoProject
+        #                     )
+        #                 )
+        #                 # print("  > %s" %
+        #                 #      [dep.project_name for dep in libIoDependencies])
+        #                 #    libIoProject
+        #                 # )
 
-        print("=======================================================")
+        #                 if libIoRepository:
+        #                     gitproject = self.githubConnector.grabRemoteProject(
+        #                         libIoRepository.github_id
+        #                     )
 
-        self.logNotify("Gathered valid directory: %s" % self.config.directory)
-        self.logNotify("Gathered '%s' valid main repositories" % len(mainProjects))
-        self.logNotify("Gathered '%s' valid main contributors" % len(mainContributors))
+        #                     # safe project / dependency information
+        #                     dependencyProjects.append(gitproject)
 
-        self.logNotify(
-            "Gathered '%s' valid dependency repositories" % len(dependencyProjects)
-        )
-        self.logNotify(
-            "Gathered '%s' valid dependency contributors" % len(dependencyContributors)
-        )
+        #     self.log(
+        #         "Gathering dependency contributor information from Github. This will take some time for larger projects."
+        #     )
+        #     for p in dependencyProjects:
+        #         # grab contributors
+        #         depContributors = self.githubConnector.grabRemoteProjectContributors(p)
+        #         # filter contributors based min contribution
+        #         depContributors = selery_utils.validateContributors(
+        #             depContributors, self.config.min_contributions_required_payout
+        #         )
+        #         # safe contributor information
+        #         dependencyContributors.extend(depContributors)
+
+        # if self.config.include_tooling_and_runtime and self.config.tooling_path:
+        #     # tooling projects will be treated as dependency projects
+        #     self.log("Searching for tooling of project '%s' " % localProject.full_name)
+        #     for toolurl in self.config.toolrepos["github"]:
+        #         toolingProject = self.githubConnector.grabRemoteProjectByUrl(toolurl)
+        #         self.log(" -- %s" % toolingProject)
+        #         self.log(" -- %s" % toolingProject.html_url)
+
+        #         # safe tooling information
+        #         toolingProjects.append(toolingProject)
+
+        #     self.log("Gathering toolchain contributor information")
+
+        #     # scan for project contributors
+        #     for p in toolingProjects:
+        #         # grab contributors
+        #         toolingContributor = self.githubConnector.grabRemoteProjectContributors(
+        #             p
+        #         )
+        #         # filter contributors
+        #         toolingContributor = selery_utils.validateContributors(
+        #             toolingContributor, self.config.min_contributions_required_payout
+        #         )
+        #         # safe contributor information
+        #         dependencyContributors.extend(toolingContributor)
+
+        # print("=======================================================")
+
+        # self.logNotify("Gathered valid directory: %s" % self.config.directory)
+        # self.logNotify("Gathered '%s' valid main repositories" % len(mainProjects))
+        # self.logNotify("Gathered '%s' valid main contributors" % len(mainContributors))
+
+        # self.logNotify(
+        #     "Gathered '%s' valid dependency repositories" % len(dependencyProjects)
+        # )
+        # self.logNotify(
+        #     "Gathered '%s' valid dependency contributors" % len(dependencyContributors)
+        # )
 
         return (
             mainProjects,
@@ -682,3 +704,4 @@ class LibreSelery(object):
                 print("Do not print privat email data")
             else:
                 print("[%s] %s" % (sym, msg))
+

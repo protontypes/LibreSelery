@@ -24,10 +24,11 @@ def _runCommand(args):
     # let it initialize configurations,
     # arguments and environments
     selery = libreselery.LibreSelery(config)
+
     # let libreselery connect to
     # various APIs and servers to
     # allow data gathering
-    selery.connect()
+    #selery.connect()
     # let libreselery gather data
     # of all involved projects,
     # dependencies and contributors
@@ -37,6 +38,7 @@ def _runCommand(args):
         dependencyProjects,
         dependencyContributors,
     ) = selery.gather()
+    return
     # please modify the weights
     # calculation to your need
     combined_weights, combined_contributors = selery.weight(

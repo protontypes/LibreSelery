@@ -1,6 +1,10 @@
+############################################################################################
+### G E N E R A L
+############################################################################################
+
 # Configuration file for LibreSelery 
 ## simulation lets you run LibreSelery without payout or coinbase tokens
-simulation: False
+simulation: True
 
 
 ## include the contributors from target repository
@@ -20,6 +24,57 @@ min_contributions_required_payout: 1
 ## number of randomly selected dependency contributors
 included_dependency_contributor: 5
 
+
+############################################################################################
+### C O N T R I B U T I O N S
+############################################################################################
+contribution_domains:
+  - 
+    DOCUMENTATION:
+      weight: 0.25
+      actions:
+      - 
+        test_action:
+          type: test_action
+          applies_to: 
+            - "*.md"
+            - "docs/"
+          metrics:
+            - 
+              UNIFORM: ### every contributor is weighted equally if they touch the files defined
+                degradation_type: linear ### could be exponential as well
+                degradation_value: 1 ### gradient in days
+      - 
+        test_action2:
+          type: test_action
+          applies_to: 
+            - "*.md"
+            - "docs/"
+          metrics:
+            - 
+              UNIFORM: ### every contributor is weighted equally if they touch the files defined
+                degradation_type: linear ### could be exponential as well
+                degradation_value: 1 ### gradient in days
+  -
+    CODING:
+      weight: 0.40
+      actions:
+      - 
+        test_action:
+          type: test_action
+          applies_to: 
+            - "*.md"
+            - "docs/"
+          metrics:
+            - 
+              UNIFORM: ### every contributor is weighted equally if they touch the files defined
+                degradation_type: linear ### could be exponential as well
+                degradation_value: 1 ### gradient in days
+
+
+############################################################################################
+### P A Y O U T
+############################################################################################
 
 # weight configuations
 ## base weight for all included contributors
