@@ -71,14 +71,16 @@ LibreSelery ...
 * Detailed [transaction history](https://github.com/protontypes/libreselery/wiki/Transaction-History) is regenerated in your github wiki every time you run LibreSelery.
 * **User defined payout configuration** by the [selery.yml](https://github.com/protontypes/libreselery/blob/master/selery.yml).
 * Dependency scanning for most languages to **include developers of your dependencies** using [Libraries.io](https://libraries.io/).
-* The money is distributed via Coinbase. Other payment methods like Uphold are currently work in progress.
+* The funding is distributed via Coinbase. Other payment methods like Uphold are currently work in progress.
 * Donators can see transparent payout logs in [GitHub Action](https://github.com/protontypes/libreselery/actions?query=workflow%3Aseleryaction).
 * Self-hosted [donation website](https://github.com/protontypes/libreselery/wiki/Donation) for secure donations is automatically stored in the Wiki of your repository.
-* Simulate the money distribution for your repository without actually transferring money to see how the money would be distributed.
-* Automated statistic generation on how much money was paid out to which contributor.
+* Simulate the funding distribution for your repository without actually transferring payout to see how the distribution would look like.
+* Automated plot generation on how much was paid out to which developer.
+* Add additional dependencies from your runtime and development environment to the [`tooling_repos.yml`](https://github.com/protontypes/seleryaction/blob/master/tooling_repos.yml) like Docker or Linux that LibreSelery is not able to find out based on your repository information. 
 * Splitting Strategies:
    - **full split** - All contributors receive a payout according to their weight.
    - **random split** - X contributors are randomly picked using the weight as probability.
+
 
 
 <p align="center">
