@@ -61,12 +61,37 @@ class GitFileContributionAction(ContributionActionPlugin):
         """
         contributors = []
         scores = []
-
+        ### execute git commands to identify line contributions for each contributor
+        ### per file under git version control
         fileContributions = self.execGit()
+        ### iterate through all cointributions and separate contributors from files
+        uniqueFileContributions = {}
         for filename, fileContributorDict in fileContributions.items():
-            print("%s" % filename)
-            self.printFileContributorDict(fileContributorDict)
-
+            self.log("%s" % filename)
+            ### extract and log necessary contributor data for the file
+            contributorData = self.processFileContributorDict(fileContributorDict)
+            ### sum up all contributions from each user in our final
+            ### dict (contributon = lines of code)
+            for author, count in contributorData.items():
+                if author in uniqueFileContributions:
+                    uniqueFileContributions[author] += count
+                else:
+                    uniqueFileContributions[author] = count
+        ### extract contributors and scores list from summed up file contribution data
+        blob = [*uniqueFileContributions.items()]
+        contributors, linesOfCode = ([c for c, s in blob], [s for c, s in blob])
+        ### convert linesOfCode to score
+        ### we need to use given metrics for that
+        ### our action was initialized with a metric, we have to use that instead of
+        ### doing something random here
+        ###
+        ### in this simple example, each line of code represents 0.25 score points
+        ###   --  this is bad, but it works for now as a reference
+        ###   --  this cannot be a magic number, has to be configurable later
+        scores = [0.25 * loc for loc in linesOfCode]
+        ### done, return our data so that it can be used inside the CDE to
+        ### weight the contributions made
+        self.log(contributors)
         return contributors, scores
 
     ### Start User Methods
@@ -101,20 +126,28 @@ class GitFileContributionAction(ContributionActionPlugin):
                 lines = blame.split("\n")
                 filename = lines[0]
                 lines = lines[1:]
-                #print("Blame > %s [%s]" % (filename, len(lines)))
                 ### put lines through blameParser
                 fileContributorDict = self.parseBlame(lines)
+                ### filter out unwanted users, for example the one git blame adds
+                ### in case there are uncommitted changes
+                ###     "<not.committed.yet>", "Not Committed Yet"
+                if "not.committed.yet" in fileContributorDict:
+                    del fileContributorDict["not.committed.yet"]
                 fileContributions[filename] = fileContributorDict
         return fileContributions
 
-    def printFileContributorDict(self, fcDict):
+    def processFileContributorDict(self, fcDict):
+        fileContributions = {}
         for author, data in fcDict.items():
-            print("  %s [%s]" % (author, data["count"]))
+            contributionCount = data["count"]
+            self.log("  %s [%s]" % (author, contributionCount))
             for stamp, count in data["stamps"].items():
                 datetimeStr = datetime.fromtimestamp(float(stamp)).strftime(
                     "%Y-%m-%d/%H:%M:%S"
                 )
-                print("    -- %s [%s]" % (datetimeStr, count))
+                self.log("    -- %s [%s]" % (datetimeStr, count))
+            fileContributions[author] = contributionCount
+        return fileContributions
 
     def parseBlame(self, lines):
         lineDescriptions = []
@@ -124,7 +157,6 @@ class GitFileContributionAction(ContributionActionPlugin):
         newEntry = True
         for line in lines:
             if newEntry:
-                # print("######################################")
                 newEntry = False
                 ### commit hash extraction
                 key = "commit"
@@ -148,10 +180,12 @@ class GitFileContributionAction(ContributionActionPlugin):
 
         fileContributions = {}
         for d in lineDescriptions:
-            author = d["author-mail"]
+            author_mail = d["author-mail"][1:-1]  ### strip leading and ending "<>"
+            author_user = d["author"]
             timestamp = d["committer-time"]
-            key = author
-            dd = fileContributions.get(author, None)
+            # key = (author_mail, author_user)
+            key = author_mail
+            dd = fileContributions.get(key, None)
             if dd:
                 c = dd["count"]
                 stamps = dd["stamps"]
@@ -176,6 +210,7 @@ def test():
     ### define our input configuration (action) which normally comes from .yml configuration
     d = {
         "contributions_to_code": {
+            "debug": True,
             "type": "git_file_contribution_action",  ### type of action (also the name of the plugin _alias_ used!)
             "applies_to": [
                 "*.md",
@@ -199,10 +234,15 @@ def test():
     init = action.initialize_()
     if init:
         ### let us do our work
-        data = action.gather_()
-        ### visualize and evaluate test data
-        print(data)
-        success = True
+        contributors, scores = action.gather_()
+        ### visualize and finalize gathered data
+        print("Result:")
+        print("contributors:\n%s" % contributors)
+        print("scores:\n%s" % scores)
+        ### evaluate test data
+        if len(contributors) == len(scores):
+            success = True
+    ### Done
     return success
 
 

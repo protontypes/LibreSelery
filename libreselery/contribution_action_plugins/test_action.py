@@ -43,7 +43,7 @@ class MY_TEST_ACTION_PLUGIN_CLASS(ContributionActionPlugin):
         Returns:
         bool: True if successfully initialized
         """
-        print("  > PLUGIN - INIT")
+        self.log("INIT")
         return True
 
     def gather_(self, cachedContributors=[]):
@@ -59,8 +59,9 @@ class MY_TEST_ACTION_PLUGIN_CLASS(ContributionActionPlugin):
         Returns:
         tuple: (list of contributors, list of scores)
         """
-        print("  > PLUGIN - GATHER")
-        contributors = ["kikass13", "otherUser"]
+        self.log("GATHER")
+        # contributors = [("nickfiege999@gmail.com", "kikass13"), ("randomEmail@random.rand", "otherUser")]
+        contributors = ["nickfiege999@gmail.com", "randomEmail@random.rand"]
         scores = [1337.0, 500.0]
         return contributors, scores
 
@@ -81,6 +82,7 @@ def test():
     ### define our input configuration (action) which normally comes from .yml configuration
     d = {
         "test_action_id": {
+            "debug": True,
             "type": "test_action",  ### type of action (also the name of the plugin _alias_ used!)
         }
     }
@@ -92,10 +94,15 @@ def test():
     init = action.initialize_()
     if init:
         ### let us do our work
-        data = action.gather_()
-        ### visualize and evaluate test data
-        print(data)
-        success = True
+        contributors, scores = action.gather_()
+        ### visualize and finalize gathered data
+        print("Result:")
+        print("contributors:\n%s" % contributors)
+        print("scores:\n%s" % scores)
+        ### evaluate test data
+        if len(contributors) == len(scores):
+            success = True
+    ### Done
     return success
 
 

@@ -24,10 +24,25 @@ def softmax(x):
 
 
 def applyLookupDict(LOOKUP_DICT, content, targetInst):
-    for k, v in content.items():
-        f = LOOKUP_DICT.get(k)
-        if f:
+    ### apply mandatory parameters
+    for k, f in LOOKUP_DICT["mandatory"].items():
+        v = content.get(k, None)
+        if v:
             obj = f(v)
+            setattr(targetInst, k, obj)
+        else:
+            raise KeyError(
+                "Configuration parameter %s was not found in given config" % k
+            )
+    ### apply optional parameters
+    for k, f in LOOKUP_DICT["optional"].items():
+        expr, default = f
+        v = content.get(k, None)
+        if v:
+            obj = expr(v)
+            setattr(targetInst, k, obj)
+        else:
+            obj = default
             setattr(targetInst, k, obj)
 
 
@@ -117,6 +132,7 @@ class ContributionDomain(object):
 class ContributionActionPlugin(object):
     def __init__(self):
         super(ContributionActionPlugin, self).__init__()
+        self.debug = False
 
     @pluginlib.abstractmethod
     def initialize_(self, action):
@@ -125,6 +141,13 @@ class ContributionActionPlugin(object):
     @pluginlib.abstractmethod
     def gather_(self, cachedContributors=[]):
         pass
+
+    def setDebug_(self, debug):
+        self.debug = debug
+
+    def log(self, msg):
+        if self.debug:
+            print("\t[.] Plugin [%s]: '%s'" % (self._alias_, msg))
 
 
 class ContributionAction(object):
@@ -150,6 +173,9 @@ class ContributionAction(object):
             self.plugin = plugins.action.get(
                 pluginName
             )()  ### plugins.<pluginlib.Parent>.<plugin_alias>
+            ### dirty little debug flag set for newly instanced plugin
+            ### this has to be dne in a better way but works for now
+            self.plugin.setDebug_(self.debug)
             ### initialize plugin
             pluginInitSuccess = self.plugin.initialize_(self)
         return pluginInitSuccess
@@ -194,12 +220,20 @@ class ContributionTarget(object):
 
 
 DOMAIN_LOOKUP_TYPES = {
-    "weight": float,
-    "actions": lambda l: [ContributionAction(d) for d in l],
+    "mandatory": {
+        "weight": float,
+        "actions": lambda l: [ContributionAction(d) for d in l],
+    },
+    "optional": {},
 }
 
 ACTION_LOOKUP_TYPES = {
-    "type": ContributionType,
-    "applies_to": lambda l: [ContributionTarget(d) for d in l],
-    "metrics": lambda l: [ContributionMetric(d) for d in l],
+    "mandatory": {
+        "type": ContributionType,
+    },
+    "optional": {
+        "debug": (bool, False),
+        "applies_to": (lambda l: [ContributionTarget(d) for d in l], []),
+        "metrics": (lambda l: [ContributionMetric(d) for d in l], []),
+    },
 }

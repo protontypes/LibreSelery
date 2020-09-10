@@ -36,17 +36,10 @@ contribution_domains:
       - 
         test_action:
           type: test_action
-          applies_to: 
-            - "*.md"
-            - "docs/"
-          metrics:
-            - 
-              UNIFORM: ### every contributor is weighted equally if they touch the files defined
-                degradation_type: linear ### could be exponential as well
-                degradation_value: 1 ### gradient in days
       - 
         test_action2:
-          type: test_action
+          debug: True
+          type: git_file_contribution_action
           applies_to: 
             - "*.md"
             - "docs/"
@@ -62,14 +55,6 @@ contribution_domains:
       - 
         test_action:
           type: test_action
-          applies_to: 
-            - "*.md"
-            - "docs/"
-          metrics:
-            - 
-              UNIFORM: ### every contributor is weighted equally if they touch the files defined
-                degradation_type: linear ### could be exponential as well
-                degradation_value: 1 ### gradient in days
 
 
 ############################################################################################

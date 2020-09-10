@@ -180,14 +180,23 @@ class LibreSelery(object):
         toolingContributors = []
 
         contributorData_scored = self.cde.gather_()
-        print("1________________")
+        print(
+            "1______________________________________________________________________________"
+        )
         print(contributorData_scored["gather"])
-        print("2________________")
+        print(
+            "2______________________________________________________________________________"
+        )
         domainContributors_weighted = self.cde.weight_(contributorData_scored)
         print(domainContributors_weighted["weight"])
-        print("3________________")
+        print(
+            "3.1______________________________________________________________________________"
+        )
         domainContributors_merged = self.cde.merge_(domainContributors_weighted)
         print(domainContributors_merged["merge"])
+        print(
+            "3.2______________________________________________________________________________"
+        )
         print(domainContributors_merged["merge_norm"])
 
         # projectUrl = git_utils.grabLocalProject(self.config.directory)
