@@ -4,13 +4,14 @@ import sys
 from libreselery.configuration import LibreSeleryConfig
 from libreselery import libreselery
 from libreselery.initwizard import getConfigThroughWizard
-from os import path
 from pathlib import Path
 import json, yaml
 from decimal import Decimal
 import re
 
+from pkg_resources import resource_string
 
+# (root-project)
 def runCli():
     args = _parseArgs()
     args.func(args)
@@ -70,22 +71,33 @@ your project running."""
 def _initCommand(args):
     print(WelcomeMessage)
 
-    # TODO, this should take the selery.yml from the LibreSelery
-    # project to have comments.
-
-    if path.exists("./selery.yml"):
+    if Path("selery.yml").exists():
         print("ERROR: config.yml file already exists: Aborting.")
         print("Either delete local selery.yml or delete run reinit.")
         sys.exit()
 
-    config = getConfigThroughWizard()
-    LibreSeleryConfig.validateConfig(config, "./selery.yml")
-    LibreSeleryConfig(config).writeYaml("./selery.yml")
+    initConfigFile = Path(__file__).parent.parent / "selery.yml"
+
+    with initConfigFile.open() as f:
+        initConfig = yaml.load(f, Loader=yaml.FullLoader)
+        print(initConfig["simulation"])
+
+    newConfig = getConfigThroughWizard()
+
+    for (key, value) in newConfig.items():
+        pattern = "^" + key + ": (.*)$"
+        span = re.search(pattern, data, flags=re.MULTILINE).span(1)
+        value = str(value) if type(value) is Decimal else json.dumps(value)
+        data = data[: span[0]] + value + data[span[1] :]
+
+    configFile = open("./selery.yml", "wt")
+    configFile.write(data)
+    configFile.close()
 
 
 def _reinitCommand(args):
     print(WelcomeMessage)
-    if not path.exists("./selery.yml"):
+    if not Path("selery.yml").exists():
         print("ERROR: config.yml file does not exist: Aborting.")
         print("Pleas run init command first.")
         sys.exit()
@@ -93,7 +105,6 @@ def _reinitCommand(args):
     data = Path("./selery.yml").read_text()
     oldConfig = yaml.safe_load(data)
     newConfig = getConfigThroughWizard(oldConfig)
-    # updateYaml(data, oldConfig, newConfig)
 
     for (key, value) in newConfig.items():
         pattern = "^" + key + ": (.*)$"
