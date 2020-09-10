@@ -11,30 +11,30 @@ class ContributionDistributionEngine(object):
         super(ContributionDistributionEngine, self).__init__()
         ###grab relevant entries from selery cfg
         self.domains = self._extractContributionDomains(config)
-        
+
     def _extractContributionDomains(self, config):
-        ### read the config and parse usable objects for each domain configured 
+        ### read the config and parse usable objects for each domain configured
         domains = []
         for domainDict in config.contribution_domains:
-            domain = cdetypes.ContributionDomain(domainDict) 
+            domain = cdetypes.ContributionDomain(domainDict)
             domains.append(domain)
         return domains
 
     def gather_(self):
         ### our task is to apply whatever ContributionType was configured
-        ### for a specific domain and extract all 
+        ### for a specific domain and extract all
         ### contributors + their weights that fit into this domain
         print("\n\nLOOK, BUT DONT TOUCH!")
         cachedContributors = []
 
-        contributorData = {"gather" : {}}
+        contributorData = {"gather": {}}
         for domain in self.domains:
             ### execute all actions of every domain
             ### this should identify the contributos that
-            ### fit the action description / 
+            ### fit the action description /
             ### that have done the configured action successfully
             contributorScores = domain.gather_(cachedContributors=cachedContributors)
-            ### every domain has to weight it's actions 
+            ### every domain has to weight it's actions
             contributorData["gather"][domain.name] = contributorScores
             ###
         return contributorData
@@ -43,11 +43,9 @@ class ContributionDistributionEngine(object):
         ### domains have to weight action scores in relation to each other
         contributorData["weight"] = {}
         for domain in self.domains:
-            print("\n_____ weight %s" % domain.name)
             domainContent = contributorData.get("gather").get(domain.name)
             ### normalize contributor weights based on contributor scores
             contributors, weights = domain.weight_(domainContent)
-            print("weights: %s" % weights)
             contributorData["weight"][domain.name] = (contributors, weights)
         return contributorData
 
@@ -64,18 +62,14 @@ class ContributionDistributionEngine(object):
                     contributorData["merge"][contributor] += weight * domain.weight
                 else:
                     contributorData["merge"][contributor] = weight * domain.weight
-        
-        ### because we potentially downgraded our weights by multiplying with 
+
+        ### because we potentially downgraded our weights by multiplying with
         ### the given domain weight ... we have to re-normalize the weights
         ### of every contributor to be within [0 ... 1] again
         contributorData["merge_norm"] = {}
         blob = [*contributorData.get("merge").items()]
-        contributors, weights = ([c for c,w in blob], [w for c,w in blob])
+        contributors, weights = ([c for c, w in blob], [w for c, w in blob])
         newWeights = cdetypes.normalizeSum(weights)
         for contributor, weight in zip(contributors, newWeights):
             contributorData["merge_norm"][contributor] = weight
         return contributorData
-
-
-
-

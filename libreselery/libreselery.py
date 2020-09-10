@@ -21,7 +21,8 @@ from libreselery import selery_utils
 from libreselery import os_utils
 from libreselery.visualization import visualizeTransactions
 from libreselery.commit_identifier import CommitIdentifierFromString
-from libreselery.contribution_distribution_engine import ContributionDistributionEngine as CDE
+from libreselery.contribution_distribution_engine import ContributionDistributionEngine
+
 
 class LibreSelery(object):
     def __init__(self, config, silent=False):
@@ -36,7 +37,7 @@ class LibreSelery(object):
         # start initialization of configs
         self.initialize()
         # kickstart cde
-        self.cde = CDE(self.config)
+        self.cde = ContributionDistributionEngine(self.config)
 
     def __del__(self):
         self.logNotify(
@@ -178,10 +179,6 @@ class LibreSelery(object):
         toolingProjects = []
         toolingContributors = []
 
-
-
-
-
         contributorData_scored = self.cde.gather_()
         print("1________________")
         print(contributorData_scored["gather"])
@@ -192,8 +189,6 @@ class LibreSelery(object):
         domainContributors_merged = self.cde.merge_(domainContributors_weighted)
         print(domainContributors_merged["merge"])
         print(domainContributors_merged["merge_norm"])
-
-
 
         # projectUrl = git_utils.grabLocalProject(self.config.directory)
 
@@ -704,4 +699,3 @@ class LibreSelery(object):
                 print("Do not print privat email data")
             else:
                 print("[%s] %s" % (sym, msg))
-
