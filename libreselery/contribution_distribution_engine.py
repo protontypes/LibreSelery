@@ -16,7 +16,7 @@ class ContributionDistributionEngine(object):
         ### read the config and parse usable objects for each domain configured
         domains = []
         for domainDict in config.contribution_domains:
-            domain = cdetypes.ContributionDomain(domainDict)
+            domain = cdetypes.ContributionDomain(domainDict, globalConfig=config)
             domains.append(domain)
         return domains
 

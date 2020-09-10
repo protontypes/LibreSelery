@@ -44,6 +44,8 @@ class GitFileContributionAction(ContributionActionPlugin):
         Returns:
         bool: True if successfully initialized
         """
+        self.fileFilters = action.applies_to
+        self.directory = self.getGlobals().directory
         return True
 
     def gather_(self, cachedContributors=[]):
@@ -99,41 +101,53 @@ class GitFileContributionAction(ContributionActionPlugin):
     ##################################################################################
 
     def execGit(self):
-        cmd = [
+        fileFilterStr = " ".join(
+            [
+                "--exclude %s" % contributionTarget.target
+                for contributionTarget in self.fileFilters
+            ]
+        )
+        cmds = [
             "git",
             "ls-files",
-            "|",
-            "while read f;",
-            'do echo "%s$f";' % self.GITBLAMESEPERATOR,
-            "git blame -CCC --line-porcelain $f;",
-            "done",
+            "--directory",  ### directory to look for files
+            self.directory,
+            "--ignored",  ### only ls files matching the excluded files (via --exclude)
+            fileFilterStr,  ### string containing patterns for all files that should be searched for
         ]
-
+        cmd = " ".join(cmds)
         ps = subprocess.Popen(
-            " ".join(cmd), shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
         )
         stdout, stderr = ps.communicate()
-
-        fileContributions = {}
         if not stderr:
+            ### encode output
             encoded = stdout.decode("utf-8")
-            ### split output for each file (we added "\n" manually to seperate each file output)
-            fileblames = encoded.split(self.GITBLAMESEPERATOR)[
-                1:
-            ]  ### 0 entry is empty because reasons ... :D
-            for blame in fileblames:
-                ### seperate lines into array
-                lines = blame.split("\n")
-                filename = lines[0]
-                lines = lines[1:]
-                ### put lines through blameParser
-                fileContributorDict = self.parseBlame(lines)
-                ### filter out unwanted users, for example the one git blame adds
-                ### in case there are uncommitted changes
-                ###     "<not.committed.yet>", "Not Committed Yet"
-                if "not.committed.yet" in fileContributorDict:
-                    del fileContributorDict["not.committed.yet"]
-                fileContributions[filename] = fileContributorDict
+            fileList = encoded.split("\n")
+            ### exec git blame for each file
+            fileContributions = {}
+            for file in fileList:
+                cmd = "git blame -CCC --line-porcelain %s" % file
+                ps = subprocess.Popen(
+                    cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+                )
+                stdout, stderr = ps.communicate()
+                if not stderr:
+                    try:
+                        ### this can fail when blaming binary files for example, we skip those
+                        encoded = stdout.decode("utf-8")
+                    except UnicodeDecodeError as e:
+                        continue
+                    ### seperate lines into array
+                    lines = encoded.split("\n")
+                    ### put lines through blameParser
+                    fileContributorDict = self.parseBlame(lines)
+                    ### filter out unwanted users, for example the one git blame adds
+                    ### in case there are uncommitted changes
+                    ###     "<not.committed.yet>", "Not Committed Yet"
+                    if "not.committed.yet" in fileContributorDict:
+                        del fileContributorDict["not.committed.yet"]
+                    fileContributions[file] = fileContributorDict
         return fileContributions
 
     def processFileContributorDict(self, fcDict):

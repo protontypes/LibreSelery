@@ -65,8 +65,9 @@ class Contributor(object):
 class ContributionDomain(object):
     """docstrig for ClassName"""
 
-    def __init__(self, d):
+    def __init__(self, d, globalConfig={}):
         super(ContributionDomain, self).__init__()
+        self.globalConfig = globalConfig
         self.name = next(iter(d))
         content = d.get(self.name)
         # self.__dict__.update(d.get(self.name))
@@ -78,7 +79,7 @@ class ContributionDomain(object):
     def initialize_(self):
         ### in case we have actions, prepare plugins
         for action in self.actions:
-            ret = action.initialize_()
+            ret = action.initialize_(globalConfig=self.globalConfig)
             if not ret:
                 raise ImportError(
                     "ContributionActionPlugin %s could not be initialized properly! [ret: %s]"
@@ -130,6 +131,8 @@ class ContributionDomain(object):
 
 @pluginlib.Parent("action")
 class ContributionActionPlugin(object):
+    _globals_ = {}
+
     def __init__(self):
         super(ContributionActionPlugin, self).__init__()
         self.debug = False
@@ -142,8 +145,17 @@ class ContributionActionPlugin(object):
     def gather_(self, cachedContributors=[]):
         pass
 
-    def setDebug_(self, debug):
+    def setDebug(self, debug):
         self.debug = debug
+
+    def getDebug(self):
+        return self.debug
+
+    def setGlobals(self, d):
+        self._globals_ = d
+
+    def getGlobals(self):
+        return self._globals_
 
     def log(self, msg):
         if self.debug:
@@ -159,7 +171,8 @@ class ContributionAction(object):
         applyLookupDict(ACTION_LOOKUP_TYPES, content, self)
         self.plugin = None
 
-    def initialize_(self):
+    def initialize_(self, globalConfig={}):
+        self.globalConfig = globalConfig
         pluginName = self.type.name
         ### initialize/load module & plugin
         moduleName = "%s.%s" % (ACTION_PLUGIN_MODULE_PREFIX, pluginName)
@@ -175,7 +188,10 @@ class ContributionAction(object):
             )()  ### plugins.<pluginlib.Parent>.<plugin_alias>
             ### dirty little debug flag set for newly instanced plugin
             ### this has to be dne in a better way but works for now
-            self.plugin.setDebug_(self.debug)
+            self.plugin.setDebug(self.debug)
+            ### provide all global configuration parameters
+            ### for this plugin
+            self.plugin.setGlobals(self.globalConfig)
             ### initialize plugin
             pluginInitSuccess = self.plugin.initialize_(self)
         return pluginInitSuccess
