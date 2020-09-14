@@ -74,13 +74,12 @@ def _initCommand(args):
         print("Either delete local selery.yml or delete run reinit.")
         sys.exit()
 
+    # read selery.yml from libreselery, clean up all entries, and
+    # use it as a template for the new selery.yml
     initConfigFile = Path(__file__).parent.parent / "selery.yml"
-
-    with initConfigFile.open() as f:
-        initConfig = yaml.load(f, Loader=yaml.FullLoader)
-        # read selery.yml from libreselery, clean up all entries, and
-        # use it as a template for the new selery.yml
-        configTemplate = re.sub("^([\w]*: ).*$", "\\1", f.read(), flags=re.MULTILINE)
+    configTemplate = re.sub(
+        "^([\w]*: ).*$", "\\1", initConfigFile.read_text(), flags=re.MULTILINE
+    )
 
     newConfig = getConfigThroughWizard()
 
