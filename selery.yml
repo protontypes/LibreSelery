@@ -7,7 +7,7 @@ simulation: False
 include_main_repository: True
 
 ## include the dependencies of the target folder. This requires a libraries.io token.
-include_dependencies: False
+include_dependencies: True
 
 ## include the tooling and runtime from file tooling_repos.yml
 ## You can add tools, which will not be detected by the dependency scanner.
@@ -18,7 +18,7 @@ include_tooling_and_runtime: False
 min_contributions_required_payout: 1
 
 ## number of randomly selected dependency contributors
-included_dependency_contributor: 0
+included_dependency_contributor: 5
 
 
 # weight configuations
@@ -34,7 +34,7 @@ activity_since_commit: 'tag_regex:v[0-9]+\.[0-9]+\.[0-9]+' # until last tag matc
 # activity_since_commit: none # whole history
 
 ## weight for contributors in the activity time range defined by `activity_since_commit`
-activity_weight: 30
+activity_weight: 10
 
 # Strategy how every payout is split among contributors.
 ## The weights are used to decide which contributors receive how much money.
@@ -43,7 +43,7 @@ activity_weight: 30
 split_strategy: "full_split"
 
 ## the amount of payout per run that is used for all split strategies
-payout_per_run: 0.002000
+payout_per_run: 0.003000
 ## the minimum payout per contributor. Below that number the payout is skipped to avoid bother contributors with very small payout. 
 min_payout_per_contributor: 0.00005
 
@@ -53,7 +53,7 @@ min_payout_per_contributor: 0.00005
 ## LibreSelery does fail if this does not apply.
 
 ## numbers of total contributors payout per run at random split
-random_split_picked_contributors: 3
+random_split_picked_contributors: 0
 
 ## the amount of btc send per user at random_split
 random_split_btc_per_picked_contributor: 0.000000
@@ -67,7 +67,7 @@ bitcoin_address: "3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w"
 perform_wallet_validation: True
 
 ## Send payout notification emails by coinbase to contributors?
-send_email_notification: False
+send_email_notification: True
 
 ## message included in every coinbase email. (after the automatically generated thank you message.)
 optional_email_message: "You are part of a new experimental funding concept for free and open projects. Enjoy your fresh Selery."

@@ -23,6 +23,7 @@ RUN bundle install
 COPY . /home/selery/libreselery/
 ### create other useful dirs
 RUN mkdir -p /home/selery/results
+RUN mkdir -p /home/selery/config
 
 WORKDIR /home/selery/libreselery
 
@@ -33,6 +34,7 @@ RUN chown -R selery:selery /usr/local/bin
 ### prepare selery user permissions
 RUN chown -R selery:selery /home/selery/libreselery
 RUN chown -R selery:selery /home/selery/results
+RUN chown -R selery:selery /home/selery/config
 
 ### change user
 USER selery

@@ -283,7 +283,7 @@ class LibreSelery(object):
                 self.log(" -- %s" % toolingProject.html_url)
 
                 # safe tooling information
-                dependencyProjects.append(toolingProject)
+                toolingProjects.append(toolingProject)
 
             self.log("Gathering toolchain contributor information")
 
@@ -571,6 +571,7 @@ class LibreSelery(object):
             donation_website = (
                 "<p align='center'><b>Donate to this address to support LibreSelery:</b><br><b></b><br><b>BTC address:</b><br><b>"
                 + self.config.bitcoin_address
+                + "<br><br><b>To get on the auto generated thank you website add a message in the following format to your message<br><b>selery:Your Name:Your Public Message.</b>"
                 + "</b><br><img src='libreselery/wallet_qrcode.png'></p>"
             )
 
@@ -580,6 +581,16 @@ class LibreSelery(object):
 
             with open(donationPagePath, "w") as write_file:
                 print(donation_website, file=write_file)
+
+            self.log("Creating transaction history website")
+            transaction_history = "<img src='libreselery/wallet_balance_per_day.png'><img src='libreselery/transactions_per_day.png'><img src='libreselery/transactions_per_month.png'><img src='libreselery/transactions_per_user.png'>"
+
+            transactionPagePath = os.path.join(
+                self.config.result_dir, "public", "Transaction-History.md"
+            )
+
+            with open(transactionPagePath, "w") as write_file:
+                print(transaction_history, file=write_file)
 
         else:
             ### simulate a receipt
@@ -625,18 +636,19 @@ class LibreSelery(object):
 
             if main_project_name.full_name != dependency_project_name.full_name:
                 repo_message = (
-                    dependency_project_name.full_name
+                    " to "
+                    + dependency_project_name.full_name
                     + ". We are using it at "
                     + main_project_name.full_name
                 )
             else:
-                repo_message = main_project_name.full_name
+                repo_message = " to " + main_project_name.full_name
 
         except Exception as e:
             print("Cannot detect remote url of git repo", e)
 
-        prefix = "@" + login_name + ": Thank you for contributing to " + repo_message
-        postfix = "Find out more about LibreSelery at https://github.com/protontypes/libreselery."
+        prefix = "@" + login_name + ": Thank you for contributing" + repo_message
+        postfix = " Find out more about LibreSelery at https://github.com/protontypes/libreselery."
         inner = (
             ": " + self.config.optional_email_message
             if self.config.optional_email_message
