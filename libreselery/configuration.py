@@ -75,11 +75,19 @@ class LibreSeleryConfig(object):
                     "Error in config: '%s'\n'%s:' Invalid attribute '%s'"
                     % (path, LibreSeleryConfig.__name__, k)
                 )
-            # hack to work with the fact that the init wizard uses the
-            # Decimal type, but LibreSelery doesn't.
-            if type(v) == Decimal:
+            if v is None:
+                # hack none values to have the correct type
+                v = type_()
+                d[k] = v
+            elif type(v) == Decimal:
+                # hack to work with the fact that the init wizard uses the
+                # Decimal type, but LibreSelery doesn't.
                 v = float(v)
                 d[k] = v
+            elif type(v) == int and type_ == float:
+                v = float(v)
+                d[k] = v
+
             # check if type of config entry is valid
             if type(v) != type_:
                 raise ValueError(

@@ -221,7 +221,7 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
                 prompt(
                     makeColorPrompt("included_dependency_contributor"),
                     default=str(
-                        defaultsDict.get("included_dependency_contributor"), ""
+                        defaultsDict.get("included_dependency_contributor", "")
                     ),
                     validator=IntegerValidator(),
                 )

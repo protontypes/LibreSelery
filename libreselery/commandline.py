@@ -102,15 +102,22 @@ def _reinitCommand(args):
         print("Pleas run init command first.")
         sys.exit()
 
-    data = Path("./selery.yml").read_text()
+    path = Path("./selery.yml")
+    data = path.read_text()
     oldConfig = yaml.safe_load(data)
+    LibreSeleryConfig.validateConfig(oldConfig, path)
     newConfig = getConfigThroughWizard(oldConfig)
 
     for (key, value) in newConfig.items():
         pattern = "^" + key + ": (.*)$"
-        span = re.search(pattern, data, flags=re.MULTILINE).span(1)
+        match = re.search(pattern, data, flags=re.MULTILINE)
         value = str(value) if type(value) is Decimal else json.dumps(value)
-        data = data[: span[0]] + value + data[span[1] :]
+        if match:
+            span = match.span(1)
+            data = data[: span[0]] + value + data[span[1] :]
+        else:
+            ensureNewLine = "\n" if data[-1] != "\n" else ""
+            data = "".join([data, ensureNewLine, key, ": ", value, "\n"])
 
     configFile = open("./selery.yml", "wt")
     configFile.write(data)
