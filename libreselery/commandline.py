@@ -9,9 +9,7 @@ import json, yaml
 from decimal import Decimal
 import re
 
-from pkg_resources import resource_string
 
-# (root-project)
 def runCli():
     args = _parseArgs()
     args.func(args)
@@ -80,18 +78,21 @@ def _initCommand(args):
 
     with initConfigFile.open() as f:
         initConfig = yaml.load(f, Loader=yaml.FullLoader)
-        print(initConfig["simulation"])
+        # read selery.yml from libreselery, clean up all entries, and
+        # use it as a template for the new selery.yml
+        configTemplate = re.sub("^([\w]*: ).*$", "\\1", f.read(), flags=re.MULTILINE)
 
     newConfig = getConfigThroughWizard()
 
+    # fill `configTemplate` with entries date from the config wizard.
     for (key, value) in newConfig.items():
-        pattern = "^" + key + ": (.*)$"
-        span = re.search(pattern, data, flags=re.MULTILINE).span(1)
+        pattern = "^" + key + ": $"
+        span = re.search(pattern, configTemplate, flags=re.MULTILINE).span()
         value = str(value) if type(value) is Decimal else json.dumps(value)
-        data = data[: span[0]] + value + data[span[1] :]
+        configTemplate = configTemplate[: span[1]] + value + configTemplate[span[1] :]
 
     configFile = open("./selery.yml", "wt")
-    configFile.write(data)
+    configFile.write(configTemplate)
     configFile.close()
 
 

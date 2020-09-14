@@ -42,7 +42,6 @@ setup(
     data_files=[
         ("libreselery/ruby_extensions", ["libreselery/ruby_extensions/scan.rb"]),
     ],
-    # package_dir={"mydata": "."}
     package_dir={"libreselery": "libreselery"},
     package_data={"libreselery": ["../selery.yml"]},
 )
