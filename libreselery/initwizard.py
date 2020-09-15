@@ -271,13 +271,12 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
             activity_since_commit_value = defaultsDict.get("activity_since_commit", "")
             defaultN = "1"
             defaultCustomStr = ""
+            match = re.fullmatch(r"commit:HEAD~(\d+)", activity_since_commit_value)
             if activity_since_commit_value == "":
                 default = "1"
             elif activity_since_commit_value == r"tag_regex:v?[0-9]+\.[0-9]+\.[0-9]+":
                 default = "2"
-            elif match := re.fullmatch(
-                r"commit:HEAD~(\d+)", activity_since_commit_value
-            ):
+            elif match:
                 default = "3"
                 defaultN = match[1]
             else:
