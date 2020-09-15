@@ -36,8 +36,12 @@ setup(
         "qrcode",
         "wheel",
     ],
-    packages=["libreselery",],
-    scripts=["scripts/selery",],
+    packages=[
+        "libreselery",
+    ],
+    scripts=[
+        "scripts/selery",
+    ],
     ### add additional files to $TARGET_DIR containing [$SOURCE_FILES]
     data_files=[
         ("libreselery/ruby_extensions", ["libreselery/ruby_extensions/scan.rb"]),
