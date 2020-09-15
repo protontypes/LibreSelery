@@ -525,7 +525,7 @@ class LibreSelery(object):
                 f.write(str(self.receiptStr))
 
             amount, currency = self.coinConnector.balancecheck()
-            self.log("Chech account wallet balance [%s] : [%s]" % (amount, currency))
+            self.log("Check account wallet balance [%s] : [%s]" % (amount, currency))
 
             native_amount, native_currency = self.coinConnector.native_balancecheck()
             self.log(

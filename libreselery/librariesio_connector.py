@@ -35,7 +35,7 @@ class LibrariesIOConnector(selery_utils.Connector):
     def __init__(self, key):
         super(LibrariesIOConnector, self).__init__()
         # this import has to be here, because it will INSTANTLY search for LIBRARIES_API_KEY
-        # instead of beeing actualy coded properly
+        # instead of being actually coded properly
         # there is no proper api for this stupid wrapper and so we do this here
         # to check for access to the library
         from pybraries.search import Search

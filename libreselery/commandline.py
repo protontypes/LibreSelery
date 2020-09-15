@@ -99,7 +99,7 @@ def _reinitCommand(args):
     print(WelcomeMessage)
     if not Path("selery.yml").exists():
         print("ERROR: config.yml file does not exist: Aborting.")
-        print("Pleas run init command first.")
+        print("Please run init command first.")
         sys.exit()
 
     path = Path("./selery.yml")
