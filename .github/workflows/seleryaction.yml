@@ -53,7 +53,7 @@ jobs:
       - name: Give everyone permission to write folder
         run: chmod -R a+rw $results_folder $config_folder
 
-      - name: Pass libreselery configuation from target project
+      - name: Pass libreselery configuration from target project
         run:  |
                echo "Use selery.yml from target project directory: ${TARGET_PROJECT}"
                cat ${TARGET_PROJECT}/selery.yml

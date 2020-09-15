@@ -354,7 +354,7 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
                 )
             )
             print("Each picked contributor will receive %s BTC." % str(answer))
-            print("Currently woth $%s (US)" % str(answer * bitcoinPrice))
+            print("Currently worth $%s (US)" % str(answer * bitcoinPrice))
             answers["random_split_btc_per_picked_contributor"] = answer
 
             printQuestion("How many contributors should get picked at random picking?")
@@ -378,7 +378,7 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
             )
         )
         print("Each run of LibreSelery will send %s BTC" % str(answer))
-        print("Currently woth $%s (US)" % str(answer * bitcoinPrice))
+        print("Currently worth $%s (US)" % str(answer * bitcoinPrice))
         answers["payout_per_run"] = answer
 
         printQuestion("What should be the minimum payment per contributor?")
@@ -389,7 +389,7 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
                 validator=DecimalValidator(),
             )
         )
-        print("Currently woth %s$" % str(answer * bitcoinPrice))
+        print("Currently worth %s$" % str(answer * bitcoinPrice))
         answers["min_payout_per_contributor"] = answer
 
         printQuestion(
