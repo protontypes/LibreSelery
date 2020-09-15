@@ -215,7 +215,7 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
 
         if answers["include_tooling_and_runtime"]:
             print(
-                "To how many contributors of dependency projects do you want to payout money?"
+                "To how many contributors of dependency projects do you want to payout to?"
             )
             answer = int(
                 prompt(
@@ -226,7 +226,9 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
                     validator=IntegerValidator(),
                 )
             )
-            print("%d contributors from the dependencies will receive money." % answer)
+            print(
+                "%d contributors from the dependencies will receive funding." % answer
+            )
             answers["included_dependency_contributor"] = answer
 
         printQuestion(
@@ -313,11 +315,11 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
         printQuestion(
             """\
             For some payment services the fees can become significant if a
-            large amount of transactions with a small amount of money
+            large amount of transactions with a small investment
             is performed. For this use case, a random picking behavior
             for contributors has been developed. This mode only pays
             out to a few randomly picked contributors instead of all
-            of them. Full split mode splits all money. Possible values are:"""
+            of them. Full split mode splits all funding. Possible values are:"""
         )
         print("1: full_split")
         print("2: random_split")
