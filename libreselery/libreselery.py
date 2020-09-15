@@ -245,8 +245,10 @@ class LibreSelery(object):
                         libIoRepository = self.librariesIoConnector.findRepository(
                             libIoProject
                         )
-                        libIoDependencies = self.librariesIoConnector.findProjectDependencies(
-                            libIoProject
+                        libIoDependencies = (
+                            self.librariesIoConnector.findProjectDependencies(
+                                libIoProject
+                            )
                         )
                         # print("  > %s" %
                         #      [dep.project_name for dep in libIoDependencies])
@@ -508,7 +510,7 @@ class LibreSelery(object):
                 receipt = self.coinConnector.payout(
                     contributor.stats.author.email,
                     send_amount,
-                    skip_email=not self.config.send_email_notification,
+                    not self.config.send_email_notification,
                     description=self._getEmailNote(
                         contributor.stats.author.login, contributor.fromProject
                     ),
