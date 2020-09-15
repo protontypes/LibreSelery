@@ -5,11 +5,6 @@
 
 ### Continuous Funding
 
-* Attract new developers by sharing donations with your dependency tree.
-* Strengthen the bond with existing developers.
-* Reward the contributors keeping the project up to date.
-* Attract new donors by distributing donations to the people actually working on the project.
-
 LibreSelery is a tool to distribute funding in free and open source projects. With a new funding model, it offers transparent, automated and adaptable compensation of contributors. The aim is to replace the middleman in donation distribution as far as possible with a free and transparent algorithm. Unlike most other donation systems LibreSelery only offers a decentralized tool and **not a platform**.
 
 [![Join the chat at https://gitter.im/protontypes/LibreSelery](https://badges.gitter.im/protontypes/LibreSelery.svg)](https://gitter.im/protontypes/LibreSelery?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -23,6 +18,13 @@ LibreSelery is a tool to distribute funding in free and open source projects. Wi
 ![Balance EUR](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/native_balance_badge.json&style=flat&logo=bitcoin)
 [![Donate with bitcoin](https://badgen.net/badge/Donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w/orange?icon=bitcoin)](https://github.com/protontypes/libreselery/wiki/Donation)
 [![Transaction History](https://badgen.net/badge/icon/Transaction%20History?icon=bitcoin&label)](https://github.com/protontypes/libreselery/wiki/Transaction-History)
+
+### Benfits for your Project
+
+* Attract new developers by sharing donations with your dependency tree.
+* Strengthen the bond with existing developers.
+* Reward the contributors keeping the project up to date.
+* Attract new donors by distributing donations to the people actually working on the project.
 
 ## Concept
 
