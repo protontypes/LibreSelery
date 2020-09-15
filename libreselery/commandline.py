@@ -4,7 +4,6 @@ import sys
 from libreselery.configuration import LibreSeleryConfig
 from libreselery import libreselery
 from libreselery.initwizard import getConfigThroughWizard
-from os import path
 from pathlib import Path
 import json, yaml
 from decimal import Decimal
@@ -70,36 +69,55 @@ your project running."""
 def _initCommand(args):
     print(WelcomeMessage)
 
-    # TODO, this should take the selery.yml from the LibreSelery
-    # project to have comments.
-
-    if path.exists("./selery.yml"):
+    if Path("selery.yml").exists():
         print("ERROR: config.yml file already exists: Aborting.")
         print("Either delete local selery.yml or delete run reinit.")
         sys.exit()
 
-    config = getConfigThroughWizard()
-    LibreSeleryConfig.validateConfig(config, "./selery.yml")
-    LibreSeleryConfig(config).writeYaml("./selery.yml")
+    # read selery.yml from libreselery, clean up all entries, and
+    # use it as a template for the new selery.yml
+    initConfigFile = Path(__file__).parent.parent / "selery.yml"
+    configTemplate = re.sub(
+        "^([\w]*: ).*$", "\\1", initConfigFile.read_text(), flags=re.MULTILINE
+    )
+
+    newConfig = getConfigThroughWizard()
+
+    # fill `configTemplate` with entries date from the config wizard.
+    for (key, value) in newConfig.items():
+        pattern = "^" + key + ": $"
+        span = re.search(pattern, configTemplate, flags=re.MULTILINE).span()
+        value = str(value) if type(value) is Decimal else json.dumps(value)
+        configTemplate = configTemplate[: span[1]] + value + configTemplate[span[1] :]
+
+    configFile = open("./selery.yml", "wt")
+    configFile.write(configTemplate)
+    configFile.close()
 
 
 def _reinitCommand(args):
     print(WelcomeMessage)
-    if not path.exists("./selery.yml"):
+    if not Path("selery.yml").exists():
         print("ERROR: config.yml file does not exist: Aborting.")
         print("Pleas run init command first.")
         sys.exit()
 
-    data = Path("./selery.yml").read_text()
+    path = Path("./selery.yml")
+    data = path.read_text()
     oldConfig = yaml.safe_load(data)
+    LibreSeleryConfig.validateConfig(oldConfig, path)
     newConfig = getConfigThroughWizard(oldConfig)
-    # updateYaml(data, oldConfig, newConfig)
 
     for (key, value) in newConfig.items():
         pattern = "^" + key + ": (.*)$"
-        span = re.search(pattern, data, flags=re.MULTILINE).span(1)
+        match = re.search(pattern, data, flags=re.MULTILINE)
         value = str(value) if type(value) is Decimal else json.dumps(value)
-        data = data[: span[0]] + value + data[span[1] :]
+        if match:
+            span = match.span(1)
+            data = data[: span[0]] + value + data[span[1] :]
+        else:
+            ensureNewLine = "\n" if data[-1] != "\n" else ""
+            data = "".join([data, ensureNewLine, key, ": ", value, "\n"])
 
     configFile = open("./selery.yml", "wt")
     configFile.write(data)
