@@ -58,6 +58,7 @@ jobs:
                echo "Use selery.yml from target project directory: ${TARGET_PROJECT}"
                cat ${TARGET_PROJECT}/selery.yml
                cp ${TARGET_PROJECT}/selery.yml $config_folder/selery.yml
+               cp ${TARGET_PROJECT}/tooling_repos.yml $config_folder/tooling_repos.yml 2>/dev/null
 
       - name: Run LibreSelery on its own sources
         run:  >
