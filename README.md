@@ -242,7 +242,7 @@ Let's assume you have a small donation that you want to distribute within a larg
 > After 30 days, any cryptocurrency sent via email that has not been claimed by the recipient will be returned to the sender.     
 
 ### My Country is not supported by Coinbase. How do I withdraw my donation? 
-[Coinbase Offically Supported Countries:](https://www.coinbase.com/places)
+[Coinbase Officially Supported Countries:](https://www.coinbase.com/places)
 > You can always use Paypal as a transaction bridge. Find more information on the the Paypal integration into Coinbase [here](https://help.coinbase.com/en/coinbase/getting-started/adding-a-payment-method/paypal-faq)
 
 ### Is this part of the Coinbase referral program?
@@ -263,7 +263,7 @@ Those who have contributed to the master branch receive emails with cryptocurren
 Find out more in the [contribution guide](https://github.com/protontypes/libreselery/wiki/Contribution-Guide) or look into the [good first issue]( https://github.com/protontypes/libreselery/labels/good%20first%20issue) labels to get into the project with some first simple tasks.
 
 ## Contact and Feedback
-For further information please contact us at `team_at_protontypes.eu`, join our [Gitter chat](https://gitter.im/protontypes/libreselery) or check out our [wiki](https://github.com/protontypes/libreselery/wiki). The organisation behind LibreSelery is `protontypes`. We are bulding an "Open Accelerator for Free and Sustainable Innovation" based on LibreSelery. Find out more on https://protontypes.eu/.
+For further information please contact us at `team_at_protontypes.eu`, join our [Gitter chat](https://gitter.im/protontypes/libreselery) or check out our [wiki](https://github.com/protontypes/libreselery/wiki). The organisation behind LibreSelery is `protontypes`. We are building an "Open Accelerator for Free and Sustainable Innovation" based on LibreSelery. Find out more on https://protontypes.eu/.
 
 <p align="center">
   <img src="docs/selery_workflow.png" width="500">
