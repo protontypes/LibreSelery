@@ -115,41 +115,52 @@ git clone https://github.com/protontypes/libreselery.git
 cd libreselery
 docker build -t libreselery .
 ```
-3. Create a token file for your user, where you store API keys and secrets.
+
+3. Clone your target repository.
+```bash
+cd ~
+git clone <target_repository>
+```
+
+4. Create a token file for your user, where you store API keys and secrets. The scope of your github token should not include any additional permissions beyond the standard minimum scope. Find out more about how to create GitHub tokens [here](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). 
 
 ```bash
 mkdir -p ~/.libreselery/secrets ~/.libreselery/results/public
 touch ~/.libreselery/secrets/tokens.env
 ```
 
-4. LibreSelery just needs API tokens from [GitHub](https://github.com/settings/tokens) when `simulation: True` and `include_dependencies: False` in your `selery.yml`. The scope of your github token should not include any additional permissions beyond the standard minimum scope. Find out more about how to create GitHub tokens [here](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Replace XXXXX with the Coinbase and [Libraries.io](https://libraries.io/api) tokens to get started without creating an actual accounts for these APIs.
+5. Copy a [selery.yml](https://github.com/protontypes/seleryexample) into your <target_repository>.
 
+6. Libreselery currently supports Coinbase. To enable valid payouts using Coinbase:
+  * Create a dedicated Coinbase account with limited amounts. Coinbase does not support sending emails to yourself. That's why you should use a dedicated email address when you are the owner of the Coinbase account and contributor of the project. Otherwise LibreSelery will skip these payouts.
+  * Buy some cryptocurrency. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transferring money into the Coinbase account.
+  * Configure the [access control settings](https://github.com/protontypes/libreselery/wiki/Coinbase-Token-API-Permission-for-LibreSelery) of the automated Coinbase wallet.
+  * Never transfer or store large values with automated cryptocurrency wallets. Use [recurring automated buys](https://blog.coinbase.com/easier-recurring-buys-and-sells-on-coinbase-9a3cd7ea934e) to recharge you wallet on a regular base to avoid financial and security risks. Coinbase does not charge for transferring cryptocurrency from one Coinbase wallet to another.
+  * Add your Coinbase API keys and secrets to the newly created file (`~/.libreselery/tokens.env`).  Never store these tokens in a public repository. Replace XXXXX with the Coinbase and [Libraries.io](https://libraries.io/api) tokens to get started without creating an actual accounts for these APIs.
+  ```bash
+  COINBASE_TOKEN=<your_coinbase_token>
+  COINBASE_SECRET=<your_coinbase_secret>
+  GITHUB_TOKEN=<your_github_tokens>
+  LIBRARIES_API_KEY=<your_libaries_io_tokens>
+  ```
 
-5. Clone your target repository.
-```bash
-git clone <target_repository>
-```
-6. Copy a [selery.yml](https://github.com/protontypes/seleryexample) into your <target_repository>.  Set `simulation: False` in your selery.yml to enable payouts with LibreSelery.
-7. Adjust and test different configurations in simulation mode on your repository project.
-8. Create a dedicated Coinbase account with limited amounts. Coinbase does not support sending emails to yourself. That's why you should use a dedicated email address when you are the owner of the Coinbase account and contributor of the project. Otherwise LibreSelery will skip these payouts.
-9. Buy some cryptocurrency. See the [price list](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees.html) for transferring money into the Coinbase account.
-10. Configure the [access control settings](https://github.com/protontypes/libreselery/wiki/Coinbase-Token-API-Permission-for-LibreSelery) of the automated Coinbase wallet.
-11. Never transfer or store large values with automated cryptocurrency wallets. Use [recurring automated buys](https://blog.coinbase.com/easier-recurring-buys-and-sells-on-coinbase-9a3cd7ea934e) to recharge you wallet on a regular base to avoid financial and security risks. Coinbase does not charge for transferring cryptocurrency from one Coinbase wallet to another.
-12. Add your Coinbase API keys and secrets to the newly created file (`~/.libreselery/tokens.env`).  Never store these tokens in a public repository .
+7. If you don't have a Coinbase account, the payouts can be simulated. To enable simulation mode:
+  * Set `simulation: True` and `include_dependencies: False` in your `selery.yml` in your <target_repository>.
+  * Adjust and test different configurations in `selery.yml` according to your requirements. 
+  * LibreSelery just needs API tokens from [GitHub](https://github.com/settings/tokens) in simulation mode. Edit the `~/.libreselery/tokens.env` as follows:
+  ```bash
+  COINBASE_TOKEN=XXXXX
+  COINBASE_SECRET=XXXXX
+  GITHUB_TOKEN=<your_github_tokens>
+  LIBRARIES_API_KEY=XXXXX
+  ```
 
-```bash
-COINBASE_TOKEN=<your_coinbase_token>
-COINBASE_SECRET=<your_coinbase_secret>
-GITHUB_TOKEN=<your_github_tokens>
-LIBRARIES_API_KEY=<your_libaries_io_tokens>
-```
-
-13. Make the token file read only.
+8. Make the token file read only.
 ```bash
 chmod 400 ~/.libreselery/secrets/tokens.env
 ```
 
-14. Send cryptocurrency to weighted random product contributors with a valid visible email address on GitHub:
+9. Send cryptocurrency to weighted random product contributors with a valid visible email address on GitHub:
 
 ```bash
 env $(cat ~/.libreselery/secrets/tokens.env) ./run.sh <target_repository>
@@ -177,7 +188,7 @@ pip3 install .
 export PATH=$HOME/.local/bin:$PATH
 ```
 
-4. Follow Step 3 to 14 of the [Running with Docker](#Running-with-Docker) instructions. They should not differ at this steps.
+4. Follow Step 3 to 9 of the [Running with Docker](#Running-with-Docker) instructions. They should not differ at this steps.
 
 5. Run LibreSelery on your target project and enjoy fresh Selery.
 
