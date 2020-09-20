@@ -12,7 +12,7 @@ include_dependencies: True
 ## include the tooling and runtime from file tooling_repos.yml
 ## You can add tools, which will not be detected by the dependency scanner.
 ## For example command line tools. If you want to support the LibreSelery project, include it in tooling_repos.yml
-include_tooling_and_runtime: False
+include_tooling_and_runtime: True
 
 ## minimum number of commits to be considered as contributor
 min_contributions_required_payout: 1
