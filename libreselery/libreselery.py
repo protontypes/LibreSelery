@@ -650,7 +650,7 @@ class LibreSelery(object):
             print("Cannot detect remote url of git repo", e)
 
         prefix = "@" + login_name + ": Thank you for contributing" + repo_message
-        postfix = " Find out more about LibreSelery at https://github.com/protontypes/libreselery."
+        postfix = " Find out more about LibreSelery at https://github.com/protontypes/libreselery and #LibreSelery"
         inner = (
             ": " + self.config.optional_email_message
             if self.config.optional_email_message

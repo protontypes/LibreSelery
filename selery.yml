@@ -18,7 +18,7 @@ include_tooling_and_runtime: False
 min_contributions_required_payout: 1
 
 ## number of randomly selected dependency contributors
-included_dependency_contributor: 5
+included_dependency_contributor: 10
 
 
 # weight configurations
@@ -43,7 +43,7 @@ activity_weight: 10
 split_strategy: "full_split"
 
 ## the amount of payout per run that is used for all split strategies
-payout_per_run: 0.003000
+payout_per_run: 0.004000
 ## the minimum payout per contributor. Below that number the payout is skipped to avoid bother contributors with very small payout. 
 min_payout_per_contributor: 0.00005
 
