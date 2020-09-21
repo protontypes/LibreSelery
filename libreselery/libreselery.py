@@ -31,8 +31,11 @@ class LibreSelery(object):
         # set our libreselery project dir, which is '../../this_script'
         self.seleryDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.silent = silent
-        self.librariesIoConnector = None
-        self.githubConnector = None
+        ### create connector objects
+        self.connectors = {}
+        self.connectors["librariesIo"] = None
+        self.connectors["github"] = None
+        self.connectors["coinbase"] = None
         self.config = config
         # start initialization of configs
         self.initialize()
@@ -149,55 +152,30 @@ class LibreSelery(object):
         # establish connection to restapi services
 
         self.log("Establishing Github connection")
-        self.githubConnector = self._execCritical(
+        self.connectors["github"] = self._execCritical(
             lambda x: GithubConnector(x), [self.config.github_token]
         )
         self.logNotify("Github connection established")
 
         if self.config.include_dependencies:
             self.log("Establishing LibrariesIO connection")
-            self.librariesIoConnector = self._execCritical(
+            self.connectors["librariesIo"] = self._execCritical(
                 lambda x: LibrariesIOConnector(x), [self.config.libraries_api_key]
             )
             self.logNotify("LibrariesIO connection established")
 
         if not self.config.simulation:
             self.log("Establishing Coinbase connection")
-            self.coinConnector = CoinbaseConnector(
+            self.connectors["coinbase"] = CoinbaseConnector(
                 self.config.coinbase_token, self.config.coinbase_secret
             )
             self.logNotify("Coinbase connection established")
 
+        ### update connectors of cde
+        self.cde.updateGlobals(connectors=self.connectors)
+
     def gather(self):
-
-        mainProjects = []
-        mainContributors = []
-
-        dependencyProjects = []
-        dependencyContributors = []
-
-        toolingProjects = []
-        toolingContributors = []
-
-        contributorData_scored = self.cde.gather_()
-        print(
-            "1______________________________________________________________________________"
-        )
-        print(contributorData_scored["gather"])
-        print(
-            "2______________________________________________________________________________"
-        )
-        domainContributors_weighted = self.cde.weight_(contributorData_scored)
-        print(domainContributors_weighted["weight"])
-        print(
-            "3.1______________________________________________________________________________"
-        )
-        domainContributors_merged = self.cde.merge_(domainContributors_weighted)
-        print(domainContributors_merged["merge"])
-        print(
-            "3.2______________________________________________________________________________"
-        )
-        print(domainContributors_merged["merge_norm"])
+        return
 
         # projectUrl = git_utils.grabLocalProject(self.config.directory)
 
@@ -341,73 +319,93 @@ class LibreSelery(object):
         #     "Gathered '%s' valid dependency contributors" % len(dependencyContributors)
         # )
 
-        return (
-            mainProjects,
-            mainContributors,
-            dependencyProjects,
-            dependencyContributors,
-        )
+        # return (
+        #     mainProjects,
+        #     mainContributors,
+        #     dependencyProjects,
+        #     dependencyContributors,
+        # )
 
     def weight(
         self, mainProjects, mainContributors, dependencyProjects, dependencyContributors
     ):
+        return
 
-        if len(dependencyContributors):
-            self.log(
-                "Add %s dependency contributor to main contributor by random choice."
-                % self.config.included_dependency_contributor
-            )
-            randomDependencyContributors = random.choices(
-                dependencyContributors, k=self.config.included_dependency_contributor
-            )
-            mainContributors.extend(randomDependencyContributors)
+        # if len(dependencyContributors):
+        #     self.log(
+        #         "Add %s dependency contributor to main contributor by random choice."
+        #         % self.config.included_dependency_contributor
+        #     )
+        #     randomDependencyContributors = random.choices(
+        #         dependencyContributors, k=self.config.included_dependency_contributor
+        #     )
+        #     mainContributors.extend(randomDependencyContributors)
 
-        # create uniform weights for all main contributors
-        self.log("Create uniform weights for contributors")
-        uniform_weights = selery_utils.calculateContributorWeights(
-            mainContributors, self.config.uniform_weight
-        )
-        self.log("Uniform Weights: " + str(uniform_weights))
+        # # create uniform weights for all main contributors
+        # self.log("Create uniform weights for contributors")
+        # uniform_weights = selery_utils.calculateContributorWeights(
+        #     mainContributors, self.config.uniform_weight
+        # )
+        # self.log("Uniform Weights: " + str(uniform_weights))
 
-        # create commit weights
-        commit_weights = [0] * len(mainContributors)
-        commit_identifier = CommitIdentifierFromString(
-            self.config.activity_since_commit
-        )
-        if not commit_identifier:
-            self.logError(
-                "Invalid commit identifier in 'activity_since_commit': "
-                + self.config.activity_since_commit
-            )
-            raise Exception("Invalid commit identifier in 'activity_since_commit'")
+        # # create commit weights
+        # commit_weights = [0] * len(mainContributors)
+        # commit_identifier = CommitIdentifierFromString(
+        #     self.config.activity_since_commit
+        # )
+        # if not commit_identifier:
+        #     self.logError(
+        #         "Invalid commit identifier in 'activity_since_commit': "
+        #         + self.config.activity_since_commit
+        #     )
+        #     raise Exception("Invalid commit identifier in 'activity_since_commit'")
 
-        weighted_commits = git_utils.find_involved_commits(
-            self.config.directory, commit_identifier
-        )
-        if weighted_commits:
-            # calc release weights
-            self.log(
-                "Add additional weight to contributors of the last commits until "
-                + str(self.config.activity_since_commit)
-            )
-            # Create a unique list of all release contributor
-            weighted_contributor = set(c.author.email.lower() for c in weighted_commits)
-            self.log("Found release contributor: " + str(len(weighted_contributor)))
-            for idx, user in enumerate(mainContributors):
-                if user.stats.author.email.lower() in weighted_contributor:
-                    commit_weights[idx] = self.config.activity_weight
-                    self.log(
-                        "Github email matches git commit email of contributor: "
-                        + user.stats.author.login
-                    )
-            self.log("Release Weights: " + str(commit_weights))
+        # weighted_commits = git_utils.find_involved_commits(
+        #     self.config.directory, commit_identifier
+        # )
+        # if weighted_commits:
+        #     # calc release weights
+        #     self.log(
+        #         "Add additional weight to contributors of the last commits until "
+        #         + str(self.config.activity_since_commit)
+        #     )
+        #     # Create a unique list of all release contributor
+        #     weighted_contributor = set(c.author.email.lower() for c in weighted_commits)
+        #     self.log("Found release contributor: " + str(len(weighted_contributor)))
+        #     for idx, user in enumerate(mainContributors):
+        #         if user.stats.author.email.lower() in weighted_contributor:
+        #             commit_weights[idx] = self.config.activity_weight
+        #             self.log(
+        #                 "Github email matches git commit email of contributor: "
+        #                 + user.stats.author.login
+        #             )
+        #     self.log("Release Weights: " + str(commit_weights))
 
-        # sum up the two list with the same size
-        combined_weights = [x + y for x, y in zip(uniform_weights, commit_weights)]
+        # # sum up the two list with the same size
+        # combined_weights = [x + y for x, y in zip(uniform_weights, commit_weights)]
 
-        self.log("Combined Weights: " + str(combined_weights))
-        # read @user from commit
-        return combined_weights, mainContributors
+        # self.log("Combined Weights: " + str(combined_weights))
+        # # read @user from commit
+        # return combined_weights, mainContributors
+
+    def run(self):
+        contributorData_scored = self.cde.gather_()
+        #print("1___________________________")
+        #print(contributorData_scored["gather"])
+        #print("2___________________________")
+        domainContributors_weighted = self.cde.weight_(contributorData_scored)
+        #print(domainContributors_weighted["weight"])
+        #print("3.1_________________________")
+        domainContributors_merged = self.cde.merge_(domainContributors_weighted)
+        #print(domainContributors_merged["merge"])
+        #print("3.2_________________________")
+        print("")
+        print(domainContributors_merged["merge_norm"])
+        print("")
+        ### split up the dicts to create contributors and weight lists
+        blob = [*domainContributors_merged["merge_norm"].items()]
+        contributors, weights = ([c for c, w in blob], [w for c, w in blob])
+        return contributors, weights
 
     def split(self, contributors, weights):
         recipients = []
@@ -438,20 +436,10 @@ class LibreSelery(object):
             self.logError("Split mode configuration unknown")
             raise Exception("Aborting")
 
-        for recipient in recipients:
-            self.log(
-                " -- '%s': '%s' [w: %s]"
-                % (
-                    recipient.stats.author.html_url,
-                    recipient.stats.author.login,
-                    weights[contributors.index(recipient)],
-                )
-            )
-            self.log("  > via project '%s'" % recipient.fromProject)
-            self.log(
-                " -- Payout split '%.6f'"
-                % contributor_payout_split[contributors.index(recipient)]
-            )
+        for index, recipient in enumerate(recipients):
+            self.log(" -- '%s' [w: %s]" % (recipient.username, weights[index]))
+            # self.log("  > via project '%s'" % recipient.fromProject)
+            self.log(" -- Payout split '%.6f'" % contributor_payout_split[index])
 
         return recipients, contributor_payout_split
 
@@ -471,6 +459,7 @@ class LibreSelery(object):
     def payout(self, recipients, contributor_payout_split):
         transactionFilePath = None
         receiptFilePath = None
+        coinConnector = self.connectors["coinbase"]
 
         if not self.config.simulation:
             transactionFilePath = os.path.join(
@@ -480,7 +469,7 @@ class LibreSelery(object):
 
             # check if the public address is in the privat wallet
             if self.config.perform_wallet_validation:
-                if self.coinConnector.iswalletAddress(self.config.bitcoin_address):
+                if coinConnector.iswalletAddress(self.config.bitcoin_address):
                     self.log(
                         "Configured wallet address matches with wallet address Coinbase account"
                     )
@@ -495,7 +484,7 @@ class LibreSelery(object):
                 "Receiving transaction history of coinbase account [%s]"
                 % transactionFilePath
             )
-            transactions = self.coinConnector.pastTransactions()
+            transactions = coinConnector.pastTransactions()
             with open(transactionFilePath, "w") as f:
                 f.write(str(transactions))
 
@@ -503,10 +492,10 @@ class LibreSelery(object):
             self.log("Trying to payout recipients")
             self.receiptStr = ""
             total_send_amount = 0.0
-            for idx, contributor in enumerate(recipients):
-                self.log("Initiate payout to [%s]" % contributor.stats.author.login)
+            for index, contributor in enumerate(recipients):
+                self.log("Initiate payout to [%s]" % contributor.username)
 
-                send_amount = "{0:.6f}".format(contributor_payout_split[idx]).rstrip(
+                send_amount = "{0:.6f}".format(contributor_payout_split[index]).rstrip(
                     "0"
                 )
 
@@ -518,7 +507,7 @@ class LibreSelery(object):
                     )
                     break
 
-                if self.coinConnector.useremail() == contributor.stats.author.email:
+                if coinConnector.useremail() == contributor.email:
                     self.logWarning(
                         "Skip payout since coinbase email is equal to contributor email"
                     )
@@ -533,12 +522,12 @@ class LibreSelery(object):
 
                 total_send_amount += float(send_amount)
 
-                receipt = self.coinConnector.payout(
-                    contributor.stats.author.email,
+                receipt = coinConnector.payout(
+                    contributor.email,
                     send_amount,
                     not self.config.send_email_notification,
                     description=self._getEmailNote(
-                        contributor.stats.author.login, contributor.fromProject
+                        contributor.username, contributor.fromProject
                     ),
                 )
                 self.receiptStr = self.receiptStr + str(receipt)
@@ -550,10 +539,10 @@ class LibreSelery(object):
             with open(receiptFilePath, "a") as f:
                 f.write(str(self.receiptStr))
 
-            amount, currency = self.coinConnector.balancecheck()
+            amount, currency = coinConnector.balancecheck()
             self.log("Chech account wallet balance [%s] : [%s]" % (amount, currency))
 
-            native_amount, native_currency = self.coinConnector.native_balancecheck()
+            native_amount, native_currency = coinConnector.native_balancecheck()
             self.log(
                 "Check native account wallet balance [%s] : [%s]"
                 % (native_amount, native_currency)
@@ -629,12 +618,12 @@ class LibreSelery(object):
             self.logWarning(
                 "Configuration 'simulation' is active, so NO transaction will be executed"
             )
-            for idx, contributor in enumerate(recipients):
+            for index, contributor in enumerate(recipients):
                 self.log(
                     " -- would have been a payout of '%s' bitcoin to '%s'"
                     % (
-                        "{0:.6f}".format(contributor_payout_split[idx]).rstrip("0"),
-                        contributor.stats.author.login,
+                        "{0:.6f}".format(contributor_payout_split[index]).rstrip("0"),
+                        contributor.username,
                     )
                 )
 
@@ -653,12 +642,11 @@ class LibreSelery(object):
 
     def _getEmailNote(self, login_name, project_url):
         repo_message = ""
+        githubConnector = self.connectors["github"]
         try:
             remote_url = git_utils.grabLocalProject(self.config.directory)
-            main_project_name = self.githubConnector.grabRemoteProjectByUrl(
-                str(remote_url)
-            )
-            dependency_project_name = self.githubConnector.grabRemoteProjectByUrl(
+            main_project_name = githubConnector.grabRemoteProjectByUrl(str(remote_url))
+            dependency_project_name = githubConnector.grabRemoteProjectByUrl(
                 str(project_url)
             )
 

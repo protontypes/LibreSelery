@@ -1,6 +1,8 @@
 #! /usr/bin/python3
 
+from libreselery.configuration import LibreSeleryConfig
 from libreselery.contribution_distribution_engine_types import (
+    Contributor,
     ContributionAction,
     ContributionActionPlugin,
 )
@@ -8,6 +10,7 @@ from libreselery.contribution_distribution_engine_types import (
 ### Start User Imports
 ### specialzed plugin imports can be added here
 ##################################################################################
+import os
 import subprocess
 from datetime import datetime
 
@@ -27,7 +30,6 @@ class GitFileContributionAction(ContributionActionPlugin):
     """
 
     _alias_ = "git_file_contribution_action"
-    GITBLAMESEPERATOR = "***\n"
 
     def __init__(self):
         super(GitFileContributionAction, self).__init__()
@@ -45,8 +47,19 @@ class GitFileContributionAction(ContributionActionPlugin):
         bool: True if successfully initialized
         """
         self.fileFilters = action.applies_to
-        self.directory = self.getGlobals().directory
         return True
+
+    def onGlobalsUpdate_(self):
+        """
+        Overload of abstract event method which signalizes the change of the global configuration
+
+        Parameters:
+        None
+
+        Returns:
+        None
+        """
+        self.directory = self.getGlobals().directory
 
     def gather_(self, cachedContributors=[]):
         """
@@ -94,6 +107,7 @@ class GitFileContributionAction(ContributionActionPlugin):
         ### done, return our data so that it can be used inside the CDE to
         ### weight the contributions made
         self.log(contributors)
+        self.log(scores)
         return contributors, scores
 
     ### Start User Methods
@@ -101,9 +115,30 @@ class GitFileContributionAction(ContributionActionPlugin):
     ##################################################################################
 
     def execGit(self):
+        ### get project information
+        project = None
+        cmds = [
+            "git",
+            "--git-dir=%s" % os.path.join(self.directory, ".git"),
+            "config",
+            "--get",
+            "remote.origin.url",
+        ]
+        cmd = " ".join(cmds)
+        ps = subprocess.Popen(
+            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        )
+        stdout, stderr = ps.communicate()
+        if not stderr:
+            ### encode output
+            project = stdout.decode("utf-8")
+        if not project:
+            raise Exception("This is not a git repository!")
+
+        ### create ls command to get all files
         fileFilterStr = " ".join(
             [
-                "--exclude %s" % contributionTarget.target
+                "--exclude '%s'" % contributionTarget.target
                 for contributionTarget in self.fileFilters
             ]
         )
@@ -141,7 +176,7 @@ class GitFileContributionAction(ContributionActionPlugin):
                     ### seperate lines into array
                     lines = encoded.split("\n")
                     ### put lines through blameParser
-                    fileContributorDict = self.parseBlame(lines)
+                    fileContributorDict = self.parseBlame(lines, project)
                     ### filter out unwanted users, for example the one git blame adds
                     ### in case there are uncommitted changes
                     ###     "<not.committed.yet>", "Not Committed Yet"
@@ -163,7 +198,7 @@ class GitFileContributionAction(ContributionActionPlugin):
             fileContributions[author] = contributionCount
         return fileContributions
 
-    def parseBlame(self, lines):
+    def parseBlame(self, lines, project):
         lineDescriptions = []
         lineDescription = {}
         currentCommitSha = None
@@ -197,8 +232,8 @@ class GitFileContributionAction(ContributionActionPlugin):
             author_mail = d["author-mail"][1:-1]  ### strip leading and ending "<>"
             author_user = d["author"]
             timestamp = d["committer-time"]
-            # key = (author_mail, author_user)
-            key = author_mail
+            # key = author_mail
+            key = Contributor(author_user, author_mail, fromProject=project)
             dd = fileContributions.get(key, None)
             if dd:
                 c = dd["count"]
@@ -227,8 +262,7 @@ def test():
             "debug": True,
             "type": "git_file_contribution_action",  ### type of action (also the name of the plugin _alias_ used!)
             "applies_to": [
-                "*.md",
-                "docs/",
+                "*.py",
             ],  ### simple filter, not really thought out yet
             "metrics": [  ### metrics applied to this action, what gets score and what doesnt
                 {
@@ -246,6 +280,10 @@ def test():
     ### which will in turn use this specific plugin
     ### if configured correctly
     init = action.initialize_()
+    ### emulate some global information
+    ### which is used by the plugin to work properly
+    config = LibreSeleryConfig({"directory": os.getcwd()})
+    action.updateGlobals(config=config, connectors=None)
     if init:
         ### let us do our work
         contributors, scores = action.gather_()

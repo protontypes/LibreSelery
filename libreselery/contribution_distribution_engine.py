@@ -11,14 +11,21 @@ class ContributionDistributionEngine(object):
         super(ContributionDistributionEngine, self).__init__()
         ###grab relevant entries from selery cfg
         self.domains = self._extractContributionDomains(config)
+        ### set our global config to the one given
+        ### these globals can be used by plugins and others
+        self.updateGlobals(config=config)
 
     def _extractContributionDomains(self, config):
         ### read the config and parse usable objects for each domain configured
         domains = []
         for domainDict in config.contribution_domains:
-            domain = cdetypes.ContributionDomain(domainDict, globalConfig=config)
+            domain = cdetypes.ContributionDomain(domainDict)
             domains.append(domain)
         return domains
+
+    def updateGlobals(self, config=None, connectors=None):
+        for domain in self.domains:
+            domain.updateGlobals(config=config, connectors=connectors)
 
     def gather_(self):
         ### our task is to apply whatever ContributionType was configured

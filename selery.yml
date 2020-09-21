@@ -31,7 +31,7 @@ included_dependency_contributor: 5
 contribution_domains:
   - 
     DOCUMENTATION:
-      weight: 0.25
+      weight: 0.1
       actions:
       - 
         test_action:
@@ -50,11 +50,16 @@ contribution_domains:
                 degradation_value: 1 ### gradient in days
   -
     CODING:
-      weight: 0.40
+      weight: 0.9
       actions:
       - 
-        test_action:
-          type: test_action
+        some_remote_contributors_action:
+          debug: True
+          type: github_remote_contributors_action
+          params: 
+            uniform_score: 30
+            min_contributions: 1
+
 
 
 ############################################################################################

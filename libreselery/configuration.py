@@ -2,7 +2,6 @@ import os
 import yaml
 from urlextract import URLExtract
 
-
 class LibreSeleryConfig(object):
     __default_env_template__ = {
         "libraries_api_key": "LIBRARIES_API_KEY",

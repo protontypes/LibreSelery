@@ -1,6 +1,8 @@
 #! /usr/bin/python3
 
+from libreselery.configuration import LibreSeleryConfig
 from libreselery.contribution_distribution_engine_types import (
+    Contributor,
     ContributionAction,
     ContributionActionPlugin,
 )
@@ -46,6 +48,20 @@ class MY_TEST_ACTION_PLUGIN_CLASS(ContributionActionPlugin):
         self.log("INIT")
         return True
 
+    def onGlobalsUpdate_(self):
+        """
+        Overload of abstract event method which signalizes the change of the global configuration
+
+        Parameters:
+        None
+
+        Returns:
+        None
+        """
+        ### example
+        self.someGlobalInformation = self.getGlobals().simulation
+        pass
+
     def gather_(self, cachedContributors=[]):
         """
         Overload of abstract method which is responsible for gathering
@@ -59,10 +75,15 @@ class MY_TEST_ACTION_PLUGIN_CLASS(ContributionActionPlugin):
         Returns:
         tuple: (list of contributors, list of scores)
         """
-        self.log("GATHER")
+        self.log("GATHER > This is a simulation: %s" % self.someGlobalInformation)
         # contributors = [("nickfiege999@gmail.com", "kikass13"), ("randomEmail@random.rand", "otherUser")]
-        contributors = ["nickfiege999@gmail.com", "randomEmail@random.rand"]
-        scores = [1337.0, 500.0]
+        contributors = [
+            Contributor("kikass13", "nickfiege999@gmail.com"),
+            Contributor("Tobias Augspurger", "ly0@protonmail.com"),
+        ]
+        scores = [1337.0, 50.0]
+        self.log(contributors)
+        self.log(scores)
         return contributors, scores
 
     ### Start User Methods
@@ -92,6 +113,11 @@ def test():
     ### which will in turn use this specific plugin
     ### if configured correctly
     init = action.initialize_()
+    ### emulate some global information
+    ### which is used by the plugin to work properly
+    config = LibreSeleryConfig({"simulation": True})
+    action.updateGlobals(config=config, connectors=None)
+    ### preparations done, lets do something
     if init:
         ### let us do our work
         contributors, scores = action.gather_()

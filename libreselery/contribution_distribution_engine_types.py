@@ -27,7 +27,7 @@ def applyLookupDict(LOOKUP_DICT, content, targetInst):
     ### apply mandatory parameters
     for k, f in LOOKUP_DICT["mandatory"].items():
         v = content.get(k, None)
-        if v:
+        if v != None:
             obj = f(v)
             setattr(targetInst, k, obj)
         else:
@@ -38,7 +38,7 @@ def applyLookupDict(LOOKUP_DICT, content, targetInst):
     for k, f in LOOKUP_DICT["optional"].items():
         expr, default = f
         v = content.get(k, None)
-        if v:
+        if v != None:
             obj = expr(v)
             setattr(targetInst, k, obj)
         else:
@@ -54,20 +54,31 @@ def simpleDictRepr(obj):
 
 
 class Contributor(object):
-    """docstrig for ClassName"""
+    def __init__(self, username, email, fromProject="<Unknown Project>"):
+        self.username = username
+        self.email = email
+        self.fromProject = fromProject
 
-    def __init__(self, d, domainRef):
-        super(Contributor, self).__init__()
-        self.__dict__.update(d)
-        self.domain = domainRef
+    def __repr__(self):
+        return "%s <%s>" % (self.username, self.email)
+
+    ### make this object hashable and fit for dictionary key use
+    def __hash__(self):
+        return hash(str(self.email))
+
+    ### boolean operators for this object to make it fit for dict use
+    def __eq__(self, other):
+        #return (self.username, self.email) == (other.username, other.email)
+        return self.email == other.email
+    def __ne__(self, other):
+        return not (self == other)
 
 
 class ContributionDomain(object):
-    """docstrig for ClassName"""
+    """Container defining the group of contributors"""
 
-    def __init__(self, d, globalConfig={}):
+    def __init__(self, d):
         super(ContributionDomain, self).__init__()
-        self.globalConfig = globalConfig
         self.name = next(iter(d))
         content = d.get(self.name)
         # self.__dict__.update(d.get(self.name))
@@ -76,10 +87,19 @@ class ContributionDomain(object):
         ### initialize our actions as well (plugin based)
         self.initialize_()
 
+    def updateGlobals(self, config=None, connectors=None):
+        if config:
+            self.config = config
+        if connectors:
+            self.connectors = connectors
+        ### propagate the globals update to all actions
+        for action in self.actions:
+            action.updateGlobals(config=config, connectors=connectors)
+
     def initialize_(self):
         ### in case we have actions, prepare plugins
         for action in self.actions:
-            ret = action.initialize_(globalConfig=self.globalConfig)
+            ret = action.initialize_()
             if not ret:
                 raise ImportError(
                     "ContributionActionPlugin %s could not be initialized properly! [ret: %s]"
@@ -131,7 +151,8 @@ class ContributionDomain(object):
 
 @pluginlib.Parent("action")
 class ContributionActionPlugin(object):
-    _globals_ = {}
+    _connectors = {}
+    _globals_ = None
 
     def __init__(self):
         super(ContributionActionPlugin, self).__init__()
@@ -139,6 +160,10 @@ class ContributionActionPlugin(object):
 
     @pluginlib.abstractmethod
     def initialize_(self, action):
+        pass
+
+    @pluginlib.abstractmethod
+    def onGlobalsUpdate_(self):
         pass
 
     @pluginlib.abstractmethod
@@ -157,6 +182,12 @@ class ContributionActionPlugin(object):
     def getGlobals(self):
         return self._globals_
 
+    def setConnectors(self, d):
+        self._connectors = d
+
+    def getConnectors(self):
+        return self._connectors
+
     def log(self, msg):
         if self.debug:
             print("\t[.] Plugin [%s]: '%s'" % (self._alias_, msg))
@@ -171,8 +202,19 @@ class ContributionAction(object):
         applyLookupDict(ACTION_LOOKUP_TYPES, content, self)
         self.plugin = None
 
-    def initialize_(self, globalConfig={}):
-        self.globalConfig = globalConfig
+    def updateGlobals(self, config=None, connectors=None):
+        ### provide all global configuration parameters
+        ### for this plugin
+        if config:
+            self.config = config
+            self.plugin.setGlobals(self.config)
+        if connectors:
+            self.connectors = connectors
+            self.plugin.setConnectors(self.connectors)
+        ### call the update event of the plugin to signalize the change
+        self.plugin.onGlobalsUpdate_()
+
+    def initialize_(self):
         pluginName = self.type.name
         ### initialize/load module & plugin
         moduleName = "%s.%s" % (ACTION_PLUGIN_MODULE_PREFIX, pluginName)
@@ -189,9 +231,6 @@ class ContributionAction(object):
             ### dirty little debug flag set for newly instanced plugin
             ### this has to be dne in a better way but works for now
             self.plugin.setDebug(self.debug)
-            ### provide all global configuration parameters
-            ### for this plugin
-            self.plugin.setGlobals(self.globalConfig)
             ### initialize plugin
             pluginInitSuccess = self.plugin.initialize_(self)
         return pluginInitSuccess
@@ -201,6 +240,15 @@ class ContributionAction(object):
         ### result should be a list of contributors with a score
         if self.plugin:
             return self.plugin.gather_(cachedContributors=cachedContributors)
+
+    def readParam(self, key, default=None):
+        val = self.params.get(key, default)
+        if not val:
+            init = False
+            self.plugin.log(
+                "<%s> value needed in action's[%s] <params>!" % (key, self.type.name)
+            )
+        return val
 
     def __repr__(self):
         return simpleDictRepr(self)
@@ -250,6 +298,7 @@ ACTION_LOOKUP_TYPES = {
     "optional": {
         "debug": (bool, False),
         "applies_to": (lambda l: [ContributionTarget(d) for d in l], []),
+        "params": (dict, {}),
         "metrics": (lambda l: [ContributionMetric(d) for d in l], []),
     },
 }
