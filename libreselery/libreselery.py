@@ -83,7 +83,7 @@ class LibreSelery(object):
         fundingPath = self._getFile("README.md")
         if fundingPath is not None:
             self.log("Loading funding file [%s] for bitcoin wallet" % fundingPath)
-            mdfile = open("README.md", "r")
+            mdfile = open(os.path.join(self.seleryDir, "README.md"), "r")
             mdstring = mdfile.read()
             urls = extractor.find_urls(mdstring)
             badge_string = "https://badgen.net/badge/LibreSelery-Donation/"
