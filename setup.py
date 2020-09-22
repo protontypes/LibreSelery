@@ -28,7 +28,7 @@ setup(
         "pyyaml==5.3.1",
         "coinbase",
         "gitpython==3.1.7",
-        "pybraries==0.2.2",
+        "pybraries==0.3.0",
         "urlextract==1.0.0",
         "matplotlib==3.3.0",
         "numpy==1.19.1",

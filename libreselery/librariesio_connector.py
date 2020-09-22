@@ -10,7 +10,9 @@ class Project(object):
         self.__dict__.update(d)
         # special vars
         self.platform = platform
-        self.owner = self.repository_url.split("/")[-2]
+        self.owner = ""
+        if self.repository_url:
+            self.owner = self.repository_url.split("/")[-2]
 
     def __repr__(self):
         return "%s: '%s' [%s]" % (self.name, self.repository_url, self.owner)
@@ -51,7 +53,7 @@ class LibrariesIOConnector(selery_utils.Connector):
         project = None
         search = Search()
         results = search.project_search(
-            filters={"keywords": depName, "manager": platform}
+            keywords=depName, sort="relevance", platform=platform
         )
         # only choose first search result
         if results:
