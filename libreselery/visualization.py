@@ -39,11 +39,15 @@ def transactionToYearMonth(transaction):
     return creation_date.strftime("%m/%Y")
 
 
-def transactionToUserEmail(transaction):
-    # user_name = GithubConnector.grabUserNameByEmail(transaction["to"]["email"])
-    email = transaction["to"]["email"]
-    name, _, _ = email.partition("@")
-    return name
+def transactionToUser(transaction):
+    userName = transaction['description']
+    if not userName:
+        return 'legacy'    
+    if (userName.startswith('@')):
+        name, _, _ = userName.partition(":")
+        return name[1:]
+    else:
+        return 'legacy' 
 
 
 def transactionIsLastMonth(transaction):
@@ -99,18 +103,22 @@ def drawBarChart(title, xlabel, keys, values):
 
 
 def drawEurPerUser(title, xlabel, keys, values):
+    # delete legacy stuff before drawing the chart
+    key_list, value_list = list(keys), list(values)
+    index = key_list.index('legacy')
+    del value_list[index], key_list[index]
     _, diagram = plt.subplots()
     y_pos = np.arange(30)
     diagram.barh(
         y_pos,
-        list(values)[0:30],
+        value_list[:30],
         align="center",
         in_layout="true",
         color=(0.23137254901960785, 0.3215686274509804, 1.0),
         edgecolor="black",
     )
     diagram.set_yticks(y_pos)
-    diagram.set_yticklabels(list(keys)[0:30])
+    diagram.set_yticklabels(key_list[:30])
     diagram.invert_yaxis()  # labels read top-to-bottom
     diagram.set_xlabel(xlabel)
     diagram.set_title(title)
@@ -165,7 +173,7 @@ def visualizeTransactions(resultDir, transactionFilePath):
             filter(transactionIsEurSpent, transactions["data"]), transactionToYearMonth
         )
         spent_data_by_user = groupBy(
-            filter(transactionIsEurSpent, transactions["data"]), transactionToUserEmail
+            filter(transactionIsEurSpent, transactions["data"]), transactionToUser
         )
 
         wallet_balance_btc_by_day_keys = list(data_by_day.keys())
@@ -193,9 +201,10 @@ def visualizeTransactions(resultDir, transactionFilePath):
             for k, v in spent_data_by_year_month.items()
         }
         eur_by_user = {
-            k: -1 * sum(map(transactionToEur, v)) for k, v in spent_data_by_user.items()
+            k: -1 * sum(map(transactionToEur, v)) 
+            for k, v in spent_data_by_user.items()
         }
-
+       
         # draw diagrams
         plt.rcdefaults()
 
