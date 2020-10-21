@@ -53,6 +53,7 @@ class GithubRemoteContributorsAction(ContributionActionPlugin):
         init = True
         self.uniform_score = action.readParam("uniform_score")
         self.min_contributions = action.readParam("min_contributions", default=0)
+        self.include_deps = action.readParam("include_dependencies", default=False)
         init = False if not self.uniform_score or not self.min_contributions else True
         return init
 
@@ -112,34 +113,14 @@ class GithubRemoteContributorsAction(ContributionActionPlugin):
                 "Gathering project information of '%s' at  local folder '%s"
                 % (projectUrl, self.directory)
             )
-
             if self.include_main_repository:
-                #### find official repositories
-                self.log(
-                    "Including contributors of root project '%s'"
-                    % localProject.full_name
-                )
-
-                self.log(" -- %s" % localProject.html_url)
-                # print(" -- %s" % [c.author.email for c in localContributors])
-
-                ### grab contributors
-                remoteContributors = self.githubConnector.grabRemoteProjectContributors(
-                    localProject
-                )
-                ### filter contributors
-                remoteContributors = self.validateContributors(remoteContributors)
-                ### extract relevant contributor information from the guthub api
-                for c in remoteContributors:
-                    email = c.stats.author.email.lower()
-                    username = c.stats.author.login
-                    project = c.fromProject
-                    if email and username:
-                        contributors.append(Contributor(username, email, fromProject=project))
-                ### calculate scores of the contributors
-                ### we could dosome fancy stuff here
-                ### but for now, everyone gets uniform "base" score and nothing else
-                scores = [self.uniform_score for i in range(len(contributors))]
+                cons, scrs = self.gatherProjectContributors(localProject)
+                contributors.extend(cons)
+                scores.extend(scrs)
+            if self.include_deps:
+                cons, scrs = self.gatherProjectDeps(localProject)
+                contributors.extend(cons)
+                scores.extend(scrs)
         else:
             self.log(
                 "Skipping work because no Connector with name '%s' could be found!"
@@ -153,6 +134,38 @@ class GithubRemoteContributorsAction(ContributionActionPlugin):
     ### specialzed plugin methods can be added here
     ##################################################################################
     ###
+    def gatherProjectContributors(self, project):
+        contributors = []
+        #### find official repositories
+        self.log("Including contributors of root project '%s'" % project.full_name)
+        self.log(" -- %s" % project.html_url)
+        # print(" -- %s" % [c.author.email for c in localContributors])
+
+        ### grab contributors
+        remoteContributors = self.githubConnector.grabRemoteProjectContributors(project)
+        ### filter contributors
+        remoteContributors = self.validateContributors(remoteContributors)
+        ### extract relevant contributor information from the guthub api
+        for c in remoteContributors:
+            email = c.stats.author.email.lower()
+            username = c.stats.author.login
+            project = c.fromProject
+            if email and username:
+                contributors.append(Contributor(username, email, fromProject=project))
+        ### calculate scores of the contributors
+        ### we could dosome fancy stuff here
+        ### but for now, everyone gets uniform "base" score and nothing else
+        scores = [self.uniform_score for i in range(len(contributors))]
+        return contributors, scores
+
+    def gatherProjectDeps(self, project):
+        contributors = []
+        scores = []
+        ### do stuff to include deps contributors as well
+        ### ...
+        self.log("XAXA")
+        return contributors, scores
+
     def validateContributors(self, contributors):
         valid = []
         for c in contributors:
@@ -201,6 +214,11 @@ def test():
         "contributions_from_github": {
             "debug": True,
             "type": "github_remote_contributors_action",  ### type of action (also the name of the plugin _alias_ used!)
+            "params": {
+                "min_contributions": 1,
+                "uniform_score": 30,
+                "include_dependencies": True,
+            },
             "metrics": [  ### metrics applied to this action, what gets score and what doesnt
                 {"UNIFORM": {}}  ### metric identifier
             ],
@@ -222,9 +240,7 @@ def test():
     config = LibreSeleryConfig(
         {
             "directory": os.path.abspath(os.path.join(os.getcwd(), "..", "..")),
-            "min_contributions_required_payout": 1,
             "include_main_repository": True,
-            "uniform_score": 30,
         }
     )
     action.updateGlobals(config=config, connectors=connectors)

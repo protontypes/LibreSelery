@@ -68,8 +68,9 @@ class Contributor(object):
 
     ### boolean operators for this object to make it fit for dict use
     def __eq__(self, other):
-        #return (self.username, self.email) == (other.username, other.email)
+        # return (self.username, self.email) == (other.username, other.email)
         return self.email == other.email
+
     def __ne__(self, other):
         return not (self == other)
 
