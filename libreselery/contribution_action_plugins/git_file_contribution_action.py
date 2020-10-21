@@ -115,11 +115,29 @@ class GitFileContributionAction(ContributionActionPlugin):
     ##################################################################################
 
     def execGit(self):
+        ### get toplevel git dir path
+        ### git rev-parse --git-dir
+        ###     --show-toplevel gives path without .git
+        cmds = [
+            "git",
+            "-C %s" % self.directory, ## run command as if in -C dir 
+            "rev-parse --git-dir",  ### get .git dir of toplevel repo
+        ]
+        cmd = " ".join(cmds)
+        ps = subprocess.Popen(
+            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        )
+        stdout, stderr = ps.communicate()
+        if not stderr:
+            ### encode output
+            projectPath = stdout.decode("utf-8").strip()
+        if not projectPath:
+            raise Exception("This is not a git repository!")
         ### get project information
         project = None
         cmds = [
             "git",
-            "--git-dir=%s" % os.path.join(self.directory, ".git"),
+            "--git-dir=%s" % projectPath,
             "config",
             "--get",
             "remote.origin.url",
@@ -134,7 +152,6 @@ class GitFileContributionAction(ContributionActionPlugin):
             project = stdout.decode("utf-8")
         if not project:
             raise Exception("This is not a git repository!")
-
         ### create ls command to get all files
         fileFilterStr = " ".join(
             [
@@ -180,8 +197,9 @@ class GitFileContributionAction(ContributionActionPlugin):
                     ### filter out unwanted users, for example the one git blame adds
                     ### in case there are uncommitted changes
                     ###     "<not.committed.yet>", "Not Committed Yet"
-                    if "not.committed.yet" in fileContributorDict:
-                        del fileContributorDict["not.committed.yet"]
+                    badContributor = Contributor("Not Committed Yet", "not.committed.yet")
+                    if badContributor in fileContributorDict:
+                        del fileContributorDict[badContributor]
                     fileContributions[file] = fileContributorDict
         return fileContributions
 

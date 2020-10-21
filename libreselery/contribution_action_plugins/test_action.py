@@ -46,6 +46,7 @@ class MY_TEST_ACTION_PLUGIN_CLASS(ContributionActionPlugin):
         bool: True if successfully initialized
         """
         self.log("INIT")
+
         return True
 
     def onGlobalsUpdate_(self):
