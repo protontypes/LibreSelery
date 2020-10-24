@@ -7,7 +7,6 @@ import libreselery.contribution_distribution_engine_types as cdetypes
 
 class ContributionDistributionEngine(object):
     def __init__(self, config):
-        print("\n\nLOOK, BUT DONT TOUCH!")
         super(ContributionDistributionEngine, self).__init__()
         ###grab relevant entries from selery cfg
         self.domains = self._extractContributionDomains(config)
@@ -27,56 +26,57 @@ class ContributionDistributionEngine(object):
         for domain in self.domains:
             domain.updateGlobals(config=config, connectors=connectors)
 
+    def splitDictKeyVals(self, d):
+        return cdetypes.splitDictKeyVals(d)
+
     def gather_(self):
         ### our task is to apply whatever ContributionType was configured
         ### for a specific domain and extract all
         ### contributors + their weights that fit into this domain
-        print("\n\nLOOK, BUT DONT TOUCH!")
-        cachedContributors = []
-
-        contributorData = {"gather": {}}
+        contributorDataScored = {}
         for domain in self.domains:
             ### execute all activities of every domain
             ### this should identify the contributos that
             ### fit the activity description /
             ### that have done the configured activity successfully
-            contributorScores = domain.gather_(cachedContributors=cachedContributors)
+            contributorScores = domain.gather_()
             ### every domain has to weight it's activities
-            contributorData["gather"][domain.name] = contributorScores
+            contributorDataScored[domain.name] = contributorScores
             ###
-        return contributorData
+        return contributorDataScored
 
-    def weight_(self, contributorData):
+    def weight_(self, contributorDataScored):
         ### domains have to weight activity scores in relation to each other
-        contributorData["weight"] = {}
+        contributorDataWeighted = {}
         for domain in self.domains:
-            domainContent = contributorData.get("gather").get(domain.name)
+            domainContent = contributorDataScored.get(domain.name)
             ### normalize contributor weights based on contributor scores
             contributors, weights = domain.weight_(domainContent)
-            contributorData["weight"][domain.name] = (contributors, weights)
-        return contributorData
+            contributorDataWeighted[domain.name] = (contributors, weights)
+        return contributorDataWeighted
 
-    def merge_(self, contributorData):
+    def merge_(self, contributorDataWeighted):
         ### after all domains are processed, we now have to weight the domains
         ### in relation to each other using the "weight" attribute given
         ### via the ContributionDomain configuration
-        contributorData["merge"] = {}
+        contributorDataMerged = {}
         for domain in self.domains:
             ### merge weights/scores of contributors over all domains
-            contributors, weights = contributorData.get("weight").get(domain.name)
+            contributors, weights = contributorDataWeighted.get(domain.name)
             for contributor, weight in zip(contributors, weights):
-                if contributor in contributorData["merge"]:
-                    contributorData["merge"][contributor] += weight * domain.weight
+                if contributor in contributorDataMerged:
+                    contributorDataMerged[contributor] += weight * domain.weight
                 else:
-                    contributorData["merge"][contributor] = weight * domain.weight
+                    contributorDataMerged[contributor] = weight * domain.weight
+        return contributorDataMerged
 
+    def normalize_(self, contributorDataMerged):
         ### because we potentially downgraded our weights by multiplying with
         ### the given domain weight ... we have to re-normalize the weights
         ### of every contributor to be within [0 ... 1] again
-        contributorData["merge_norm"] = {}
-        blob = [*contributorData.get("merge").items()]
-        contributors, weights = ([c for c, w in blob], [w for c, w in blob])
+        contributorDataNormalized = {}
+        contributors, weights = cdetypes.splitDictKeyVals(contributorDataMerged)
         newWeights = cdetypes.normalizeSum(weights)
         for contributor, weight in zip(contributors, newWeights):
-            contributorData["merge_norm"][contributor] = weight
-        return contributorData
+            contributorDataNormalized[contributor] = weight
+        return contributorDataNormalized

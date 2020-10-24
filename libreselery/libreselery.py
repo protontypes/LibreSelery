@@ -390,21 +390,10 @@ class LibreSelery(object):
 
     def run(self):
         contributorData_scored = self.cde.gather_()
-        # print("1___________________________")
-        # print(contributorData_scored["gather"])
-        # print("2___________________________")
         domainContributors_weighted = self.cde.weight_(contributorData_scored)
-        # print(domainContributors_weighted["weight"])
-        # print("3.1_________________________")
         domainContributors_merged = self.cde.merge_(domainContributors_weighted)
-        # print(domainContributors_merged["merge"])
-        # print("3.2_________________________")
-        print("")
-        print(domainContributors_merged["merge_norm"])
-        print("")
-        ### split up the dicts to create contributors and weight lists
-        blob = [*domainContributors_merged["merge_norm"].items()]
-        contributors, weights = ([c for c, w in blob], [w for c, w in blob])
+        domainContributors_normalized = self.cde.normalize_(domainContributors_merged)
+        contributors, weights = self.cde.splitDictKeyVals(domainContributors_normalized)
         return contributors, weights
 
     def split(self, contributors, weights):

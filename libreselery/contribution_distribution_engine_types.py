@@ -7,6 +7,13 @@ import os
 ACTIVITY_PLUGIN_MODULE_PREFIX = "libreselery.contribution_activity_plugins"
 
 
+def splitDictKeyVals(d):
+    ### split up the dicts to create contributors and weight lists
+    blob = [*d.items()]
+    keys, vals = ([c for c, w in blob], [w for c, w in blob])
+    return keys, vals
+
+
 def normalizeR(v):
     v = np.array(v) if type(v) != np.array else v
     return v / np.sqrt(np.sum(v ** 2))
