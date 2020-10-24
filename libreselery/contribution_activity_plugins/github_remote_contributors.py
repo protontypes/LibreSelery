@@ -6,8 +6,8 @@ from libreselery import git_utils
 from libreselery import selery_utils
 from libreselery.contribution_distribution_engine_types import (
     Contributor,
-    ContributionAction,
-    ContributionActionPlugin,
+    ContributionActivity,
+    ContributionActivityPlugin,
 )
 
 ### Start User Imports
@@ -21,9 +21,9 @@ from datetime import datetime
 ##################################################################################
 
 
-class GithubRemoteContributorsAction(ContributionActionPlugin):
+class GithubRemoteContributorsActivity(ContributionActivityPlugin):
     """
-    This class is a plugin containing the implementation of a single ContributorAction.
+    This class is a plugin containing the implementation of a single ContributorActivity.
     It is responsible for gathering contributor information and evaluating scores
     for each contributor based on configurated metrics
 
@@ -32,28 +32,28 @@ class GithubRemoteContributorsAction(ContributionActionPlugin):
     contributors of local files (under git version control).
     """
 
-    _alias_ = "github_remote_contributors_action"
+    _alias_ = ContributionActivityPlugin.pluginNameFromFileName(__file__)
     GITHUB_CONNECTOR_NAME = "github"
 
     def __init__(self):
-        super(GithubRemoteContributorsAction, self).__init__()
+        super(GithubRemoteContributorsActivity, self).__init__()
 
-    def initialize_(self, action):
+    def initialize_(self, activity):
         """
         Overload of abstract method which is responsible for initializing this plugin
 
         Parameters:
-        action (ContributionAction):
-            action object which contains all necessary information of what
+        activity (ContributionActivity):
+            activity object which contains all necessary information of what
             a contributor has to doto be scored and recognized as such
 
         Returns:
         bool: True if successfully initialized
         """
         init = True
-        self.uniform_score = action.readParam("uniform_score")
-        self.min_contributions = action.readParam("min_contributions", default=0)
-        self.include_deps = action.readParam("include_dependencies", default=False)
+        self.uniform_score = activity.readParam("uniform_score")
+        self.min_contributions = activity.readParam("min_contributions", default=0)
+        self.include_deps = activity.readParam("include_dependencies", default=False)
         init = False if not self.uniform_score or not self.min_contributions else True
         return init
 
@@ -73,9 +73,9 @@ class GithubRemoteContributorsAction(ContributionActionPlugin):
         ###
         ### TODO:
         ### these config values should probably not come from globals()
-        ### but from action (self.initialize_) instead
+        ### but from activity (self.initialize_) instead
         ### because they are not global anymore and instead
-        ### define this specific action
+        ### define this specific activity
         self.include_main_repository = self.getGlobals().include_main_repository
 
         ### get current github connector
@@ -92,7 +92,7 @@ class GithubRemoteContributorsAction(ContributionActionPlugin):
     def gather_(self, cachedContributors=[]):
         """
         Overload of abstract method which is responsible for gathering
-        contributor information and scoring contributors based on the action defined
+        contributor information and scoring contributors based on the activity defined
 
         Parameters:
         [optional] cachedContributors (list):
@@ -163,7 +163,6 @@ class GithubRemoteContributorsAction(ContributionActionPlugin):
         scores = []
         ### do stuff to include deps contributors as well
         ### ...
-        self.log("XAXA")
         return contributors, scores
 
     def validateContributors(self, contributors):
@@ -209,31 +208,29 @@ def test_grabEnvironmentVarsFromFile(path):
 def test():
     success = False
     print("This is a Test!")
-    ### define our input configuration (action) which normally comes from .yml configuration
+    ### define our input configuration (activity) which normally comes from .yml configuration
     d = {
         "contributions_from_github": {
             "debug": True,
-            "type": "github_remote_contributors_action",  ### type of action (also the name of the plugin _alias_ used!)
+            ### type of activity (also the name of the plugin _alias_ used!)
+            "type": ContributionActivityPlugin.pluginNameFromFileName(__file__),
             "params": {
                 "min_contributions": 1,
                 "uniform_score": 30,
                 "include_dependencies": True,
             },
-            "metrics": [  ### metrics applied to this action, what gets score and what doesnt
-                {"UNIFORM": {}}  ### metric identifier
-            ],
         }
     }
-    ### create an action object
-    action = ContributionAction(d)
-    ### initialize the action
+    ### create an activity object
+    activity = ContributionActivity(d)
+    ### initialize the activity
     ### which will in turn use this specific plugin
     ### if configured correctly
-    init = action.initialize_()
+    init = activity.initialize_()
     ### emulate some global information
     ### which is used by the plugin to work properly
     test_grabEnvironmentVarsFromFile(
-        os.path.join(os.environ["HOME"], ".openselery/tokens.env")
+        os.path.join(os.environ["HOME"], ".libreselery/tokens.env")
     )
     myGithubToken = os.environ["GITHUB_TOKEN"]
     connectors = {"github": GithubConnector(myGithubToken)}
@@ -243,10 +240,10 @@ def test():
             "include_main_repository": True,
         }
     )
-    action.updateGlobals(config=config, connectors=connectors)
+    activity.updateGlobals(config=config, connectors=connectors)
     if init:
         ### let us do our work
-        contributors, scores = action.gather_()
+        contributors, scores = activity.gather_()
         ### visualize and finalize gathered data
         print("Result:")
         print("contributors:\n%s" % contributors)

@@ -2,8 +2,9 @@
 
 import pluginlib
 import numpy as np
+import os
 
-ACTION_PLUGIN_MODULE_PREFIX = "libreselery.contribution_action_plugins"
+ACTIVITY_PLUGIN_MODULE_PREFIX = "libreselery.contribution_activity_plugins"
 
 
 def normalizeR(v):
@@ -85,7 +86,7 @@ class ContributionDomain(object):
         # self.__dict__.update(d.get(self.name))
         ### parse other values as well
         applyLookupDict(DOMAIN_LOOKUP_TYPES, content, self)
-        ### initialize our actions as well (plugin based)
+        ### initialize our activities as well (plugin based)
         self.initialize_()
 
     def updateGlobals(self, config=None, connectors=None):
@@ -93,35 +94,35 @@ class ContributionDomain(object):
             self.config = config
         if connectors:
             self.connectors = connectors
-        ### propagate the globals update to all actions
-        for action in self.actions:
-            action.updateGlobals(config=config, connectors=connectors)
+        ### propagate the globals update to all activities
+        for activity in self.activities:
+            activity.updateGlobals(config=config, connectors=connectors)
 
     def initialize_(self):
-        ### in case we have actions, prepare plugins
-        for action in self.actions:
-            ret = action.initialize_()
+        ### in case we have activities, prepare plugins
+        for activity in self.activities:
+            ret = activity.initialize_()
             if not ret:
                 raise ImportError(
-                    "ContributionActionPlugin %s could not be initialized properly! [ret: %s]"
-                    % (action.name, ret)
+                    "ContributionActivityPlugin %s could not be initialized properly! [ret: %s]"
+                    % (activity.name, ret)
                 )
 
     def gather_(self, cachedContributors=[]):
         contributorData = {}
-        ### for each action defined
-        for action in self.actions:
+        ### for each activity defined
+        for activity in self.activities:
             ### gather whatever you have to find out who contributed what
             ### result should be a list of contributors with a score
-            contributors, scores = action.gather_()
+            contributors, scores = activity.gather_()
             ### we now have evaluated all contributors for this specific domain
-            contributorData[action.name] = (contributors, scores)
+            contributorData[activity.name] = (contributors, scores)
         return contributorData
 
     def mangle_(self, contributorData):
         contributorScoreData = {}
         ### merge and add all scores for each contributor
-        for actionName, data in contributorData.items():
+        for activityName, data in contributorData.items():
             contributors, scores = data
             for contributor, score in zip(contributors, scores):
                 ### simply add up the score from contributors
@@ -136,9 +137,9 @@ class ContributionDomain(object):
         return contributors, scores
 
     def weight_(self, contributorData):
-        ### weight action scores in relation to each other
+        ### weight activities scores in relation to each other
         ### this is domain specific, so WEIGHT(SUM(contributor_scores) == 1.0)
-        ### sum all scores of all different actions together so that the weighting is easier
+        ### sum all scores of all different activities together so that the weighting is easier
         contributors, scores = self.mangle_(contributorData)
         ### calculate weight from score (normalize)
         weights = normalizeSum(scores)
@@ -150,17 +151,17 @@ class ContributionDomain(object):
         return simpleDictRepr(self)
 
 
-@pluginlib.Parent("action")
-class ContributionActionPlugin(object):
+@pluginlib.Parent("activity")
+class ContributionActivityPlugin(object):
     _connectors = {}
     _globals_ = None
 
     def __init__(self):
-        super(ContributionActionPlugin, self).__init__()
+        super(ContributionActivityPlugin, self).__init__()
         self.debug = False
 
     @pluginlib.abstractmethod
-    def initialize_(self, action):
+    def initialize_(self, activity):
         pass
 
     @pluginlib.abstractmethod
@@ -191,16 +192,20 @@ class ContributionActionPlugin(object):
 
     def log(self, msg):
         if self.debug:
-            print("\t[.] Plugin [%s]: '%s'" % (self._alias_, msg))
+            print("\t[.] Plugin [%s]: %s" % (self._alias_, msg))
+
+    @staticmethod
+    def pluginNameFromFileName(filename):
+        return os.path.splitext(os.path.basename(filename))[0]
 
 
-class ContributionAction(object):
+class ContributionActivity(object):
     def __init__(self, d):
-        super(ContributionAction, self).__init__()
+        super(ContributionActivity, self).__init__()
         self.name = next(iter(d))
         content = d.get(self.name)
         ### parse other values as well
-        applyLookupDict(ACTION_LOOKUP_TYPES, content, self)
+        applyLookupDict(ACTIVITY_LOOKUP_TYPES, content, self)
         self.plugin = None
 
     def updateGlobals(self, config=None, connectors=None):
@@ -218,15 +223,15 @@ class ContributionAction(object):
     def initialize_(self):
         pluginName = self.type.name
         ### initialize/load module & plugin
-        moduleName = "%s.%s" % (ACTION_PLUGIN_MODULE_PREFIX, pluginName)
+        moduleName = "%s.%s" % (ACTIVITY_PLUGIN_MODULE_PREFIX, pluginName)
         loader = pluginlib.PluginLoader(modules=[moduleName])
         plugins = loader.plugins
         ### instantiate and initialize our plugin object
-        pluginRef = plugins.action.get(pluginName, None)
+        pluginRef = plugins.activity.get(pluginName, None)
         pluginInitSuccess = None
         if pluginRef:
             ### instantiate plugin
-            self.plugin = plugins.action.get(
+            self.plugin = plugins.activity.get(
                 pluginName
             )()  ### plugins.<pluginlib.Parent>.<plugin_alias>
             ### dirty little debug flag set for newly instanced plugin
@@ -247,7 +252,7 @@ class ContributionAction(object):
         if not val:
             init = False
             self.plugin.log(
-                "<%s> value needed in action's[%s] <params>!" % (key, self.type.name)
+                "<%s> value needed in activity's [%s] <params>!" % (key, self.type.name)
             )
         return val
 
@@ -287,15 +292,13 @@ class ContributionTarget(object):
 DOMAIN_LOOKUP_TYPES = {
     "mandatory": {
         "weight": float,
-        "actions": lambda l: [ContributionAction(d) for d in l],
+        "activities": lambda l: [ContributionActivity(d) for d in l],
     },
     "optional": {},
 }
 
-ACTION_LOOKUP_TYPES = {
-    "mandatory": {
-        "type": ContributionType,
-    },
+ACTIVITY_LOOKUP_TYPES = {
+    "mandatory": {"type": ContributionType},
     "optional": {
         "debug": (bool, False),
         "applies_to": (lambda l: [ContributionTarget(d) for d in l], []),

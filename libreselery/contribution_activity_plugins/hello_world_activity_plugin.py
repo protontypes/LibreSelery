@@ -3,8 +3,8 @@
 from libreselery.configuration import LibreSeleryConfig
 from libreselery.contribution_distribution_engine_types import (
     Contributor,
-    ContributionAction,
-    ContributionActionPlugin,
+    ContributionActivity,
+    ContributionActivityPlugin,
 )
 
 ### Start User Imports
@@ -16,30 +16,30 @@ import sys
 ##################################################################################
 
 
-class MY_TEST_ACTION_PLUGIN_CLASS(ContributionActionPlugin):
+class MY_TEST_ACTIVITY_PLUGIN_CLASS(ContributionActivityPlugin):
     """
-    This class is a plugin containing the implementation of a single ContributorAction.
+    This class is a plugin containing the implementation of a single ContributorActivity.
     It is responsible for gathering contributor information and evaluating scores
     for each contributor based on configurated metrics
 
     Plugin description:
     This plugin does nothing special, it's just for testing and showcasing how
-    to use and implement plugins in the action lifecycle of the CDE.
+    to use and implement plugins in the activity lifecycle of the CDE.
     It will just return a random contributor list and some randome scores.
     """
 
-    _alias_ = "test_action"
+    _alias_ = ContributionActivityPlugin.pluginNameFromFileName(__file__)
 
     def __init__(self):
-        super(MY_TEST_ACTION_PLUGIN_CLASS, self).__init__()
+        super(MY_TEST_ACTIVITY_PLUGIN_CLASS, self).__init__()
 
-    def initialize_(self, action):
+    def initialize_(self, activity):
         """
         Overload of abstract method which is responsible for initializing this plugin
 
         Parameters:
-        action (ContributionAction):
-            action object which contains all necessary information of what
+        activity (ContributionActivity):
+            activity object which contains all necessary information of what
             a contributor has to doto be scored and recognized as such
 
         Returns:
@@ -66,7 +66,7 @@ class MY_TEST_ACTION_PLUGIN_CLASS(ContributionActionPlugin):
     def gather_(self, cachedContributors=[]):
         """
         Overload of abstract method which is responsible for gathering
-        contributor information and scoring contributors based on the action defined
+        contributor information and scoring contributors based on the activity defined
 
         Parameters:
         [optional] cachedContributors (list):
@@ -101,27 +101,28 @@ class MY_TEST_ACTION_PLUGIN_CLASS(ContributionActionPlugin):
 def test():
     success = False
     print("This is a Test!")
-    ### define our input configuration (action) which normally comes from .yml configuration
+    ### define our input configuration (activity) which normally comes from .yml configuration
     d = {
-        "test_action_id": {
+        "test_activity_id": {
             "debug": True,
-            "type": "test_action",  ### type of action (also the name of the plugin _alias_ used!)
+            ### type of activity (also the name of the plugin _alias_ used!)
+            "type": ContributionActivityPlugin.pluginNameFromFileName(__file__),
         }
     }
-    ### create an action object
-    action = ContributionAction(d)
+    ### create an activity object
+    activity = ContributionActivity(d)
     ### initialize the action
     ### which will in turn use this specific plugin
     ### if configured correctly
-    init = action.initialize_()
+    init = activity.initialize_()
     ### emulate some global information
     ### which is used by the plugin to work properly
     config = LibreSeleryConfig({"simulation": True})
-    action.updateGlobals(config=config, connectors=None)
+    activity.updateGlobals(config=config, connectors=None)
     ### preparations done, lets do something
     if init:
         ### let us do our work
-        contributors, scores = action.gather_()
+        contributors, scores = activity.gather_()
         ### visualize and finalize gathered data
         print("Result:")
         print("contributors:\n%s" % contributors)

@@ -36,18 +36,18 @@ class ContributionDistributionEngine(object):
 
         contributorData = {"gather": {}}
         for domain in self.domains:
-            ### execute all actions of every domain
+            ### execute all activities of every domain
             ### this should identify the contributos that
-            ### fit the action description /
-            ### that have done the configured action successfully
+            ### fit the activity description /
+            ### that have done the configured activity successfully
             contributorScores = domain.gather_(cachedContributors=cachedContributors)
-            ### every domain has to weight it's actions
+            ### every domain has to weight it's activities
             contributorData["gather"][domain.name] = contributorScores
             ###
         return contributorData
 
     def weight_(self, contributorData):
-        ### domains have to weight action scores in relation to each other
+        ### domains have to weight activity scores in relation to each other
         contributorData["weight"] = {}
         for domain in self.domains:
             domainContent = contributorData.get("gather").get(domain.name)

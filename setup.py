@@ -35,7 +35,8 @@ setup(
         "prompt_toolkit",
         "qrcode",
         "wheel",
-        "pluginlib"
+        "pluginlib",
+        "python-dotenv",
     ],
     packages=[
         "libreselery",

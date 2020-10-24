@@ -32,30 +32,25 @@ contribution_domains:
   - 
     DOCUMENTATION:
       weight: 0.1
-      actions:
+      activities:
       - 
-        test_action:
-          type: test_action
+        test_activity:
+          type: hello_world_activity_plugin
       - 
-        test_action2:
+        test_activity2:
           debug: True
-          type: git_file_contribution_action
+          type: git_file_contributors
           applies_to: 
             - "*.md"
             - "docs/"
-          metrics:
-            - 
-              UNIFORM: ### every contributor is weighted equally if they touch the files defined
-                degradation_type: linear ### could be exponential as well
-                degradation_value: 1 ### gradient in days
   -
     CODING:
       weight: 0.9
-      actions:
+      activities:
       - 
-        some_remote_contributors_action:
+        some_remote_contributors_activity:
           debug: True
-          type: github_remote_contributors_action
+          type: github_remote_contributors
           params: 
             uniform_score: 30
             min_contributions: 1

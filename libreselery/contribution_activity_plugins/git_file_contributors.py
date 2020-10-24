@@ -3,8 +3,8 @@
 from libreselery.configuration import LibreSeleryConfig
 from libreselery.contribution_distribution_engine_types import (
     Contributor,
-    ContributionAction,
-    ContributionActionPlugin,
+    ContributionActivity,
+    ContributionActivityPlugin,
 )
 
 ### Start User Imports
@@ -18,7 +18,7 @@ from datetime import datetime
 ##################################################################################
 
 
-class GitFileContributionAction(ContributionActionPlugin):
+class GitFileContributionActivity(ContributionActivityPlugin):
     """
     This class is a plugin containing the implementation of a single ContributorAction.
     It is responsible for gathering contributor information and evaluating scores
@@ -29,24 +29,24 @@ class GitFileContributionAction(ContributionActionPlugin):
     contributors of local files (under git version control).
     """
 
-    _alias_ = "git_file_contribution_action"
+    _alias_ = ContributionActivityPlugin.pluginNameFromFileName(__file__)
 
     def __init__(self):
-        super(GitFileContributionAction, self).__init__()
+        super(GitFileContributionActivity, self).__init__()
 
-    def initialize_(self, action):
+    def initialize_(self, activity):
         """
         Overload of abstract method which is responsible for initializing this plugin
 
         Parameters:
-        action (ContributionAction):
-            action object which contains all necessary information of what
+        activity (ContibutionActivity):
+            activity object which contains all necessary information of what
             a contributor has to doto be scored and recognized as such
 
         Returns:
         bool: True if successfully initialized
         """
-        self.fileFilters = action.applies_to
+        self.fileFilters = activity.applies_to
         return True
 
     def onGlobalsUpdate_(self):
@@ -97,7 +97,7 @@ class GitFileContributionAction(ContributionActionPlugin):
         contributors, linesOfCode = ([c for c, s in blob], [s for c, s in blob])
         ### convert linesOfCode to score
         ### we need to use given metrics for that
-        ### our action was initialized with a metric, we have to use that instead of
+        ### our activity was initialized with a metric, we have to use that instead of
         ### doing something random here
         ###
         ### in this simple example, each line of code represents 0.25 score points
@@ -118,10 +118,10 @@ class GitFileContributionAction(ContributionActionPlugin):
         ### get toplevel git dir path
         ### git rev-parse --git-dir
         ###     --show-toplevel gives path without .git
-        self.log("Finding .git of '%s' ..." % self.directory)
+        self.log("Finding .git in '%s' ..." % self.directory)
         cmds = [
             "git",
-            "-C %s" % self.directory, ## run command as if in -C dir 
+            "-C %s" % self.directory,  ## run command as if in -C dir
             "rev-parse --absolute-git-dir",  ### get .git dir of toplevel repo
         ]
         cmd = " ".join(cmds)
@@ -152,7 +152,7 @@ class GitFileContributionAction(ContributionActionPlugin):
         stdout, stderr = ps.communicate()
         if not stderr:
             ### encode output
-            project = stdout.decode("utf-8")
+            project = stdout.decode("utf-8").strip()
         if not project:
             raise Exception("This is not a git repository!")
         self.log("Found: '%s'" % project)
@@ -202,10 +202,14 @@ class GitFileContributionAction(ContributionActionPlugin):
                     ### filter out unwanted users, for example the one git blame adds
                     ### in case there are uncommitted changes
                     ###     "<not.committed.yet>", "Not Committed Yet"
-                    badContributor = Contributor("Not Committed Yet", "not.committed.yet")
+                    badContributor = Contributor(
+                        "Not Committed Yet", "not.committed.yet"
+                    )
                     if badContributor in fileContributorDict:
                         del fileContributorDict[badContributor]
                     fileContributions[file] = fileContributorDict
+        else:
+            self.log(stderr)
         return fileContributions
 
     def processFileContributorDict(self, fcDict):
@@ -279,37 +283,28 @@ class GitFileContributionAction(ContributionActionPlugin):
 def test():
     success = False
     print("This is a Test!")
-    ### define our input configuration (action) which normally comes from .yml configuration
+    ### define our input configuration (activity) which normally comes from .yml configuration
     d = {
         "contributions_to_code": {
             "debug": True,
-            "type": "git_file_contribution_action",  ### type of action (also the name of the plugin _alias_ used!)
-            "applies_to": [
-                "*.py",
-            ],  ### simple filter, not really thought out yet
-            "metrics": [  ### metrics applied to this action, what gets score and what doesnt
-                {
-                    "UNIFORM": {  ### metric identifier
-                        "degradation_type": "linear",
-                        "degradation_value": 1,
-                    }
-                }
-            ],
+            ### type of activity (also the name of the plugin _alias_ used!)
+            "type": ContributionActivityPlugin.pluginNameFromFileName(__file__),
+            "applies_to": ["*.py"],  ### simple filter, not really thought out yet
         }
     }
-    ### create an action object
-    action = ContributionAction(d)
+    ### create an activity object
+    activity = ContributionActivity(d)
     ### initialize the action
     ### which will in turn use this specific plugin
     ### if configured correctly
-    init = action.initialize_()
+    init = activity.initialize_()
     ### emulate some global information
     ### which is used by the plugin to work properly
     config = LibreSeleryConfig({"directory": os.getcwd()})
-    action.updateGlobals(config=config, connectors=None)
+    activity.updateGlobals(config=config, connectors=None)
     if init:
         ### let us do our work
-        contributors, scores = action.gather_()
+        contributors, scores = activity.gather_()
         ### visualize and finalize gathered data
         print("Result:")
         print("contributors:\n%s" % contributors)
