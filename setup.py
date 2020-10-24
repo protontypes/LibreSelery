@@ -35,6 +35,7 @@ setup(
         "prompt_toolkit",
         "qrcode",
         "wheel",
+        "pluginlib"
     ],
     packages=[
         "libreselery",

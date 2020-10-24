@@ -118,10 +118,11 @@ class GitFileContributionAction(ContributionActionPlugin):
         ### get toplevel git dir path
         ### git rev-parse --git-dir
         ###     --show-toplevel gives path without .git
+        self.log("Finding .git of '%s' ..." % self.directory)
         cmds = [
             "git",
             "-C %s" % self.directory, ## run command as if in -C dir 
-            "rev-parse --git-dir",  ### get .git dir of toplevel repo
+            "rev-parse --absolute-git-dir",  ### get .git dir of toplevel repo
         ]
         cmd = " ".join(cmds)
         ps = subprocess.Popen(
@@ -133,7 +134,9 @@ class GitFileContributionAction(ContributionActionPlugin):
             projectPath = stdout.decode("utf-8").strip()
         if not projectPath:
             raise Exception("This is not a git repository!")
+        self.log("Found: '%s'" % projectPath)
         ### get project information
+        self.log("Finding project url ...")
         project = None
         cmds = [
             "git",
@@ -152,7 +155,9 @@ class GitFileContributionAction(ContributionActionPlugin):
             project = stdout.decode("utf-8")
         if not project:
             raise Exception("This is not a git repository!")
+        self.log("Found: '%s'" % project)
         ### create ls command to get all files
+        self.log("Searching contributors ...")
         fileFilterStr = " ".join(
             [
                 "--exclude '%s'" % contributionTarget.target
