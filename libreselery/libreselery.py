@@ -39,8 +39,6 @@ class LibreSelery(object):
         self.config = config
         # start initialization of configs
         self.initialize()
-        # kickstart cde
-        self.cde = ContributionDistributionEngine(self.config)
 
     def __del__(self):
         self.logNotify(
@@ -171,8 +169,9 @@ class LibreSelery(object):
             )
             self.logNotify("Coinbase connection established")
 
-        ### update connectors of cde
-        self.cde.updateGlobals(connectors=self.connectors)
+    def startEngine(self):
+        # kickstart cde
+        self.cde = ContributionDistributionEngine(self.config, self.connectors)
 
     def gather(self):
         return

@@ -32,26 +32,38 @@ def softmax(x):
 
 
 def applyLookupDict(LOOKUP_DICT, content, targetInst):
-    ### apply mandatory parameters
+    ### apply and consume mandatory parameters
     for k, f in LOOKUP_DICT["mandatory"].items():
         v = content.get(k, None)
         if v != None:
             obj = f(v)
             setattr(targetInst, k, obj)
+            del content[k]
         else:
             raise KeyError(
                 "Configuration parameter %s was not found in given config" % k
             )
-    ### apply optional parameters
+    ### apply and consume optional parameters
     for k, f in LOOKUP_DICT["optional"].items():
         expr, default = f
         v = content.get(k, None)
         if v != None:
             obj = expr(v)
             setattr(targetInst, k, obj)
+            del content[k]
         else:
             obj = default
             setattr(targetInst, k, obj)
+    ### check if unconsumed parameters are left,
+    ### if so, it is an indicator that the user has provided
+    ### a false parameter, either because of a bug or typo.
+    ### We do only allow parameters defined in the respective
+    ### lookup dicts [LOOKUP_DICT]
+    if len(content.keys()) > 0:
+        raise KeyError(
+            "The Following configuration parameters could not been consumed because they do not exist! %s"
+            % content
+        )
 
 
 def simpleDictRepr(obj):
@@ -93,29 +105,20 @@ class ContributionDomain(object):
         # self.__dict__.update(d.get(self.name))
         ### parse other values as well
         applyLookupDict(DOMAIN_LOOKUP_TYPES, content, self)
-        ### initialize our activities as well (plugin based)
-        self.initialize_()
 
-    def updateGlobals(self, config=None, connectors=None):
-        if config:
-            self.config = config
-        if connectors:
-            self.connectors = connectors
-        ### propagate the globals update to all activities
-        for activity in self.activities:
-            activity.updateGlobals(config=config, connectors=connectors)
-
-    def initialize_(self):
+    def initialize_(self, config, connectors):
+        self.config = config
+        self.connectors = connectors
         ### in case we have activities, prepare plugins
         for activity in self.activities:
-            ret = activity.initialize_()
+            ret = activity.initialize_(globals=self.config, connectors=self.connectors)
             if not ret:
                 raise ImportError(
-                    "ContributionActivityPlugin %s could not be initialized properly! [ret: %s]"
+                    "ContributionActivityPlugin '%s' could not be initialized properly! [ret: %s]"
                     % (activity.name, ret)
                 )
 
-    def gather_(self, cachedContributors=[]):
+    def gather_(self):
         contributorData = {}
         ### for each activity defined
         for activity in self.activities:
@@ -162,28 +165,31 @@ class ContributionDomain(object):
 class ContributionActivityPlugin(object):
     _connectors = {}
     _globals_ = None
+    _debug_ = False
+    _output_ = False
 
     def __init__(self):
         super(ContributionActivityPlugin, self).__init__()
-        self.debug = False
 
     @pluginlib.abstractmethod
     def initialize_(self, activity):
-        pass
+        raise NotImplementedError()
 
     @pluginlib.abstractmethod
-    def onGlobalsUpdate_(self):
-        pass
+    def gather_(self):
+        raise NotImplementedError()
 
-    @pluginlib.abstractmethod
-    def gather_(self, cachedContributors=[]):
-        pass
+    def setOutput(self, o):
+        self._output_ = o
+
+    def getOutput(self):
+        return self._output_
 
     def setDebug(self, debug):
-        self.debug = debug
+        self._debug_ = debug
 
     def getDebug(self):
-        return self.debug
+        return self._debug_
 
     def setGlobals(self, d):
         self._globals_ = d
@@ -198,7 +204,7 @@ class ContributionActivityPlugin(object):
         return self._connectors
 
     def log(self, msg):
-        if self.debug:
+        if self.getOutput():
             print("\t[.] Plugin [%s]: %s" % (self._alias_, msg))
 
     @staticmethod
@@ -215,19 +221,10 @@ class ContributionActivity(object):
         applyLookupDict(ACTIVITY_LOOKUP_TYPES, content, self)
         self.plugin = None
 
-    def updateGlobals(self, config=None, connectors=None):
-        ### provide all global configuration parameters
-        ### for this plugin
-        if config:
-            self.config = config
-            self.plugin.setGlobals(self.config)
-        if connectors:
-            self.connectors = connectors
-            self.plugin.setConnectors(self.connectors)
-        ### call the update event of the plugin to signalize the change
-        self.plugin.onGlobalsUpdate_()
-
-    def initialize_(self):
+    def initialize_(self, globals=None, connectors=None):
+        # self.globals_ = globals_
+        # self.connectors_ = connectors_
+        ### do plugin work
         pluginName = self.type.name
         ### initialize/load module & plugin
         moduleName = "%s.%s" % (ACTIVITY_PLUGIN_MODULE_PREFIX, pluginName)
@@ -244,15 +241,25 @@ class ContributionActivity(object):
             ### dirty little debug flag set for newly instanced plugin
             ### this has to be dne in a better way but works for now
             self.plugin.setDebug(self.debug)
+            ### same as debug, we have to set the print option which
+            ### can mute teh output of the plugin
+            self.plugin.setOutput(self.output)
+            ### we wil lalso set our glboals and conenctors,
+            ### so tht plugins can acces those wherever
+            self.plugin.setGlobals(globals)
+            self.plugin.setConnectors(connectors)
             ### initialize plugin
+            ### this is the first event,
+            ### that the plugin user code will get
             pluginInitSuccess = self.plugin.initialize_(self)
+            ### done
         return pluginInitSuccess
 
-    def gather_(self, cachedContributors=[]):
+    def gather_(self):
         ### gather whatever you have to find out who contributed what
         ### result should be a list of contributors with a score
         if self.plugin:
-            return self.plugin.gather_(cachedContributors=cachedContributors)
+            return self.plugin.gather_()
 
     def readParam(self, key, default=None):
         val = self.params.get(key, default)
@@ -262,17 +269,6 @@ class ContributionActivity(object):
                 "<%s> value needed in activity's [%s] <params>!" % (key, self.type.name)
             )
         return val
-
-    def __repr__(self):
-        return simpleDictRepr(self)
-
-
-class ContributionMetric(object):
-    def __init__(self, d):
-        super(ContributionMetric, self).__init__()
-        self.name = next(iter(d))
-        content = d.get(self.name)
-        self.__dict__.update(content)
 
     def __repr__(self):
         return simpleDictRepr(self)
@@ -308,6 +304,7 @@ ACTIVITY_LOOKUP_TYPES = {
     "mandatory": {"type": ContributionType},
     "optional": {
         "debug": (bool, False),
+        "output": (bool, False),
         "applies_to": (lambda l: [ContributionTarget(d) for d in l], []),
         "params": (dict, {}),
         "metrics": (lambda l: [ContributionMetric(d) for d in l], []),

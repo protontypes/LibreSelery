@@ -50,46 +50,25 @@ class GithubRemoteContributorsActivity(ContributionActivityPlugin):
         Returns:
         bool: True if successfully initialized
         """
+        ### get some information about our activity
         init = True
         self.uniform_score = activity.readParam("uniform_score")
         self.min_contributions = activity.readParam("min_contributions", default=0)
         self.include_deps = activity.readParam("include_dependencies", default=False)
         init = False if not self.uniform_score or not self.min_contributions else True
-        return init
-
-    def onGlobalsUpdate_(self):
-        """
-        Overload of abstract event method which signalizes the change of the global configuration
-
-        Parameters:
-        Non
-
-        Returns:
-        None
-        """
         ### get current project
         self.directory = self.getGlobals().directory
-        ### get special params
-        ###
-        ### TODO:
-        ### these config values should probably not come from globals()
-        ### but from activity (self.initialize_) instead
-        ### because they are not global anymore and instead
-        ### define this specific activity
+
+        ### get global configurations
         self.include_main_repository = self.getGlobals().include_main_repository
 
-        ### get current github connector
-        ###
-        ### TODO:
-        ### connectors are a dict atm, containing all possible
-        ### (preinitialized) connector objects. These can be
-        ### considered "work in progress" and will change slightly
-        ### as time goes on
+        ### get global github connector
         self.githubConnector = self.getConnectors().get(
             self.GITHUB_CONNECTOR_NAME, None
         )
+        return init
 
-    def gather_(self, cachedContributors=[]):
+    def gather_(self):
         """
         Overload of abstract method which is responsible for gathering
         contributor information and scoring contributors based on the activity defined
@@ -223,10 +202,6 @@ def test():
     }
     ### create an activity object
     activity = ContributionActivity(d)
-    ### initialize the activity
-    ### which will in turn use this specific plugin
-    ### if configured correctly
-    init = activity.initialize_()
     ### emulate some global information
     ### which is used by the plugin to work properly
     test_grabEnvironmentVarsFromFile(
@@ -234,13 +209,16 @@ def test():
     )
     myGithubToken = os.environ["GITHUB_TOKEN"]
     connectors = {"github": GithubConnector(myGithubToken)}
-    config = LibreSeleryConfig(
+    globalCfg = LibreSeleryConfig(
         {
             "directory": os.path.abspath(os.path.join(os.getcwd(), "..", "..")),
             "include_main_repository": True,
         }
     )
-    activity.updateGlobals(config=config, connectors=connectors)
+    ### initialize the activity
+    ### which will in turn use this specific plugin
+    ### if configured correctly
+    init = activity.initialize_(globals=globalCfg, connectors=connectors)
     if init:
         ### let us do our work
         contributors, scores = activity.gather_()

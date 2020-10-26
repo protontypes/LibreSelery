@@ -47,21 +47,12 @@ class GitFileContributionActivity(ContributionActivityPlugin):
         bool: True if successfully initialized
         """
         self.fileFilters = activity.applies_to
+
+        ### get global configurations
+        self.directory = self.getGlobals().directory
         return True
 
-    def onGlobalsUpdate_(self):
-        """
-        Overload of abstract event method which signalizes the change of the global configuration
-
-        Parameters:
-        None
-
-        Returns:
-        None
-        """
-        self.directory = self.getGlobals().directory
-
-    def gather_(self, cachedContributors=[]):
+    def gather_(self):
         """
         Overload of abstract method which is responsible for gathering
         contributor information and scoring contributors based on the action defined
@@ -294,14 +285,14 @@ def test():
     }
     ### create an activity object
     activity = ContributionActivity(d)
+
+    ### emulate some global information
+    ### which is used by the plugin to work properly
+    globalCfg = LibreSeleryConfig({"directory": os.getcwd()})
     ### initialize the action
     ### which will in turn use this specific plugin
     ### if configured correctly
-    init = activity.initialize_()
-    ### emulate some global information
-    ### which is used by the plugin to work properly
-    config = LibreSeleryConfig({"directory": os.getcwd()})
-    activity.updateGlobals(config=config, connectors=None)
+    init = activity.initialize_(globals=globalCfg)
     if init:
         ### let us do our work
         contributors, scores = activity.gather_()

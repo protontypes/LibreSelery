@@ -6,25 +6,19 @@ import libreselery.contribution_distribution_engine_types as cdetypes
 
 
 class ContributionDistributionEngine(object):
-    def __init__(self, config):
+    def __init__(self, config, connectors):
         super(ContributionDistributionEngine, self).__init__()
         ###grab relevant entries from selery cfg
-        self.domains = self._extractContributionDomains(config)
-        ### set our global config to the one given
-        ### these globals can be used by plugins and others
-        self.updateGlobals(config=config)
+        self.domains = self._extractContributionDomains(config, connectors)
 
-    def _extractContributionDomains(self, config):
+    def _extractContributionDomains(self, config, connectors):
         ### read the config and parse usable objects for each domain configured
         domains = []
         for domainDict in config.contribution_domains:
             domain = cdetypes.ContributionDomain(domainDict)
+            domain.initialize_(config, connectors)
             domains.append(domain)
         return domains
-
-    def updateGlobals(self, config=None, connectors=None):
-        for domain in self.domains:
-            domain.updateGlobals(config=config, connectors=connectors)
 
     def splitDictKeyVals(self, d):
         return cdetypes.splitDictKeyVals(d)

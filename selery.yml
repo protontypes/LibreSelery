@@ -35,10 +35,11 @@ contribution_domains:
       activities:
       - 
         test_activity:
+          output: True
           type: hello_world_activity_plugin
       - 
         test_activity2:
-          debug: True
+          output: True
           type: git_file_contributors
           applies_to: 
             - "*.md"
@@ -49,7 +50,7 @@ contribution_domains:
       activities:
       - 
         some_remote_contributors_activity:
-          debug: True
+          output: True
           type: github_remote_contributors
           params: 
             uniform_score: 30

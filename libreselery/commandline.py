@@ -29,6 +29,12 @@ def _runCommand(args):
     # various APIs and servers to
     # allow data gathering
     selery.connect()
+
+    # initialize the CDE (Contribution Distribution Engine)
+    # this also involves finding and 
+    # instantiating activity plugins
+    selery.startEngine()
+
     # let libreselery gather data
     # of all involved projects,
     # dependencies and contributors

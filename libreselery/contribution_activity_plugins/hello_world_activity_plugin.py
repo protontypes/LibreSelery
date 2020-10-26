@@ -47,23 +47,12 @@ class MY_TEST_ACTIVITY_PLUGIN_CLASS(ContributionActivityPlugin):
         """
         self.log("INIT")
 
-        return True
-
-    def onGlobalsUpdate_(self):
-        """
-        Overload of abstract event method which signalizes the change of the global configuration
-
-        Parameters:
-        None
-
-        Returns:
-        None
-        """
         ### example
         self.someGlobalInformation = self.getGlobals().simulation
-        pass
 
-    def gather_(self, cachedContributors=[]):
+        return True
+
+    def gather_(self):
         """
         Overload of abstract method which is responsible for gathering
         contributor information and scoring contributors based on the activity defined
@@ -111,14 +100,13 @@ def test():
     }
     ### create an activity object
     activity = ContributionActivity(d)
+    ### emulate some global information
+    ### which is used by the plugin to work properly
+    globalCfg = LibreSeleryConfig({"simulation": True})
     ### initialize the action
     ### which will in turn use this specific plugin
     ### if configured correctly
-    init = activity.initialize_()
-    ### emulate some global information
-    ### which is used by the plugin to work properly
-    config = LibreSeleryConfig({"simulation": True})
-    activity.updateGlobals(config=config, connectors=None)
+    init = activity.initialize_(globals=globalCfg)
     ### preparations done, lets do something
     if init:
         ### let us do our work
