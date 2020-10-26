@@ -31,7 +31,7 @@ def _runCommand(args):
     selery.connect()
 
     # initialize the CDE (Contribution Distribution Engine)
-    # this also involves finding and 
+    # this also involves finding and
     # instantiating activity plugins
     selery.startEngine()
 
