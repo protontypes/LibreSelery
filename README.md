@@ -43,7 +43,7 @@ The amount distributed to each contributor is calculated from an accumulation of
 It is sent via the cryptocurrency market API to the public email address of the git platform user profile.
 You can even configure the compensation of contributors from your own dependencies, therefore donating money back to open source platforms which play an integral role in your project.
 
-The weights calculations are under active development and will be extended in the future in cooperation with the community. We always listen to concerns and actively seek options for fair and appropriate measures of payout weights. The goal is a system that is fair and recognizes the contributions made without being susceptible to abuse. urthermore the issue of 'morality' is still open and any issues, concerns or ideas, regarding the following questions, are always welcome:
+The weights calculations are under active development and will be extended in the future in cooperation with the community. We always listen to concerns and actively seek options for fair and appropriate measures of payout weights. The goal is a system that is fair and recognizes the contributions made without being susceptible to abuse. Furthermore the issue of 'morality' is still open and any issues, concerns or ideas, regarding the following questions, are always welcome:
 
 - Which metric should give contributions more weight than others? 
 - How can we design metrics, which do represent and reward more helpful contributors?
@@ -63,7 +63,7 @@ LibreSelery ...
 6. adds the weights to the combined weight used for different distribution splitting behaviors.
 7. distributes the funding between the contributors based on the selected split behavior.
 8. pays out cryptocurrency to the selected contributor's email addresses via the Coinbase API. Contributors without a Coinbase account will receive an email to claim the donation.
-9. automatically generates a dotation and transaction visualization website in your GitHub wiki.
+9. automatically generates a donation and transaction visualization website in your GitHub wiki.
 
 
 <a href="https://asciinema.org/a/X0eONfhRtPAevNLPueyZ5Tamq" target="_blank">
@@ -208,7 +208,7 @@ env $(cat ~/.libreselery/secrets/tokens.env) selery run -d ~/<target_repository>
 
 
 
-LibreSelery is gone support multiple APIs and assets in the near future like:
+LibreSelery is going to support multiple APIs and assets in the near future like:
 
 - [x] GitHub
 - [ ] Gitlab
@@ -253,9 +253,9 @@ Let's assume you have a small donation that you want to distribute within a larg
 
 LibreSelery is working on a way to make even this referral income transparent for the sending account. 
 
-### How does this works from the legal side in the context of people partly funded by third-party sources, being employed in academics, or people working in industries?
+### How does this work from the legal side in the context of people partly funded by third-party sources, being employed in academics, or people working in industries?
 
-LibreSelery will send the donation to the public email address of your GitHub account. In case the email address is a business or academics address you need to talk to your organization what to do with the donation. If you have entered a private e-mail address here, you can accept donations at your own discretion. We consider your project contribution as privately done that has not already been rewarded. 
+LibreSelery will send the donation to the public email address of your GitHub account. In case the email address is a business or academics address you need to talk to your organization about what to do with the donation. If you have entered a private e-mail address here, you can accept donations at your own discretion. We consider your project contribution as privately done that has not already been rewarded. 
 
 ## Support LibreSelery
 
