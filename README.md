@@ -216,6 +216,7 @@ LibreSelery is gone support multiple APIs and assets in the near future like:
 - [x] Libraries.io
 - [x] Coinbase
 - [ ] Uphold
+- [ ] [GNU Taler](https://taler.net/)
 
 ## Frequently Asked Questions
 
@@ -251,6 +252,10 @@ Let's assume you have a small donation that you want to distribute within a larg
 [...] You can also send funds to an email address. This will register as a referral as well. 
 
 LibreSelery is working on a way to make even this referral income transparent for the sending account. 
+
+### How does this works from the legal side in the context of people partly funded by third-party sources, being employed in academics, or people working in industries?
+
+LibreSelery will send the donation to the public email address of your GitHub account. In case the email address is a business or academics address you need to talk to your organization what to do with the donation. If you have entered a private e-mail address here, you can accept donations at your own discretion. We consider your project contribution as privately done that has not already been rewarded. 
 
 ## Support LibreSelery
 
