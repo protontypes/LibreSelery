@@ -152,7 +152,7 @@ def drawTimeSeries(title, ylabel, keys, values):
     fig.autofmt_xdate()
 
 
-def visualizeTransactions(resultDir, transactionFilePath):
+def visualizeTransactions(resultDir, transactionFilePath, cryptocurrency):
     if transactionFilePath:
         # read transactions file
         with open(transactionFilePath) as transactions_file:
@@ -161,7 +161,7 @@ def visualizeTransactions(resultDir, transactionFilePath):
         # prepare transaction data
         f = lambda transactions, cryptocurrency: transactionIscryptocurrency(transactions["data"],cryptocurrency)
         data_by_day = groupBy(
-                filter(f(tranactions,cryptocurrency)),
+                filter(f(transactions,cryptocurrency)),
             transactionToIsoDate,
         )
         spent_data_by_day_last_month = groupBy(
