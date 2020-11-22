@@ -24,7 +24,7 @@ import requests
 import json
 
 
-def getBitcoinPrice():
+def getcryptocurrencyPrice():
     URL = "https://www.bitstamp.net/api/ticker/"
     try:
         r = requests.get(URL)
@@ -33,18 +33,18 @@ def getBitcoinPrice():
         return Decimal("NaN")
 
 
-bitcoinPrice = getBitcoinPrice()
+cryptocurrencyPrice = getcryptocurrencyPrice()
 
 
-class BitcoinAddressValidator(Validator):
+class cryptocurrencyAddressValidator(Validator):
     def __init__(self):
         self.pattern = re.compile(r"(1|3|bc1)[a-zA-Z0-9]+", 0)
 
     def validate(self, document):
         if not re.fullmatch(self.pattern, document.text):
-            raise ValidationError(message="invalid bitcoin address")
+            raise ValidationError(message="invalid cryptocurrency address")
         if len(document.text) < 26:
-            raise ValidationError(message="bitcoin address too short")
+            raise ValidationError(message="cryptocurrency address too short")
 
 
 class BoolValidator(Validator):
@@ -122,7 +122,7 @@ ConfigDefaults = {
     "activity_weight": 70,
     # omit activity_since_commit
     "split_strategy": "full_split",
-    "random_split_btc_per_picked_contributor": Decimal("0.0001"),
+    "random_split_cryptocurrency_per_picked_contributor": Decimal("0.0001"),
     "random_split_picked_contributors": 1,
     "payout_per_run": Decimal("0.002"),
     "min_payout_per_contributor": Decimal(0.0),
@@ -337,25 +337,32 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
         answers["split_strategy"] = answer
         print("The split behavior has been set to " + answer)
 
-        print("current bitcoin value: $%s (US)" % str(bitcoinPrice))
+        print("current cryptocurrency value: $%s (US)" % str(cryptocurrencyPrice))
         print(
-            "you need %s BTC for $1 (US)" % str(Context(prec=6).divide(1, bitcoinPrice))
+            "you need %s cryptocurrency for $1 (US)"
+            % str(Context(prec=6).divide(1, cryptocurrencyPrice))
         )
 
         if answer == "random_split":
             printQuestion("How much should a picked contributor get?")
             answer = Decimal(
                 prompt(
-                    makeColorPrompt("random_split_btc_per_picked_contributor"),
+                    makeColorPrompt(
+                        "random_split_cryptocurrency_per_picked_contributor"
+                    ),
                     default=str(
-                        defaultsDict.get("random_split_btc_per_picked_contributor", "")
+                        defaultsDict.get(
+                            "random_split_cryptocurrency_per_picked_contributor", ""
+                        )
                     ),
                     validator=DecimalValidator(),
                 )
             )
-            print("Each picked contributor will receive %s BTC." % str(answer))
-            print("Currently worth $%s (US)" % str(answer * bitcoinPrice))
-            answers["random_split_btc_per_picked_contributor"] = answer
+            print(
+                "Each picked contributor will receive %s cryptocurrency." % str(answer)
+            )
+            print("Currently worth $%s (US)" % str(answer * cryptocurrencyPrice))
+            answers["random_split_cryptocurrency_per_picked_contributor"] = answer
 
             printQuestion("How many contributors should get picked at random picking?")
             answer = int(
@@ -377,8 +384,8 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
                 validator=DecimalValidator(),
             )
         )
-        print("Each run of LibreSelery will send %s BTC" % str(answer))
-        print("Currently worth $%s (US)" % str(answer * bitcoinPrice))
+        print("Each run of LibreSelery will send %s cryptocurrency" % str(answer))
+        print("Currently worth $%s (US)" % str(answer * cryptocurrencyPrice))
         answers["payout_per_run"] = answer
 
         printQuestion("What should be the minimum payment per contributor?")
@@ -389,7 +396,7 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
                 validator=DecimalValidator(),
             )
         )
-        print("Currently worth %s$" % str(answer * bitcoinPrice))
+        print("Currently worth %s$" % str(answer * cryptocurrencyPrice))
         answers["min_payout_per_contributor"] = answer
 
         printQuestion(
@@ -404,17 +411,17 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
         )
         answers["min_contributions_required_payout"] = answer
 
-        printQuestion("What is the source Bitcoin address payout?")
+        printQuestion("What is the source cryptocurrency address payout?")
         answer = prompt(
-            makeColorPrompt("bitcoin_address"),
-            default=str(defaultsDict.get("bitcoin_address", "")),
-            validator=BitcoinAddressValidator(),
+            makeColorPrompt("cryptocurrency_address"),
+            default=str(defaultsDict.get("cryptocurrency_address", "")),
+            validator=cryptocurrencyAddressValidator(),
         )
         print("%s will be used to pay out contributors." % answer)
-        answers["bitcoin_address"] = answer
+        answers["cryptocurrency_address"] = answer
 
         printQuestion(
-            "Should LibreSelery validate that the public bitcoin address matches the secret coinbase address?"
+            "Should LibreSelery validate that the public cryptocurrency address matches the secret coinbase address?"
         )
         answer = answerStringToBool(
             prompt(
@@ -424,9 +431,9 @@ def getConfigThroughWizard(defaultsDict=ConfigDefaults):
             )
         )
         if answer:
-            print("Double checking of bitcoin address enabled.")
+            print("Double checking of cryptocurrency address enabled.")
         else:
-            print("Double checking of bitcoin address disabled.")
+            print("Double checking of cryptocurrency address disabled.")
         answers["perform_wallet_validation"] = answer
 
         printQuestion("Do you want Coinbase to send notification e-mails?")

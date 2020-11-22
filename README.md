@@ -14,7 +14,7 @@ LibreSelery is a tool to distribute funding in free and open source projects. Wi
 *This project is funded by LibreSelery itself. If you actively contribute to this repository, you will receive a small amount of cryptocurrency from the donation pool to your public email address on GitHub.*
 
 [![Actions Status](https://github.com/protontypes/libreselery/workflows/seleryaction/badge.svg)](https://github.com/protontypes/libreselery/actions?query=workflow%3Aseleryaction)
-![Balance BTC](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/balance_badge.json&style=flat&logo=bitcoin)
+![Balance cryptocurrency](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/balance_badge.json&style=flat&logo=bitcoin)
 ![Balance EUR](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/wiki/protontypes/libreselery/libreselery/native_balance_badge.json&style=flat&logo=bitcoin)
 [![Donate with bitcoin](https://badgen.net/badge/Donate/3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w/orange?icon=bitcoin)](https://github.com/protontypes/libreselery/wiki/Donation)
 [![Transaction History](https://badgen.net/badge/icon/Transaction%20History?icon=bitcoin&label)](https://github.com/protontypes/libreselery/wiki/Transaction-History)
@@ -231,12 +231,12 @@ Find more information on this discussion in our issue board: [#159](https://gith
 Since LibreSelery is only a tool and not a platform, we do not and cannot charge any fees. Only buying and selling cryptocurrency on Coinbase has [fees](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees). Transactions between Coinbase wallets have no fees. 
 
 ### Can I do micro transactions?
-Yes, you can do that. But please try to avoid spamming people with emails. Every payout results in an email. To disable notification emails, set `send_email_notification: False`. Users without a Coinbase account on their github profile email address will still receive emails. Sending cryptocurrency between Coinbase wallets is for free. The Coinbase API allows you to send a minimum of 0.000001 BTC. 
+Yes, you can do that. But please try to avoid spamming people with emails. Every payout results in an email. To disable notification emails, set `send_email_notification: False`. Users without a Coinbase account on their github profile email address will still receive emails. Sending cryptocurrency between Coinbase wallets is for free. The Coinbase API allows you to send a minimum of 0.000001 cryptocurrency. 
 [Coinbase Help:](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees)
 > We do not charge for transferring cryptocurrency from one Coinbase wallet to another 
 
 ### When should I use the `random_split` strategy?
-Let's assume you have a small donation that you want to distribute within a larger project. `full_split` could cause your transaction to fall below the allowed limit of 0.000001 BTC. Not many people in your project may have a Coinbase account. Only few people would open an account for 10 cents. With the random distribution, individual donors are randomly selected based on their weight and receive a larger donation. Over a longer period of time, the same distribution should emerge as it would with the `full_split` distribution.
+Let's assume you have a small donation that you want to distribute within a larger project. `full_split` could cause your transaction to fall below the allowed limit of 0.000001 cryptocurrency. Not many people in your project may have a Coinbase account. Only few people would open an account for 10 cents. With the random distribution, individual donors are randomly selected based on their weight and receive a larger donation. Over a longer period of time, the same distribution should emerge as it would with the `full_split` distribution.
 
 ### When does my credit expire at Coinbase if I do not open an account?
 [Coinbase Help:](https://help.coinbase.com/en/coinbase/trading-and-funding/sending-or-receiving-cryptocurrency/i-sent-funds-to-the-wrong-address-how-do-i-get-them-back.html)

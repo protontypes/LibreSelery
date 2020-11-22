@@ -4,7 +4,7 @@ simulation: False
 
 
 ## include the contributors from target repository
-include_main_repository: True
+include_main_repository: False
 
 ## include the dependencies of the target folder. This requires a libraries.io token.
 include_dependencies: True
@@ -12,10 +12,10 @@ include_dependencies: True
 ## include the tooling and runtime from file tooling_repos.yml
 ## You can add tools, which will not be detected by the dependency scanner.
 ## For example command line tools. If you want to support the LibreSelery project, include it in tooling_repos.yml
-include_tooling_and_runtime: True
+include_tooling_and_runtime: False
 
 ## minimum number of commits to be considered as contributor
-min_contributions_required_payout: 1
+min_contributions_required_payout: 3
 
 ## number of randomly selected dependency contributors
 included_dependency_contributor: 10
@@ -42,29 +42,32 @@ activity_weight: 10
 ## "random_split": X contributors are randomly picked using the weight as probability.
 split_strategy: "full_split"
 
+## the used cryptocurrency
+cryptocurrency: "BTC"
+
 ## the amount of payout per run that is used for all split strategies
-payout_per_run: 0.004000
+payout_per_run: 0.0005
 ## the minimum payout per contributor. Below that number the payout is skipped to avoid bother contributors with very small payout. 
 min_payout_per_contributor: 0.00005
 
 # Random Split Strategy configuration
 ## Please consider that:
-## random_split_picked_contributors X random_split_btc_per_picked_contributors = payout_per_run
+## random_split_picked_contributors X random_split_cryptocurrency_per_picked_contributors = payout_per_run
 ## LibreSelery does fail if this does not apply.
 
 ## numbers of total contributors payout per run at random split
 random_split_picked_contributors: 0
 
-## the amount of btc send per user at random_split
-random_split_btc_per_picked_contributor: 0.000000
+## the amount of cryptocurrency send per user at random_split
+random_split_cryptocurrency_per_picked_contributor: 0.000000
 
 
 # payout configuration
-## bitcoin address used to pay contributors and receive donations
-bitcoin_address: "3PVdiyLPR7MgaeFRJLW9mfuESZS2aAPX9w"
+## cryptocurrency address used to pay contributors and receive donations
+cryptocurrency_address: "0xc41D1363693f16AD129108f2d323758aFDda2E7e"
 
-## automatically check that the configured `bitcoin_address` matches the coinbase wallet address
-perform_wallet_validation: True
+## automatically check that the configured `cryptocurrency_address` matches the coinbase wallet address
+perform_wallet_validation: False
 
 ## Send payout notification emails by coinbase to contributors?
 send_email_notification: True

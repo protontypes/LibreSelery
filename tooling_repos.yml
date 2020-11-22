@@ -1,5 +1,5 @@
 github:
 #    - https://github.com/protontypes/libreselery
-#    - https://github.com/torvalds/linux
-    - https://github.com/python/cpython
-    - https://github.com/docker/docker-ce
+    - https://github.com/torvalds/linux
+#    - https://github.com/python/cpython
+#    - https://github.com/docker/docker-ce

@@ -40,14 +40,14 @@ def transactionToYearMonth(transaction):
 
 
 def transactionToUser(transaction):
-    userName = transaction['description']
+    userName = transaction["description"]
     if not userName:
-        return 'legacy'    
-    if (userName.startswith('@')):
+        return "legacy"
+    if userName.startswith("@"):
         name, _, _ = userName.partition(":")
         return name[1:]
     else:
-        return 'legacy' 
+        return "legacy"
 
 
 def transactionIsLastMonth(transaction):
@@ -74,12 +74,12 @@ def transactionToEur(transaction):
     return float(transaction["native_amount"]["amount"])
 
 
-def transactionIsBtc(transaction):
-    return transaction["amount"]["currency"] == "BTC"
+def transactionIscryptocurrency(transaction,cryptocurrency):
+    return transaction["amount"]["currency"] == cryptocurrency
 
 
-def transactionToBtc(transaction):
-    assert transactionIsBtc(transaction)
+def transactionTocryptocurrency(transaction,cryptocurrency):
+    assert transactionIscryptocurrency(transaction,cryptocurrency)
     return float(transaction["amount"]["amount"])
 
 
@@ -105,7 +105,7 @@ def drawBarChart(title, xlabel, keys, values):
 def drawEurPerUser(title, xlabel, keys, values):
     # delete legacy stuff before drawing the chart
     key_list, value_list = list(keys), list(values)
-    index = key_list.index('legacy')
+    index = key_list.index("legacy")
     del value_list[index], key_list[index]
     _, diagram = plt.subplots()
     y_pos = np.arange(30)
@@ -159,8 +159,10 @@ def visualizeTransactions(resultDir, transactionFilePath):
             transactions = json.loads(transactions_file.read())
 
         # prepare transaction data
+        f = lambda transactions, cryptocurrency: transactionIscryptocurrency(transactions["data"],cryptocurrency)
         data_by_day = groupBy(
-            filter(transactionIsBtc, transactions["data"]), transactionToIsoDate
+                filter(f(tranactions,cryptocurrency)),
+            transactionToIsoDate,
         )
         spent_data_by_day_last_month = groupBy(
             filter(
@@ -176,19 +178,19 @@ def visualizeTransactions(resultDir, transactionFilePath):
             filter(transactionIsEurSpent, transactions["data"]), transactionToUser
         )
 
-        wallet_balance_btc_by_day_keys = list(data_by_day.keys())
-        wallet_balance_btc_by_day_keys.sort()
-        wallet_balance_btc_by_day_keys_datetimes = list(
+        wallet_balance_cryptocurrency_by_day_keys = list(data_by_day.keys())
+        wallet_balance_cryptocurrency_by_day_keys.sort()
+        wallet_balance_cryptocurrency_by_day_keys_datetimes = list(
             map(
                 lambda d: np.datetime64(isoDateToDatetime(d)),
-                wallet_balance_btc_by_day_keys,
+                wallet_balance_cryptocurrency_by_day_keys,
             )
         )
-        wallet_balance_btc_by_day_values = list(
+        wallet_balance_cryptocurrency_by_day_values = list(
             accumulate(
                 [
-                    sum(map(transactionToBtc, data_by_day[k]))
-                    for k in wallet_balance_btc_by_day_keys
+                    sum(map(transactionTocryptocurrency, data_by_day[k]))
+                    for k in wallet_balance_cryptocurrency_by_day_keys
                 ]
             )
         )
@@ -201,10 +203,9 @@ def visualizeTransactions(resultDir, transactionFilePath):
             for k, v in spent_data_by_year_month.items()
         }
         eur_by_user = {
-            k: -1 * sum(map(transactionToEur, v)) 
-            for k, v in spent_data_by_user.items()
+            k: -1 * sum(map(transactionToEur, v)) for k, v in spent_data_by_user.items()
         }
-       
+
         # draw diagrams
         plt.rcdefaults()
 
@@ -237,10 +238,10 @@ def visualizeTransactions(resultDir, transactionFilePath):
         )
 
         drawTimeSeries(
-            "BTC wallet per day in last month",
-            "BTC",
-            wallet_balance_btc_by_day_keys_datetimes,
-            wallet_balance_btc_by_day_values,
+            "cryptocurrency wallet per day in last month",
+            "cryptocurrency",
+            wallet_balance_cryptocurrency_by_day_keys_datetimes,
+            wallet_balance_cryptocurrency_by_day_values,
         )
         plt.savefig(
             os.path.join(resultDir, "wallet_balance_per_day.png"), bbox_inches="tight"

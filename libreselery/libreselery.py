@@ -82,25 +82,25 @@ class LibreSelery(object):
         extractor = URLExtract()
         fundingPath = self._getFile("README.md")
         if fundingPath is not None:
-            self.log("Loading funding file [%s] for bitcoin wallet" % fundingPath)
+            self.log("Loading funding file [%s] for cryptocurrency wallet" % fundingPath)
             mdfile = open(os.path.join(self.seleryDir, "README.md"), "r")
             mdstring = mdfile.read()
             urls = extractor.find_urls(mdstring)
             badge_string = "https://badgen.net/badge/LibreSelery-Donation/"
             for url in urls:
                 if badge_string in url:
-                    self.config.bitcoin_address = url.split(badge_string, 1)[1]
-                    self.log("Found bitcoin address [%s]" % self.config.bitcoin_address)
+                    self.config.cryptocurrency_address = url.split(badge_string, 1)[1]
+                    self.log("Found cryptocurrency address [%s]" % self.config.cryptocurrency_address)
         else:
             self.log(
-                "Using bitcoin address from configuration file for validation check [%s]"
-                % self.config.bitcoin_address
+                "Using cryptocurrency address from configuration file for validation check [%s]"
+                % self.config.cryptocurrency_address
             )
 
         # Create a new QR code based on the configured wallet address
         self.log("Creating QR code PNG image for funders")
         wallet_qrcode = QRCode(error_correction=1)
-        wallet_qrcode.add_data(self.config.bitcoin_address)
+        wallet_qrcode.add_data(self.config.cryptocurrency_address)
         wallet_qrcode.best_fit()
         wallet_qrcode.makeImpl(False, 6)
         wallet_image = wallet_qrcode.make_image()
@@ -398,7 +398,7 @@ class LibreSelery(object):
                 contributors, weights, k=self.config.random_split_picked_contributors
             )
             contributor_payout_split = [
-                self.config.random_split_btc_per_picked_contributor
+                self.config.random_split_cryptocurrency_per_picked_contributor
             ] * len(contributors)
 
         elif self.config.split_strategy == "full_split":
@@ -437,7 +437,7 @@ class LibreSelery(object):
             )
             try:
                 visualizeTransactions(
-                    os.path.join(self.config.result_dir, "public"), transactionFilePath
+                    os.path.join(self.config.result_dir, "public"), transactionFilePath , self.config.cryptocurrency
                 )
             except Exception as e:
                 self.logError("Error creating visualization: %s" % e)
@@ -454,7 +454,7 @@ class LibreSelery(object):
 
             # check if the public address is in the privat wallet
             if self.config.perform_wallet_validation:
-                if self.coinConnector.iswalletAddress(self.config.bitcoin_address):
+                if self.coinConnector.iswalletAddress(self.config.cryptocurrency_address):
                     self.log(
                         "Configured wallet address matches with wallet address Coinbase account"
                     )
@@ -506,15 +506,9 @@ class LibreSelery(object):
                     continue
 
                 total_send_amount += float(send_amount)
+                description=self._getEmailNote(contributor.stats.author.login, contributor.fromProject)
 
-                receipt = self.coinConnector.payout(
-                    contributor.stats.author.email,
-                    send_amount,
-                    not self.config.send_email_notification,
-                    description=self._getEmailNote(
-                        contributor.stats.author.login, contributor.fromProject
-                    ),
-                )
+                receipt = self.coinConnector.payout(contributor.stats.author.email, send_amount, not self.config.send_email_notification, description, self.config.cryptocurrency)
                 self.receiptStr = self.receiptStr + str(receipt)
                 self.log(
                     "Payout of [%s][%s] succeeded"
@@ -533,7 +527,7 @@ class LibreSelery(object):
                 % (native_amount, native_currency)
             )
 
-            self.log("Creating static badges of the wallet amount in BTC and EUR")
+            self.log("Creating static badges of the wallet amount in [%s] and EUR" % self.config.cryptocurrency)
             # Create the balance badge to show on the README
             balance_badge = {
                 "schemaVersion": 1,
@@ -571,8 +565,8 @@ class LibreSelery(object):
 
             self.log("Creating donation website")
             donation_website = (
-                "<p align='center'><b>Donate to this address to support LibreSelery:</b><br><b></b><br><b>BTC address:</b><br><b>"
-                + self.config.bitcoin_address
+                "<p align='center'><b>Donate to this address to support LibreSelery:</b><br><b></b><br><b>cryptocurrency address:</b><br><b>"
+                + self.config.cryptocurrency_address
                 + "<br><br><b>To get on the auto generated thank you website add a message in the following format to your message<br><b>selery:Your Name:Your Public Message.</b>"
                 + "</b><br><img src='libreselery/wallet_qrcode.png'></p>"
             )
@@ -605,9 +599,10 @@ class LibreSelery(object):
             )
             for idx, contributor in enumerate(recipients):
                 self.log(
-                    " -- would have been a payout of '%s' bitcoin to '%s'"
+                    " -- would have been a payout of '%s' '%s' to '%s'"
                     % (
                         "{0:.6f}".format(contributor_payout_split[idx]).rstrip("0"),
+                        self.config.cryptocurrency,
                         contributor.stats.author.login,
                     )
                 )

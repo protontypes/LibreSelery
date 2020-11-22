@@ -8,7 +8,7 @@ class CoinbaseConnector(selery_utils.Connector):
         super(CoinbaseConnector, self).__init__()
         self.client = Client(token, secret)
         self.account = self.client.get_primary_account()
-        self.addresses = self.account.get_addresses()
+        #self.addresses = self.account.get_addresses()
 
     def pastTransactions(self):
         return self.client.get_transactions(self.account.id)
@@ -19,11 +19,18 @@ class CoinbaseConnector(selery_utils.Connector):
                 return True
         return False
 
-    def payout(self, target_email, target_amount, skip_notifications, description):
+    def payout(
+        self,
+        target_email,
+        target_amount,
+        skip_notifications,
+        description,
+        cryptocurrency,
+    ):
         tx = self.account.send_money(
             to=target_email,
             amount=float(target_amount),
-            currency="btc",
+            currency=cryptocurrency,
             skip_notifications=skip_notifications,
             description=description,
         )
