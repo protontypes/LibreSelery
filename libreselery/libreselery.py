@@ -295,20 +295,22 @@ class LibreSelery(object):
                     continue
 
                 total_send_amount += float(send_amount)
+                email_message = self._getEmailNote(contributor.username, contributor.fromProject)
 
-                receipt = coinConnector.payout(
-                    contributor.email,
-                    send_amount,
-                    not self.config.send_email_notification,
-                    description=self._getEmailNote(
-                        contributor.username, contributor.fromProject
-                    ),
-                )
-                self.receiptStr = self.receiptStr + str(receipt)
-                self.log(
-                    "Payout of [%s][%s] succeeded"
-                    % (receipt["amount"]["amount"], receipt["amount"]["currency"])
-                )
+                try:
+                    receipt = coinConnector.payout(
+                        contributor.email,
+                        send_amount,
+                        not self.config.send_email_notification,
+                        description=email_message 
+                    )
+                    self.receiptStr = self.receiptStr + str(receipt)
+                    self.log(
+                        "Payout of [%s][%s] succeeded"
+                        % (receipt["amount"]["amount"], receipt["amount"]["currency"])
+                    )
+                except coinbase.wallet.error.ValidationError as e:
+                    self.log(e)
 
             with open(receiptFilePath, "a") as f:
                 f.write(str(self.receiptStr))
@@ -419,32 +421,30 @@ class LibreSelery(object):
         githubConnector = self.connectors["github"]
         try:
             remote_url = git_utils.grabLocalProject(self.config.directory)
-            main_project_name = githubConnector.grabRemoteProjectByUrl(str(remote_url))
+            main_project_name = githubConnector.grabRemoteProjectByUrl(str(remote_url).strip())
             dependency_project_name = githubConnector.grabRemoteProjectByUrl(
                 str(project_url)
             )
 
             if main_project_name.full_name != dependency_project_name.full_name:
                 repo_message = (
-                    " to "
-                    + dependency_project_name.full_name
-                    + ". We are using it at "
-                    + main_project_name.full_name
+                    "to %s. We are using it at %s" % (dependency_project_name.full_name, main_project_name.full_name)
                 )
             else:
-                repo_message = " to " + main_project_name.full_name
+                repo_message = "to %s" %  (main_project_name.full_name)
 
         except Exception as e:
             print("Cannot detect remote url of git repo", e)
 
-        prefix = "@" + login_name + ": Thank you for contributing" + repo_message
-        postfix = " Find out more about LibreSelery at https://github.com/protontypes/libreselery."
+        prefix = "@%s: The project you contributed is part of %s" % (login_name, repo_message)
+        postfix = "Find out more about LibreSelery at https://github.com/protontypes/libreselery."
         inner = (
-            ": " + self.config.optional_email_message
+            ": %s" % self.config.optional_email_message
             if self.config.optional_email_message
             else ""
         )
-        return prefix + inner + postfix
+        note = "%s%s %s" % (prefix, inner, postfix)
+        return note
 
     def getConfig(self):
         return self.config

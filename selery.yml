@@ -4,7 +4,7 @@
 
 # Configuration file for LibreSelery 
 ## simulation lets you run LibreSelery without payout or coinbase tokens
-simulation: True
+simulation: False
 
 
 ## include the contributors from target repository
@@ -29,35 +29,45 @@ included_dependency_contributor: 5
 ### C O N T R I B U T I O N S
 ############################################################################################
 contribution_domains:
-  - 
-    DOCUMENTATION:
-      weight: 0.1
-      activities:
-      - 
-        test_activity:
-          output: True
-          type: hello_world_activity_plugin
-      - 
-        test_activity2:
-          output: True
-          type: git_file_contributors
-          applies_to: 
-            - "*.md"
-            - "docs/"
-  -
-    CODING:
-      weight: 0.9
-      activities:
-      - 
-        some_remote_contributors_activity:
-          output: True
-          type: github_remote_contributors
-          params: 
-            uniform_score: 30
-            min_contributions: 1
-
-
-
+#  - 
+#    DOCUMENTATION:
+#      weight: 0.1
+#      activities:
+#      - 
+#        test_activity:
+#          output: True
+#          type: hello_world_activity_plugin
+#      - 
+#        test_activity2:
+#          output: True
+#          type: git_file_contributors
+#          applies_to: 
+#            - "*.md"
+#            - "docs/"
+#  -
+#    CODING:
+#      weight: 0.9
+#      activities:
+#      - 
+#        some_remote_contributors_activity:
+#          output: True
+#          type: github_remote_contributors
+#          params: 
+#            uniform_score: 30
+#            min_contributions: 1
+#
+    -
+      AWESOME1:
+        weight: 0.5
+        activities:
+        -
+          awesome_list_contributor_activity:
+            output: True
+            type: awesome_list_contributors
+            params:
+              source: "AWESOME.md"
+              randomPickCount: 5
+              uniform_score: 10
 ############################################################################################
 ### P A Y O U T
 ############################################################################################
