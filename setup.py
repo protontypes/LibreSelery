@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 from setuptools import setup
+from glob import glob
 
 ### https://setuptools.readthedocs.io/en/latest/setuptools.html
 
@@ -23,20 +24,22 @@ setup(
         "https://github.com/protontypes/coinbase-python/tarball/master#egg=coinbase"
     ],
     install_requires=[
-        "pygithub==1.52",
-        "dnspython==2.0.0",
-        "pyyaml==5.3.1",
+        "pygithub",
+        "dnspython",
+        "pyyaml",
         "coinbase",
-        "gitpython==3.1.7",
-        "pybraries==0.2.2",
-        "urlextract==1.0.0",
-        "matplotlib==3.3.0",
-        "numpy==1.19.1",
+        "gitpython",
+        "pybraries",
+        "urlextract",
+        "matplotlib",
+        "numpy",
         "prompt_toolkit",
         "qrcode",
         "wheel",
         "pluginlib",
         "python-dotenv",
+        "markdown",
+        "bs4",
     ],
     packages=[
         "libreselery",
@@ -46,6 +49,7 @@ setup(
     ],
     ### add additional files to $TARGET_DIR containing [$SOURCE_FILES]
     data_files=[
-        ("libreselery/ruby_extensions", ["libreselery/ruby_extensions/scan.rb"])
+        ("libreselery/ruby_extensions", ["libreselery/ruby_extensions/scan.rb"]),
+        ("libreselery/contribution_activity_plugins", glob("libreselery/contribution_activity_plugins/*.py"))
     ],
 )

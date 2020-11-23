@@ -236,7 +236,8 @@ class AwesomeListActivityPlugin(ContributionActivityPlugin):
         allEntries = []
         for r in awesomeObject.rubrics:
             for e in r.entries:
-                if "github.com" in e.url:
+                url_split = e.url.split("/")
+                if "github.com" in url_split[2] and url_split[4]: 
                     allEntries.append(e.url)
         #self.log(allEntries)
 

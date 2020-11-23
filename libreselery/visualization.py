@@ -41,8 +41,11 @@ def transactionToYearMonth(transaction):
 
 def transactionToUserEmail(transaction):
     # user_name = GithubConnector.grabUserNameByEmail(transaction["to"]["email"])
-    email = transaction["to"]["email"]
-    name, _, _ = email.partition("@")
+    if 'transaction["to"]["email"]' in transaction:
+        email = transaction["to"]["email"]
+        name, _, _ = email.partition("@")
+    else:
+        name = "Unknown User"
     return name
 
 

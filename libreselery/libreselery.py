@@ -9,6 +9,7 @@ import yaml
 import random
 import logging
 import datetime
+import sys
 
 from urlextract import URLExtract
 from qrcode import QRCode
@@ -228,7 +229,7 @@ class LibreSelery(object):
                     os.path.join(self.config.result_dir, "public"), transactionFilePath
                 )
             except Exception as e:
-                self.logError("Error creating visualization: %s" % e)
+                self.logError("Error creating visualization: %s" % sys.exc_info()[0])
 
     def payout(self, recipients, contributor_payout_split):
         transactionFilePath = None
@@ -297,23 +298,23 @@ class LibreSelery(object):
                 total_send_amount += float(send_amount)
                 email_message = self._getEmailNote(contributor.username, contributor.fromProject)
 
-                try:
-                    receipt = coinConnector.payout(
-                        contributor.email,
-                        send_amount,
-                        not self.config.send_email_notification,
-                        description=email_message 
-                    )
-                    self.receiptStr = self.receiptStr + str(receipt)
-                    self.log(
-                        "Payout of [%s][%s] succeeded"
-                        % (receipt["amount"]["amount"], receipt["amount"]["currency"])
-                    )
-                except coinbase.wallet.error.ValidationError as e:
-                    self.log(e)
-
-            with open(receiptFilePath, "a") as f:
-                f.write(str(self.receiptStr))
+#                try:
+#                    receipt = coinConnector.payout(
+#                        contributor.email,
+#                        send_amount,
+#                        not self.config.send_email_notification,
+#                        description=email_message 
+#                    )
+#                    self.receiptStr = self.receiptStr + str(receipt)
+#                    self.log(
+#                        "Payout of [%s][%s] succeeded"
+#                        % (receipt["amount"]["amount"], receipt["amount"]["currency"])
+#                    )
+#                except coinbase.wallet.error.ValidationError as e:
+#                    self.log(e)
+#
+#            with open(receiptFilePath, "a") as f:
+#                f.write(str(self.receiptStr))
 
             amount, currency = coinConnector.balancecheck()
             self.log("Chech account wallet balance [%s] : [%s]" % (amount, currency))
@@ -428,10 +429,10 @@ class LibreSelery(object):
 
             if main_project_name.full_name != dependency_project_name.full_name:
                 repo_message = (
-                    "to %s. We are using it at %s" % (dependency_project_name.full_name, main_project_name.full_name)
+                    "to %s. The project is part of %s" % (dependency_project_name.full_name, project_url)
                 )
             else:
-                repo_message = "to %s" %  (main_project_name.full_name)
+                repo_message = "to %s" %  (project_url)
 
         except Exception as e:
             print("Cannot detect remote url of git repo", e)
