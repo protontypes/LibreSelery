@@ -56,7 +56,7 @@ The weights calculations are under active development and will be extended in th
 LibreSelery ...
 
 1. is configured based on the selery.yml file and runs as a GitHub Action on your project.
-2. is triggered with every push on the main branch by the GitHub Action worflow file that is part of your project repository.
+2. is triggered with every push on the main branch by the GitHub Action workflow file that is part of your project repository.
 3. gathers contributor information about the target project via the GitHub and Libraries.io API.
 4. filters out contributors with a hidden email address in the GitHub profile and below the minimum contribution limit. LibreSelery will not send emails to the git commit email addresses in order to avoid spam.
 5. creates custom funding distribution weights based on the contribution rating of various projects: Minimum contribution, activity, ...
