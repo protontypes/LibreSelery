@@ -24,7 +24,7 @@ setup(
         "https://github.com/protontypes/coinbase-python/tarball/master#egg=coinbase"
     ],
     install_requires=[
-        "pygithub",
+        "pygithub==1.52",
         "dnspython",
         "pyyaml",
         "coinbase",

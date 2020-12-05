@@ -432,12 +432,12 @@ class LibreSelery(object):
             )
 
             if main_project_name.full_name != dependency_project_name.full_name:
-                repo_message = "to %s. The project is part of %s" % (
+                repo_message = "%s. The project is part of %s" % (
                     dependency_project_name.full_name,
                     remote_url,
                 )
             else:
-                repo_message = "to %s" % (project_url)
+                repo_message = "%s" % (project_url)
 
         except Exception as e:
             print("Cannot detect remote url of git repo", e)
