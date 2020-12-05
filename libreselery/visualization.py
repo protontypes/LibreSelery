@@ -49,6 +49,15 @@ def transactionToUser(transaction):
     else:
         return 'legacy' 
 
+def transactionToUserEmail(transaction):
+    # user_name = GithubConnector.grabUserNameByEmail(transaction["to"]["email"])
+    if 'transaction["to"]["email"]' in transaction:
+        email = transaction["to"]["email"]
+        name, _, _ = email.partition("@")
+    else:
+        name = "Unknown User"
+    return name
+
 
 def transactionIsLastMonth(transaction):
     now_date = datetime.datetime.now()

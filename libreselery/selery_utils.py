@@ -44,31 +44,6 @@ def checkMail(mail):
     return valid
 
 
-def validateContributor(contributor, minimum_contributions=0):
-    if not contributor:
-        return False
-
-    # ignore contributos with less than num_contrib contributions
-    if contributor.stats.total < minimum_contributions:
-        return False
-    # ignore contributos with no or bad email
-    email = contributor.stats.author.email
-    if email is None:
-        return False
-    elif not checkMail(contributor.stats.author.email):
-        return False
-
-    return True
-
-
-def validateContributors(contributors, minimum_contributions):
-    valid = []
-    for c in contributors:
-        if validateContributor(c, minimum_contributions):
-            valid.append(c)
-    return valid
-
-
 # dep_list: list of dependencies, each dependency has a contributors list
 # returns: list of dependencies, each dependency has a contributors list with accociated weights
 def calculateContributorWeights(contributors, uniform_weight):

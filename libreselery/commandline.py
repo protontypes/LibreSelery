@@ -23,29 +23,24 @@ def _runCommand(args):
     # let it initialize configurations,
     # arguments and environments
     selery = libreselery.LibreSelery(config)
+
     # let libreselery connect to
     # various APIs and servers to
     # allow data gathering
     selery.connect()
+
+    # initialize the CDE (Contribution Distribution Engine)
+    # this also involves finding and
+    # instantiating activity plugins
+    selery.startEngine()
+
     # let libreselery gather data
     # of all involved projects,
     # dependencies and contributors
-    (
-        mainProjects,
-        mainContributors,
-        dependencyProjects,
-        dependencyContributors,
-    ) = selery.gather()
-    # please modify the weights
-    # calculation to your need
-    combined_weights, combined_contributors = selery.weight(
-        mainProjects, mainContributors, dependencyProjects, dependencyContributors
-    )
+    contributors, weights = selery.run()
     # split between contributors
     # who should receive payout
-    recipients, contributor_payout_split = selery.split(
-        combined_contributors, combined_weights
-    )
+    recipients, contributor_payout_split = selery.split(contributors, weights)
     # let libreselery use the given
     # address containing virtual currency
     # to pay out the selected contributors

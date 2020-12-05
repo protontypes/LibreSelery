@@ -1,3 +1,6 @@
+#! /usr/bin/python3
+
+import yaml
 import subprocess
 import os
 import re
@@ -6,6 +9,7 @@ import yaml
 import random
 import logging
 import datetime
+import sys
 
 from urlextract import URLExtract
 from qrcode import QRCode
@@ -18,6 +22,7 @@ from libreselery import selery_utils
 from libreselery import os_utils
 from libreselery.visualization import visualizeTransactions
 from libreselery.commit_identifier import CommitIdentifierFromString
+from libreselery.contribution_distribution_engine import ContributionDistributionEngine
 
 
 class LibreSelery(object):
@@ -27,8 +32,11 @@ class LibreSelery(object):
         # set our libreselery project dir, which is '../../this_script'
         self.seleryDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.silent = silent
-        self.librariesIoConnector = None
-        self.githubConnector = None
+        ### create connector objects
+        self.connectors = {}
+        self.connectors["librariesIo"] = None
+        self.connectors["github"] = None
+        self.connectors["coinbase"] = None
         self.config = config
         # start initialization of configs
         self.initialize()
@@ -83,7 +91,7 @@ class LibreSelery(object):
         fundingPath = self._getFile("README.md")
         if fundingPath is not None:
             self.log("Loading funding file [%s] for bitcoin wallet" % fundingPath)
-            mdfile = open(os.path.join(self.seleryDir, "README.md"), "r")
+            mdfile = open(fundingPath, "r")
             mdstring = mdfile.read()
             urls = extractor.find_urls(mdstring)
             badge_string = "https://badgen.net/badge/LibreSelery-Donation/"
@@ -98,15 +106,15 @@ class LibreSelery(object):
             )
 
         # Create a new QR code based on the configured wallet address
-        self.log("Creating QR code PNG image for funders")
-        wallet_qrcode = QRCode(error_correction=1)
-        wallet_qrcode.add_data(self.config.bitcoin_address)
-        wallet_qrcode.best_fit()
-        wallet_qrcode.makeImpl(False, 6)
-        wallet_image = wallet_qrcode.make_image()
-        wallet_image.save(
-            os.path.join(self.config.result_dir, "public", "wallet_qrcode.png")
-        )
+        # self.log("Creating QR code PNG image for funders")
+        # wallet_qrcode = QRCode(error_correction=1)
+        # wallet_qrcode.add_data(self.config.bitcoin_address)
+        # wallet_qrcode.best_fit()
+        # wallet_qrcode.makeImpl(False, 6)
+        # wallet_image = wallet_qrcode.make_image()
+        # wallet_image.save(
+        #     os.path.join(self.config.result_dir, "public", "wallet_qrcode.png")
+        # )
 
         # load tooling url
         if self.config.include_tooling_and_runtime and self.config.tooling_path:
@@ -143,245 +151,36 @@ class LibreSelery(object):
         # establish connection to restapi services
 
         self.log("Establishing Github connection")
-        self.githubConnector = self._execCritical(
+        self.connectors["github"] = self._execCritical(
             lambda x: GithubConnector(x), [self.config.github_token]
         )
         self.logNotify("Github connection established")
 
         if self.config.include_dependencies:
             self.log("Establishing LibrariesIO connection")
-            self.librariesIoConnector = self._execCritical(
+            self.connectors["librariesIo"] = self._execCritical(
                 lambda x: LibrariesIOConnector(x), [self.config.libraries_api_key]
             )
             self.logNotify("LibrariesIO connection established")
 
         if not self.config.simulation:
             self.log("Establishing Coinbase connection")
-            self.coinConnector = CoinbaseConnector(
+            self.connectors["coinbase"] = CoinbaseConnector(
                 self.config.coinbase_token, self.config.coinbase_secret
             )
             self.logNotify("Coinbase connection established")
 
-    def gather(self):
+    def startEngine(self):
+        # kickstart cde
+        self.cde = ContributionDistributionEngine(self.config, self.connectors)
 
-        mainProjects = []
-        mainContributors = []
-
-        dependencyProjects = []
-        dependencyContributors = []
-
-        toolingProjects = []
-        toolingContributors = []
-
-        projectUrl = git_utils.grabLocalProject(self.config.directory)
-
-        localProject = self.githubConnector.grabRemoteProjectByUrl(projectUrl)
-        self.log(
-            "Gathering project information of '%s' at  local folder '%s"
-            % (projectUrl, self.config.directory)
-        )
-
-        print("=======================================================")
-        if self.config.include_main_repository:
-            # find official repositories
-            self.log(
-                "Including contributors of root project '%s'" % localProject.full_name
-            )
-
-            self.log(" -- %s" % localProject.html_url)
-            # print(" -- %s" % [c.author.email for c in localContributors])
-
-            # safe dependency information
-            mainProjects.append(localProject)
-
-            for p in mainProjects:
-                # grab contributors
-                mainContributor = self.githubConnector.grabRemoteProjectContributors(p)
-                # filter contributors
-                mainContributor = selery_utils.validateContributors(
-                    mainContributor, self.config.min_contributions_required_payout
-                )
-                # safe contributor information
-                mainContributors.extend(mainContributor)
-
-        if self.config.include_dependencies:
-            self.log(
-                "Searching for dependencies of project '%s' " % localProject.full_name
-            )
-            # scan for dependencies repositories
-            rubyScanScriptPath = os.path.join(
-                self.seleryDir, "libreselery", "ruby_extensions", "scan.rb"
-            )
-            process = subprocess.run(
-                ["ruby", rubyScanScriptPath, "--project=%s" % self.config.directory],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                universal_newlines=True,
-            )
-            # exec and evaluate stdout
-            if process.returncode == 0:
-                dependencies_json = json.loads(process.stdout)
-            else:
-                self.logError("Could not find project manifesto")
-                print(process.stderr)
-                raise Exception("Aborting")
-
-            # process dependency json
-            unique_dependency_dict = selery_utils.getUniqueDependencies(
-                dependencies_json
-            )
-            for platform, depList in unique_dependency_dict.items():
-                for dep in depList:
-                    d = dep["name"]
-                    r = dep["requirement"]
-                    print(" -- %s: %s [%s]" % (platform, d, r))
-                    libIoProject = self.librariesIoConnector.findProject(platform, d)
-                    print(
-                        "  > %s"
-                        % ("FOUND %s" % libIoProject if libIoProject else "NOT FOUND")
-                    )
-                    # gather more information for project dependency
-                    if libIoProject:
-                        libIoRepository = self.librariesIoConnector.findRepository(
-                            libIoProject
-                        )
-                        libIoDependencies = (
-                            self.librariesIoConnector.findProjectDependencies(
-                                libIoProject
-                            )
-                        )
-                        # print("  > %s" %
-                        #      [dep.project_name for dep in libIoDependencies])
-                        #    libIoProject
-                        # )
-
-                        if libIoRepository:
-                            gitproject = self.githubConnector.grabRemoteProject(
-                                libIoRepository.github_id
-                            )
-
-                            # safe project / dependency information
-                            dependencyProjects.append(gitproject)
-
-            self.log(
-                "Gathering dependency contributor information from Github. This will take some time for larger projects."
-            )
-            for p in dependencyProjects:
-                # grab contributors
-                depContributors = self.githubConnector.grabRemoteProjectContributors(p)
-                # filter contributors based min contribution
-                depContributors = selery_utils.validateContributors(
-                    depContributors, self.config.min_contributions_required_payout
-                )
-                # safe contributor information
-                dependencyContributors.extend(depContributors)
-
-        if self.config.include_tooling_and_runtime and self.config.tooling_path:
-            # tooling projects will be treated as dependency projects
-            self.log("Searching for tooling of project '%s' " % localProject.full_name)
-            for toolurl in self.config.toolrepos["github"]:
-                toolingProject = self.githubConnector.grabRemoteProjectByUrl(toolurl)
-                self.log(" -- %s" % toolingProject)
-                self.log(" -- %s" % toolingProject.html_url)
-
-                # safe tooling information
-                toolingProjects.append(toolingProject)
-
-            self.log("Gathering toolchain contributor information")
-
-            # scan for project contributors
-            for p in toolingProjects:
-                # grab contributors
-                toolingContributor = self.githubConnector.grabRemoteProjectContributors(
-                    p
-                )
-                # filter contributors
-                toolingContributor = selery_utils.validateContributors(
-                    toolingContributor, self.config.min_contributions_required_payout
-                )
-                # safe contributor information
-                dependencyContributors.extend(toolingContributor)
-
-        print("=======================================================")
-
-        self.logNotify("Gathered valid directory: %s" % self.config.directory)
-        self.logNotify("Gathered '%s' valid main repositories" % len(mainProjects))
-        self.logNotify("Gathered '%s' valid main contributors" % len(mainContributors))
-
-        self.logNotify(
-            "Gathered '%s' valid dependency repositories" % len(dependencyProjects)
-        )
-        self.logNotify(
-            "Gathered '%s' valid dependency contributors" % len(dependencyContributors)
-        )
-
-        return (
-            mainProjects,
-            mainContributors,
-            dependencyProjects,
-            dependencyContributors,
-        )
-
-    def weight(
-        self, mainProjects, mainContributors, dependencyProjects, dependencyContributors
-    ):
-
-        if len(dependencyContributors):
-            self.log(
-                "Add %s dependency contributor to main contributor by random choice."
-                % self.config.included_dependency_contributor
-            )
-            randomDependencyContributors = random.choices(
-                dependencyContributors, k=self.config.included_dependency_contributor
-            )
-            mainContributors.extend(randomDependencyContributors)
-
-        # create uniform weights for all main contributors
-        self.log("Create uniform weights for contributors")
-        uniform_weights = selery_utils.calculateContributorWeights(
-            mainContributors, self.config.uniform_weight
-        )
-        self.log("Uniform Weights: " + str(uniform_weights))
-
-        # create commit weights
-        commit_weights = [0] * len(mainContributors)
-        commit_identifier = CommitIdentifierFromString(
-            self.config.activity_since_commit
-        )
-        if not commit_identifier:
-            self.logError(
-                "Invalid commit identifier in 'activity_since_commit': "
-                + self.config.activity_since_commit
-            )
-            raise Exception("Invalid commit identifier in 'activity_since_commit'")
-
-        weighted_commits = git_utils.find_involved_commits(
-            self.config.directory, commit_identifier
-        )
-        if weighted_commits:
-            # calc release weights
-            self.log(
-                "Add additional weight to contributors of the last commits until "
-                + str(self.config.activity_since_commit)
-            )
-            # Create a unique list of all release contributor
-            weighted_contributor = set(c.author.email.lower() for c in weighted_commits)
-            self.log("Found release contributor: " + str(len(weighted_contributor)))
-            for idx, user in enumerate(mainContributors):
-                if user.stats.author.email.lower() in weighted_contributor:
-                    commit_weights[idx] = self.config.activity_weight
-                    self.log(
-                        "Github email matches git commit email of contributor: "
-                        + user.stats.author.login
-                    )
-            self.log("Release Weights: " + str(commit_weights))
-
-        # sum up the two list with the same size
-        combined_weights = [x + y for x, y in zip(uniform_weights, commit_weights)]
-
-        self.log("Combined Weights: " + str(combined_weights))
-        # read @user from commit
-        return combined_weights, mainContributors
+    def run(self):
+        contributorData_scored = self.cde.gather_()
+        domainContributors_weighted = self.cde.weight_(contributorData_scored)
+        domainContributors_merged = self.cde.merge_(domainContributors_weighted)
+        domainContributors_normalized = self.cde.normalize_(domainContributors_merged)
+        contributors, weights = self.cde.splitDictKeyVals(domainContributors_normalized)
+        return contributors, weights
 
     def split(self, contributors, weights):
         recipients = []
@@ -412,20 +211,10 @@ class LibreSelery(object):
             self.logError("Split mode configuration unknown")
             raise Exception("Aborting")
 
-        for recipient in recipients:
-            self.log(
-                " -- '%s': '%s' [w: %s]"
-                % (
-                    recipient.stats.author.html_url,
-                    recipient.stats.author.login,
-                    weights[contributors.index(recipient)],
-                )
-            )
-            self.log("  > via project '%s'" % recipient.fromProject)
-            self.log(
-                " -- Payout split '%.6f'"
-                % contributor_payout_split[contributors.index(recipient)]
-            )
+        for index, recipient in enumerate(recipients):
+            self.log(" -- '%s' [w: %s]" % (recipient.username, weights[index]))
+            # self.log("  > via project '%s'" % recipient.fromProject)
+            self.log(" -- Payout split '%.6f'" % contributor_payout_split[index])
 
         return recipients, contributor_payout_split
 
@@ -440,11 +229,12 @@ class LibreSelery(object):
                     os.path.join(self.config.result_dir, "public"), transactionFilePath
                 )
             except Exception as e:
-                self.logError("Error creating visualization: %s" % e)
+                self.logError("Error creating visualization: %s" % sys.exc_info()[0])
 
     def payout(self, recipients, contributor_payout_split):
         transactionFilePath = None
         receiptFilePath = None
+        coinConnector = self.connectors["coinbase"]
 
         if not self.config.simulation:
             transactionFilePath = os.path.join(
@@ -454,7 +244,7 @@ class LibreSelery(object):
 
             # check if the public address is in the privat wallet
             if self.config.perform_wallet_validation:
-                if self.coinConnector.iswalletAddress(self.config.bitcoin_address):
+                if coinConnector.iswalletAddress(self.config.bitcoin_address):
                     self.log(
                         "Configured wallet address matches with wallet address Coinbase account"
                     )
@@ -469,7 +259,7 @@ class LibreSelery(object):
                 "Receiving transaction history of coinbase account [%s]"
                 % transactionFilePath
             )
-            transactions = self.coinConnector.pastTransactions()
+            transactions = coinConnector.pastTransactions()
             with open(transactionFilePath, "w") as f:
                 f.write(str(transactions))
 
@@ -477,10 +267,10 @@ class LibreSelery(object):
             self.log("Trying to payout recipients")
             self.receiptStr = ""
             total_send_amount = 0.0
-            for idx, contributor in enumerate(recipients):
-                self.log("Initiate payout to [%s]" % contributor.stats.author.login)
+            for index, contributor in enumerate(recipients):
+                self.log("Initiate payout to [%s]" % contributor.username)
 
-                send_amount = "{0:.6f}".format(contributor_payout_split[idx]).rstrip(
+                send_amount = "{0:.6f}".format(contributor_payout_split[index]).rstrip(
                     "0"
                 )
 
@@ -492,7 +282,7 @@ class LibreSelery(object):
                     )
                     break
 
-                if self.coinConnector.useremail() == contributor.stats.author.email:
+                if coinConnector.useremail() == contributor.email:
                     self.logWarning(
                         "Skip payout since coinbase email is equal to contributor email"
                     )
@@ -506,28 +296,32 @@ class LibreSelery(object):
                     continue
 
                 total_send_amount += float(send_amount)
+                email_message = self._getEmailNote(
+                    contributor.username, contributor.fromProject
+                )
 
-                receipt = self.coinConnector.payout(
-                    contributor.stats.author.email,
-                    send_amount,
-                    not self.config.send_email_notification,
-                    description=self._getEmailNote(
-                        contributor.stats.author.login, contributor.fromProject
-                    ),
-                )
-                self.receiptStr = self.receiptStr + str(receipt)
-                self.log(
-                    "Payout of [%s][%s] succeeded"
-                    % (receipt["amount"]["amount"], receipt["amount"]["currency"])
-                )
+                try:
+                    receipt = coinConnector.payout(
+                        contributor.email,
+                        send_amount,
+                        not self.config.send_email_notification,
+                        description=email_message,
+                    )
+                    self.receiptStr = self.receiptStr + str(receipt)
+                    self.log(
+                        "Payout of [%s][%s] succeeded"
+                        % (receipt["amount"]["amount"], receipt["amount"]["currency"])
+                    )
+                except coinbase.wallet.error.ValidationError as e:
+                    self.log(e)
 
             with open(receiptFilePath, "a") as f:
                 f.write(str(self.receiptStr))
 
-            amount, currency = self.coinConnector.balancecheck()
-            self.log("Check account wallet balance [%s] : [%s]" % (amount, currency))
+            amount, currency = coinConnector.balancecheck()
+            self.log("Chech account wallet balance [%s] : [%s]" % (amount, currency))
 
-            native_amount, native_currency = self.coinConnector.native_balancecheck()
+            native_amount, native_currency = coinConnector.native_balancecheck()
             self.log(
                 "Check native account wallet balance [%s] : [%s]"
                 % (native_amount, native_currency)
@@ -603,12 +397,12 @@ class LibreSelery(object):
             self.logWarning(
                 "Configuration 'simulation' is active, so NO transaction will be executed"
             )
-            for idx, contributor in enumerate(recipients):
+            for index, contributor in enumerate(recipients):
                 self.log(
                     " -- would have been a payout of '%s' bitcoin to '%s'"
                     % (
-                        "{0:.6f}".format(contributor_payout_split[idx]).rstrip("0"),
-                        contributor.stats.author.login,
+                        "{0:.6f}".format(contributor_payout_split[index]).rstrip("0"),
+                        contributor.username,
                     )
                 )
 
@@ -627,36 +421,40 @@ class LibreSelery(object):
 
     def _getEmailNote(self, login_name, project_url):
         repo_message = ""
+        githubConnector = self.connectors["github"]
         try:
             remote_url = git_utils.grabLocalProject(self.config.directory)
-            main_project_name = self.githubConnector.grabRemoteProjectByUrl(
-                str(remote_url)
+            main_project_name = githubConnector.grabRemoteProjectByUrl(
+                str(remote_url).strip()
             )
-            dependency_project_name = self.githubConnector.grabRemoteProjectByUrl(
+            dependency_project_name = githubConnector.grabRemoteProjectByUrl(
                 str(project_url)
             )
 
             if main_project_name.full_name != dependency_project_name.full_name:
-                repo_message = (
-                    " to "
-                    + dependency_project_name.full_name
-                    + ". We are using it at "
-                    + main_project_name.full_name
+                repo_message = "%s. The project is part of %s" % (
+                    dependency_project_name.full_name,
+                    remote_url,
                 )
             else:
-                repo_message = " to " + main_project_name.full_name
+                repo_message = "%s" % (project_url)
 
         except Exception as e:
             print("Cannot detect remote url of git repo", e)
 
-        prefix = "@" + login_name + ": Thank you for contributing" + repo_message
-        postfix = " Find out more about LibreSelery at https://github.com/protontypes/libreselery and #LibreSelery"
+        prefix = "@%s: The project you contributed is part of %s" % (
+            login_name,
+            repo_message,
+        )
+        postfix = "Find out more about LibreSelery at https://github.com/protontypes/libreselery."
         inner = (
-            ": " + self.config.optional_email_message
+            ": %s" % self.config.optional_email_message
             if self.config.optional_email_message
             else ""
         )
-        return prefix + inner + postfix
+        note = "%s%s %s" % (prefix, inner, postfix)
+        print(note)
+        return note
 
     def getConfig(self):
         return self.config
