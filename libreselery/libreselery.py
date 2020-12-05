@@ -9,6 +9,7 @@ import yaml
 import random
 import logging
 import datetime
+import sys
 
 from urlextract import URLExtract
 from qrcode import QRCode
@@ -228,7 +229,7 @@ class LibreSelery(object):
                     os.path.join(self.config.result_dir, "public"), transactionFilePath
                 )
             except Exception as e:
-                self.logError("Error creating visualization: %s" % e)
+                self.logError("Error creating visualization: %s" % sys.exc_info()[0])
 
     def payout(self, recipients, contributor_payout_split):
         transactionFilePath = None
@@ -295,14 +296,16 @@ class LibreSelery(object):
                     continue
 
                 total_send_amount += float(send_amount)
-                email_message = self._getEmailNote(contributor.username, contributor.fromProject)
+                email_message = self._getEmailNote(
+                    contributor.username, contributor.fromProject
+                )
 
                 try:
                     receipt = coinConnector.payout(
                         contributor.email,
                         send_amount,
                         not self.config.send_email_notification,
-                        description=email_message 
+                        description=email_message,
                     )
                     self.receiptStr = self.receiptStr + str(receipt)
                     self.log(
@@ -421,22 +424,28 @@ class LibreSelery(object):
         githubConnector = self.connectors["github"]
         try:
             remote_url = git_utils.grabLocalProject(self.config.directory)
-            main_project_name = githubConnector.grabRemoteProjectByUrl(str(remote_url).strip())
+            main_project_name = githubConnector.grabRemoteProjectByUrl(
+                str(remote_url).strip()
+            )
             dependency_project_name = githubConnector.grabRemoteProjectByUrl(
                 str(project_url)
             )
 
             if main_project_name.full_name != dependency_project_name.full_name:
-                repo_message = (
-                    "to %s. We are using it at %s" % (dependency_project_name.full_name, main_project_name.full_name)
+                repo_message = "%s. The project is part of %s" % (
+                    dependency_project_name.full_name,
+                    remote_url,
                 )
             else:
-                repo_message = "to %s" %  (main_project_name.full_name)
+                repo_message = "%s" % (project_url)
 
         except Exception as e:
             print("Cannot detect remote url of git repo", e)
 
-        prefix = "@%s: The project you contributed is part of %s" % (login_name, repo_message)
+        prefix = "@%s: The project you contributed is part of %s" % (
+            login_name,
+            repo_message,
+        )
         postfix = "Find out more about LibreSelery at https://github.com/protontypes/libreselery."
         inner = (
             ": %s" % self.config.optional_email_message
@@ -444,6 +453,7 @@ class LibreSelery(object):
             else ""
         )
         note = "%s%s %s" % (prefix, inner, postfix)
+        print(note)
         return note
 
     def getConfig(self):

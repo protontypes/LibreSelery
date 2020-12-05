@@ -4,7 +4,7 @@
 
 # Configuration file for LibreSelery 
 ## simulation lets you run LibreSelery without payout or coinbase tokens
-simulation: False
+simulation: True
 
 
 ## include the contributors from target repository

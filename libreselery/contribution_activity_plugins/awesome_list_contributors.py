@@ -9,8 +9,6 @@ from libreselery.contribution_distribution_engine_types import (
 )
 
 
-
-
 ### Start User Imports
 ### specialzed plugin imports can be added here
 ##################################################################################
@@ -27,12 +25,13 @@ from pprint import pprint
 
 import sys
 
+
 class AwesomeListRubric(object):
     def __init__(self, key, rubricEntries):
         super(AwesomeListRubric, self).__init__()
         self.key = key
         self.entries = []
-        #pprint(rubricEntries)
+        # pprint(rubricEntries)
         for entry in rubricEntries:
             new = AwesomeListEntry(entry)
             if new:
@@ -43,8 +42,10 @@ class AwesomeListRubric(object):
         for e in self.entries:
             s += "%s" % (e)
         return s
+
     def __repr__(self):
         return str(self)
+
 
 class AwesomeListEntry(object):
     def __init__(self, entry, depth=0):
@@ -59,16 +60,18 @@ class AwesomeListEntry(object):
 
         self.children = []
         for subentry in children:
-            self.children.append(AwesomeListEntry(subentry, depth=self.depth+1))
+            self.children.append(AwesomeListEntry(subentry, depth=self.depth + 1))
 
     def __str__(self):
-        s = " " * self.depth*2 + " - %s %s [%s]\n" % (self.name, self.text, self.url)
+        s = " " * self.depth * 2 + " - %s %s [%s]\n" % (self.name, self.text, self.url)
         for child in self.children:
             s += str(child)
         return s
+
     def __repr__(self):
         return str(self)
-       
+
+
 class AwesomeList(object):
     def __init__(self, path):
         super().__init__()
@@ -79,10 +82,10 @@ class AwesomeList(object):
 
     def convertFromHtml(self, path):
         html = markdown(open(path).read())
-        soup = BeautifulSoup(html, features='html.parser')
-        #print(soup.prettify())
+        soup = BeautifulSoup(html, features="html.parser")
+        # print(soup.prettify())
         return soup
-    
+
     def generateDict(self, soup):
         ### crawl though all categories and extract information
         d = self.findLists(soup)
@@ -95,7 +98,7 @@ class AwesomeList(object):
         return contents, d
 
     def createStructure(self, contents, d):
-        children = self.findListItems(contents, ignoreSubLists=True) 
+        children = self.findListItems(contents, ignoreSubLists=True)
         for c in children:
             rubricKey = c.get_text()
             rubricEntries = d.get(rubricKey, None)
@@ -109,20 +112,21 @@ class AwesomeList(object):
         while True:
             toc = soup.find("h2")
             if toc:
-                toc.extract() ## extract will consume the item
+                toc.extract()  ## extract will consume the item
                 aList = self.findList(soup)
                 if aList:
                     d[toc.get_text()] = aList
             else:
                 break
         return d
+
     def findList(self, parent):
         ul = parent.find("ul")
         if ul:
             ul.extract()
         return ul
 
-    def findListItems(self, parent,  ignoreSubLists=False, depth=0):
+    def findListItems(self, parent, ignoreSubLists=False, depth=0):
         children = parent.findChildren("li", recursive=False)
         if ignoreSubLists == False:
             tree = []
@@ -134,28 +138,31 @@ class AwesomeList(object):
                 if subList:
                     ### sublist found ... now add it
                     ###recursion
-                    recursiveSubLists = self.findListItems(subList, depth=depth+2)
+                    recursiveSubLists = self.findListItems(subList, depth=depth + 2)
                     tree[i] = (child, recursiveSubLists)
-                #print(" " * depth + "+" +str(tree[i]).replace("\n", ""))
+                # print(" " * depth + "+" +str(tree[i]).replace("\n", ""))
             ### overwrite the normal children list with the special tupled treelist containing subs and stuff
             children = tree
         return children
-    
+
     def __str__(self):
         s = ""
         for e in self.rubrics:
             s += "%s" % (e)
         return s
+
     def __repr__(self):
         return str(self)
 
-######################################################################################################################################################     
+
+######################################################################################################################################################
 def validateContributors(contributors):
     valid = []
     for c in contributors:
         if validateContributor(c):
             valid.append(c)
     return valid
+
 
 def validateContributor(contributor):
     if not contributor:
@@ -167,7 +174,10 @@ def validateContributor(contributor):
     elif not selery_utils.checkMail(contributor.stats.author.email):
         return False
     return True
+
+
 ##################################################################################################################
+
 
 class AwesomeListActivityPlugin(ContributionActivityPlugin):
     """
@@ -209,7 +219,7 @@ class AwesomeListActivityPlugin(ContributionActivityPlugin):
         self.random_picks = activity.readParam("randomPickCount")
         ### get global github connector
         self.githubConnector = self.getConnectors().get(
-           self.GITHUB_CONNECTOR_NAME, None
+            self.GITHUB_CONNECTOR_NAME, None
         )
 
         return True
@@ -236,24 +246,27 @@ class AwesomeListActivityPlugin(ContributionActivityPlugin):
         allEntries = []
         for r in awesomeObject.rubrics:
             for e in r.entries:
-                if "github.com" in e.url:
+                url_split = e.url.split("/")
+                if "github.com" in url_split[2] and url_split[4]:
                     allEntries.append(e.url)
-        #self.log(allEntries)
+        # self.log(allEntries)
 
         ### Pick random projects
-        lucky_projects = random.choices(allEntries, k = self.random_picks)
+        lucky_projects = random.choices(allEntries, k=self.random_picks)
         self.log(lucky_projects)
 
         ### grab remote project urls and validate their relevant contributors
         for url in lucky_projects:
             project = self.githubConnector.grabRemoteProjectByUrl(url)
             ### grab contributors
-            remoteContributors = self.githubConnector.grabRemoteProjectContributors(project)
+            remoteContributors = self.githubConnector.grabRemoteProjectContributors(
+                project
+            )
             ## filter contributors
             remoteContributors = validateContributors(remoteContributors)
             if remoteContributors:
                 ### choose one single contributor from teh repository
-                lucky_contributors = random.choices(remoteContributors, k = 1)
+                lucky_contributors = random.choices(remoteContributors, k=1)
                 ### extract relevant contributor information from the github api
                 for c in lucky_contributors:
                     email = c.stats.author.email.lower()
@@ -261,18 +274,16 @@ class AwesomeListActivityPlugin(ContributionActivityPlugin):
                     project = c.fromProject
                     if email and username:
                         ### add valid and lucky contributors to our list
-                        contributors.append(Contributor(username, email, fromProject=project))
-        
+                        contributors.append(
+                            Contributor(username, email, fromProject=project)
+                        )
+
         ### score our contributors with fixed points
         scores = [self.uniform_score for c in contributors]
         ### done, log and return
         self.log(contributors)
         self.log(scores)
         return contributors, scores
-
-
-
-
 
     ### Start User Methods
     ### specialzed plugin methods can be added here
@@ -285,12 +296,6 @@ class AwesomeListActivityPlugin(ContributionActivityPlugin):
     ##################################################################################
 
 
-
-
-
-
-
-
 def test():
     success = False
     print("This is a Test!")
@@ -301,10 +306,10 @@ def test():
             ### type of activity (also the name of the plugin _alias_ used!)
             "type": "awesome_list_contributors",
             "params": {
-               "source": "AWESOME.md",
-              "randomPickCount": 5,
-              "uniform_score": 10,
-             }
+                "source": "AWESOME.md",
+                "randomPickCount": 5,
+                "uniform_score": 10,
+            },
         }
     }
     ### create an activity object
