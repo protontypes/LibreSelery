@@ -12,6 +12,7 @@ class LibreSeleryConfig(object):
     }
 
     __default_config_template__ = {
+        "contribution_domains": list,
         "simulation": bool,
         "include_dependencies": bool,
         "include_main_repository": bool,
@@ -27,7 +28,6 @@ class LibreSeleryConfig(object):
         "min_payout_per_contributor": float,
         "split_strategy": str,
         "min_contributions_required_payout": int,
-        "uniform_weight": int,
         "activity_weight": int,
         "activity_since_commit": str,
     }

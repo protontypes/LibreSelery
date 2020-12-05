@@ -5,20 +5,10 @@ from github import Github, StatsContributor
 from libreselery import selery_utils
 
 
-class Contributor(object):
+class CachedContributor(object):
     def __init__(self, fromProject, c):
         self.fromProject = fromProject
         self.stats = c
-
-    def __repr__(self):
-        result = "Contributor("
-        result += "fromProject: "
-        result += str(self.fromProject)
-        result += ", "
-        result += "stats: "
-        result += str(self.stats)
-        result += ")"
-        return result
 
 
 class GithubConnector(selery_utils.Connector):
@@ -70,7 +60,7 @@ class GithubConnector(selery_utils.Connector):
 
         # cash collect all contributors by iterating over them
         for c in contributors:
-            cachedContributors.append(Contributor(project.html_url, c))
+            cachedContributors.append(CachedContributor(project.html_url, c))
 
         # cash collect all contributors by iterating over them
         # for contributor in contributors:
