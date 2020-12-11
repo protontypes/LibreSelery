@@ -191,25 +191,13 @@ class LibreSelery(object):
             self.logError("Could not find any contributors to payout")
             raise Exception("Aborting")
 
-        if self.config.split_strategy == "random_split":
-            self.log("Creating random split based on weights")
-            recipients = random.choices(
-                contributors, weights, k=self.config.random_split_picked_contributors
-            )
-            contributor_payout_split = [
-                self.config.random_split_btc_per_picked_contributor
-            ] * len(contributors)
-
-        elif self.config.split_strategy == "full_split":
+        else:
+            ### FULL SPLIT STRATEGY
             self.log("Creating full split based on weights")
             recipients = contributors
             contributor_payout_split = selery_utils.weighted_split(
                 contributors, weights, self.config.payout_per_run
             )
-
-        else:
-            self.logError("Split mode configuration unknown")
-            raise Exception("Aborting")
 
         for index, recipient in enumerate(recipients):
             self.log(" -- '%s' [w: %s]" % (recipient.username, weights[index]))

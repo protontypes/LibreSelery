@@ -45,66 +45,50 @@ contribution_domains:
 #          applies_to: 
 #            - "*.md"
 #            - "docs/"
+  -
+    SELERY_CONTRIBUTIONS:
+      weight: 1.0
+      activities:
+      -
+       latest_contribution:
+         output: True
+         type: latest_contribution
+         params:
+           contribution_since_commit: 'tag_regex:v[0-9]+\.[0-9]+\.[0-9]+'
+           #contribution_since_commit: "commit:HEAD~5"
+           # "commit:<sha>" # specific commit
+           # "commit:<branch>" # certain branch
+           contribution_since_commit_score: 50
+      -
+       some_remote_contributors_activity:
+         output: True
+         type: github_remote_contributors
+         params:
+           uniform_score: 10
+           min_contributions: 1
+           
 #  -
-#    CODING:
-#      weight: 0.9
-#      activities:
-#      - 
-#        some_remote_contributors_activity:
-#          output: True
-#          type: github_remote_contributors
-#          params: 
-#            uniform_score: 30
-#            min_contributions: 1
-#
-    -
-      AWESOME1:
-        weight: 0.5
-        activities:
-        -
-          awesome_list_contributor_activity:
-            output: True
-            type: awesome_list_contributors
-            params:
-              source: "AWESOME.md"
-              randomPickCount: 5
-              uniform_score: 10
+#      AWESOME1:
+#        weight: 0.5
+#        activities:
+#        -
+#          awesome_list_contributor_activity:
+#            output: True
+#            type: awesome_list_contributors
+#            params:
+#              source: "AWESOME.md"
+#              randomPickCount: 5
+#              uniform_score: 10
+
 ############################################################################################
 ### P A Y O U T
 ############################################################################################
-## give weight to the last x git commits
-## activity since specified git reference (tag, branch, commit hash, ...)
-activity_since_commit: 'tag_regex:v[0-9]+\.[0-9]+\.[0-9]+' # until last tag matching the regex
-# activity_since_commit: "commit:HEAD~1" # last commit
-# activity_since_commit: "commit:<sha>" # specific commit
-# activity_since_commit: "commit:<branch>" # certain branch
-# activity_since_commit: none # whole history
 
-## weight for contributors in the activity time range defined by `activity_since_commit`
-activity_weight: 10
-
-# Strategy how every payout is split among contributors.
-## The weights are used to decide which contributors receive how much money.
-## "full_split": All contributors receive a payout according to their weight.
-## "random_split": X contributors are randomly picked using the weight as probability.
-split_strategy: "full_split"
 
 ## the amount of payout per run that is used for all split strategies
 payout_per_run: 0.004000
 ## the minimum payout per contributor. Below that number the payout is skipped to avoid bother contributors with very small payout. 
 min_payout_per_contributor: 0.00005
-
-# Random Split Strategy configuration
-## Please consider that:
-## random_split_picked_contributors X random_split_btc_per_picked_contributors = payout_per_run
-## LibreSelery does fail if this does not apply.
-
-## numbers of total contributors payout per run at random split
-random_split_picked_contributors: 0
-
-## the amount of btc send per user at random_split
-random_split_btc_per_picked_contributor: 0.000000
-
 
 # payout configuration
 ## bitcoin address used to pay contributors and receive donations
