@@ -49,7 +49,6 @@ setup(
     ],
     ### add additional files to $TARGET_DIR containing [$SOURCE_FILES]
     data_files=[
-        ("libreselery/ruby_extensions", ["libreselery/ruby_extensions/scan.rb"]),
         ("libreselery/contribution_activity_plugins", glob("libreselery/contribution_activity_plugins/*.py"))
     ],
 )
