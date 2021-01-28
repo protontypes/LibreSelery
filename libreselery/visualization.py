@@ -40,14 +40,14 @@ def transactionToYearMonth(transaction):
 
 
 def transactionToUser(transaction):
-    userName = transaction['description']
+    userName = transaction["description"]
     if not userName:
-        return 'legacy'    
-    if (userName.startswith('@')):
+        return "legacy"
+    if userName.startswith("@"):
         name, _, _ = userName.partition(":")
         return name[1:]
     else:
-        return 'legacy' 
+        return "legacy"
 
 
 def transactionIsLastMonth(transaction):
@@ -105,7 +105,7 @@ def drawBarChart(title, xlabel, keys, values):
 def drawEurPerUser(title, xlabel, keys, values):
     # delete legacy stuff before drawing the chart
     key_list, value_list = list(keys), list(values)
-    index = key_list.index('legacy')
+    index = key_list.index("legacy")
     del value_list[index], key_list[index]
     _, diagram = plt.subplots()
     y_pos = np.arange(30)
@@ -201,10 +201,9 @@ def visualizeTransactions(resultDir, transactionFilePath):
             for k, v in spent_data_by_year_month.items()
         }
         eur_by_user = {
-            k: -1 * sum(map(transactionToEur, v)) 
-            for k, v in spent_data_by_user.items()
+            k: -1 * sum(map(transactionToEur, v)) for k, v in spent_data_by_user.items()
         }
-       
+
         # draw diagrams
         plt.rcdefaults()
 
