@@ -63,6 +63,7 @@ class GithubConnector(selery_utils.Connector):
                 contributors = project.get_stats_contributors()  # .get_contributors()
                 break
             except:
+                print("Retry Connections to Github")
                 attempts += 1
                 time.sleep(5.0)
         if attempts >= max_attempts:

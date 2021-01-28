@@ -7,12 +7,12 @@ simulation: False
 include_main_repository: True
 
 ## include the dependencies of the target folder. This requires a libraries.io token.
-include_dependencies: True
+include_dependencies: False
 
 ## include the tooling and runtime from file tooling_repos.yml
 ## You can add tools, which will not be detected by the dependency scanner.
 ## For example command line tools. If you want to support the LibreSelery project, include it in tooling_repos.yml
-include_tooling_and_runtime: True
+include_tooling_and_runtime: False
 
 ## minimum number of commits to be considered as contributor
 min_contributions_required_payout: 1
@@ -43,7 +43,7 @@ activity_weight: 10
 split_strategy: "full_split"
 
 ## the amount of payout per run that is used for all split strategies
-payout_per_run: 0.004000
+payout_per_run: 0.001000
 ## the minimum payout per contributor. Below that number the payout is skipped to avoid bother contributors with very small payout. 
 min_payout_per_contributor: 0.00005
 

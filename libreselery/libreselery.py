@@ -507,19 +507,22 @@ class LibreSelery(object):
 
                 total_send_amount += float(send_amount)
 
-                receipt = self.coinConnector.payout(
-                    contributor.stats.author.email,
-                    send_amount,
-                    not self.config.send_email_notification,
-                    description=self._getEmailNote(
-                        contributor.stats.author.login, contributor.fromProject
-                    ),
-                )
-                self.receiptStr = self.receiptStr + str(receipt)
-                self.log(
-                    "Payout of [%s][%s] succeeded"
-                    % (receipt["amount"]["amount"], receipt["amount"]["currency"])
-                )
+                try:
+                    receipt = self.coinConnector.payout(
+                        contributor.stats.author.email,
+                        send_amount,
+                        not self.config.send_email_notification,
+                        description=self._getEmailNote(
+                            contributor.stats.author.login, contributor.fromProject
+                        ),
+                    )
+                    self.receiptStr = self.receiptStr + str(receipt)
+                    self.log(
+                        "Payout of [%s][%s] succeeded"
+                        % (receipt["amount"]["amount"], receipt["amount"]["currency"])
+                    )
+                except Exception as error_message:
+                    self.logWarning("Paypout failed [%s]" % error_message)
 
             with open(receiptFilePath, "a") as f:
                 f.write(str(self.receiptStr))
