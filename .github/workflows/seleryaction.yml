@@ -30,9 +30,8 @@ jobs:
               REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
               echo ${HOME}/work/${REPOSITORY_NAME}/${REPOSITORY_NAME}
               ls ${HOME}/work/${REPOSITORY_NAME}/${REPOSITORY_NAME}
-              echo "::set-env name=TARGET_PROJECT::${HOME}/work/${REPOSITORY_NAME}/${REPOSITORY_NAME}"
-              echo "::set-env name=GITHUB_REPOSITORY_NEW::$GITHUB_REPOSITORY"
-
+              echo "{TARGET_PROJECT}={${HOME}/work/${REPOSITORY_NAME}/${REPOSITORY_NAME}}" >> $GITHUB_ENV
+              echo "{GITHUB_REPOSITORY_NEW}={$GITHUB_REPOSITORY}" >> $GITHUB_ENV
 
       #- name: Pull libreselery from dockerhub
       #  run: docker pull protontypes/libreselery
@@ -42,8 +41,8 @@ jobs:
 
       - name: Set env variables for folder paths that are used between steps
         run:  |
-              echo "::set-env name=results_folder::${HOME}/results_folder"
-              echo "::set-env name=config_folder::${HOME}/config_folder"
+              echo "{results_folder}={${HOME}/results_folder}" >> $GITHUB_ENV
+              echo "{config_folder}={${HOME}/config_folder}" >> $GITHUB_ENV
 
       - name: Create result and config folder
         run:  |
