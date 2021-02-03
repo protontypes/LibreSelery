@@ -275,6 +275,7 @@ class LibreSelery(object):
             )
             for p in dependencyProjects:
                 # grab contributors
+                self.log("Gathering Contributor information of %s" % p)
                 depContributors = self.githubConnector.grabRemoteProjectContributors(p)
                 # filter contributors based min contribution
                 depContributors = selery_utils.validateContributors(
@@ -332,6 +333,7 @@ class LibreSelery(object):
     def weight(
         self, mainProjects, mainContributors, dependencyProjects, dependencyContributors
     ):
+        self.log("Weighting of contributors initiated")
 
         if len(dependencyContributors):
             self.log(

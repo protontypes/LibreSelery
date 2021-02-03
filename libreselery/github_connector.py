@@ -67,6 +67,7 @@ class GithubConnector(selery_utils.Connector):
                 attempts += 1
                 time.sleep(5.0)
         if attempts >= max_attempts:
+            print("Not able to connect to Github with current credentials")
             raise KeyError("Not able to connect to Github with current credentials")
 
         # cash collect all contributors by iterating over them

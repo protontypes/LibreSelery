@@ -32,4 +32,3 @@ docker run --rm -it \
     --directory $DOCKER_PATH_TARGET_DIR \
     --result /home/selery/results \
     --tooling /home/selery/config/tooling_repos.yml
-
