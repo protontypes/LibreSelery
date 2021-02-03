@@ -1,13 +1,13 @@
 <img align="center" src="./docs/logo_LibreSelery-04.png" width="400">
 
 
-**We just launched! :tada:  Please read our [introductory blog post](https://protontypes.eu/blog/2020/09/02/launch-of-protontypes/).** 
+**We just launched! :tada:  Please read our [pitch slides](https://github.com/protontypes/organization-documents/blob/master/slides/protontypes_LibreSelery.pdf) or [introductory blog post](https://protontypes.eu/blog/2020/09/02/launch-of-protontypes/).** 
 
 ### Continuous Funding
 
 LibreSelery is a tool to distribute funding in free and open source projects. With a new funding model, it offers transparent, automated and adaptable compensation of contributors. The aim is to replace the middleman in donation distribution as far as possible with a free and transparent algorithm. Unlike most other donation systems LibreSelery only offers a decentralized tool and **not a platform**.
 
-[![Join the chat at https://gitter.im/protontypes/LibreSelery](https://badges.gitter.im/protontypes/LibreSelery.svg)](https://gitter.im/protontypes/LibreSelery?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/protontypes/LibreSelery](https://badges.gitter.im/protontypes/LibreSelery.svg)](https://gitter.im/protontypes/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Docker Pulls](https://img.shields.io/docker/pulls/protontypes/libreselery)](https://hub.docker.com/r/protontypes/libreselery/tags)
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 
