@@ -230,13 +230,20 @@ class LibreSelery(object):
             unique_dependency_dict = selery_utils.getUniqueDependencies(
                 dependencies_json
             )
+            self.log(
+                "Dependencies based on project manifesto files '%s'"
+                % unique_dependency_dict
+            )
             for platform, depList in unique_dependency_dict.items():
                 for dep in depList:
                     d = dep["name"]
                     r = dep["requirement"]
-                    print(" -- %s: %s [%s]" % (platform, d, r))
+                    self.log(
+                        "Searching for Project URL on Libraries.io %s: %s [%s]"
+                        % (platform, d, r)
+                    )
                     libIoProject = self.librariesIoConnector.findProject(platform, d)
-                    print(
+                    self.log(
                         "  > %s"
                         % ("FOUND %s" % libIoProject if libIoProject else "NOT FOUND")
                     )
