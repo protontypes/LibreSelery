@@ -78,7 +78,7 @@ def _initCommand(args):
     # use it as a template for the new selery.yml
     initConfigFile = Path(__file__).parent.parent / "selery.yml"
     configTemplate = re.sub(
-        "^([\w]*: ).*$", "\\1", initConfigFile.read_text(), flags=re.MULTILINE
+        r"^([\w]*: ).*$", "\\1", initConfigFile.read_text(), flags=re.MULTILINE
     )
 
     newConfig = getConfigThroughWizard()
