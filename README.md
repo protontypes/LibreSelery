@@ -56,7 +56,7 @@ The weights calculations are under active development and will be extended in th
 LibreSelery ...
 
 1. is configured based on the selery.yml file and runs as a GitHub Action on your project.
-2. is triggered with every push on the main branch by the GitHub Action worflow file that is part of your project repository.
+2. is triggered with every push on the main branch by the GitHub Action workflow file that is part of your project repository.
 3. gathers contributor information about the target project via the GitHub and Libraries.io API.
 4. filters out contributors with a hidden email address in the GitHub profile and below the minimum contribution limit. LibreSelery will not send emails to the git commit email addresses in order to avoid spam.
 5. creates custom funding distribution weights based on the contribution rating of various projects: Minimum contribution, activity, ...
@@ -141,7 +141,7 @@ touch ~/.libreselery/secrets/tokens.env
   COINBASE_TOKEN=<your_coinbase_token>
   COINBASE_SECRET=<your_coinbase_secret>
   GITHUB_TOKEN=<your_github_tokens>
-  LIBRARIES_API_KEY=<your_libaries_io_tokens>
+  LIBRARIES_API_KEY=<your_libraries_io_tokens>
   ```
 
 7. If you don't have a Coinbase account, the payouts can be simulated. To enable simulation mode:
@@ -244,7 +244,7 @@ Let's assume you have a small donation that you want to distribute within a larg
 
 ### My Country is not supported by Coinbase. How do I withdraw my donation? 
 [Coinbase Officially Supported Countries:](https://www.coinbase.com/places)
-> You can always use Paypal as a transaction bridge. Find more information on the the Paypal integration into Coinbase [here](https://help.coinbase.com/en/coinbase/getting-started/adding-a-payment-method/paypal-faq)
+> You can always use Paypal as a transaction bridge. Find more information on the Paypal integration into Coinbase [here](https://help.coinbase.com/en/coinbase/getting-started/adding-a-payment-method/paypal-faq)
 
 ### Is this part of the Coinbase referral program?
 [Coinbase Help:](https://help.coinbase.com/en/coinbase/other-topics/other/the-coinbase-referral-program)
