@@ -5,7 +5,12 @@
 
 ### Continuous Funding
 
-LibreSelery is a tool to distribute funding in free and open source projects. With a new funding model, it offers transparent, automated and adaptable compensation of contributors. The aim is to replace the middleman in donation distribution as far as possible with a free and transparent algorithm. Unlike most other donation systems LibreSelery only offers a decentralized tool and **not a platform**.
+LibreSelery is a command line tool to distribute funding in free and open source projects. With a new funding model, it offers transparent, automated and adaptable compensation of contributors. The aim is to replace the middleman in donation distribution as far as possible with a free and transparent algorithm. Unlike most other donation systems LibreSelery only offers a decentralized tool and **not a platform**.
+
+<a href="https://asciinema.org/a/X0eONfhRtPAevNLPueyZ5Tamq" target="_blank">
+<p align="center">
+  <img src="https://asciinema.org/a/X0eONfhRtPAevNLPueyZ5Tamq.svg" width="500">
+</p></a>
 
 [![Join the chat at https://gitter.im/protontypes/LibreSelery](https://badges.gitter.im/protontypes/LibreSelery.svg)](https://gitter.im/protontypes/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Docker Pulls](https://img.shields.io/docker/pulls/protontypes/libreselery)](https://hub.docker.com/r/protontypes/libreselery/tags)
@@ -26,10 +31,7 @@ LibreSelery is a tool to distribute funding in free and open source projects. Wi
 * Reward the contributors keeping the project up to date.
 * Attract new donors by distributing donations to the people actually working on the project.
 
-<a href="https://asciinema.org/a/X0eONfhRtPAevNLPueyZ5Tamq" target="_blank">
-<p align="center">
-  <img src="https://asciinema.org/a/X0eONfhRtPAevNLPueyZ5Tamq.svg" width="500">
-</p></a>
+
 
 ## Concept
 
