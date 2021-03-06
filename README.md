@@ -26,6 +26,11 @@ LibreSelery is a tool to distribute funding in free and open source projects. Wi
 * Reward the contributors keeping the project up to date.
 * Attract new donors by distributing donations to the people actually working on the project.
 
+<a href="https://asciinema.org/a/X0eONfhRtPAevNLPueyZ5Tamq" target="_blank">
+<p align="center">
+  <img src="https://asciinema.org/a/X0eONfhRtPAevNLPueyZ5Tamq.svg" width="500">
+</p></a>
+
 ## Concept
 
 LibreSelery is a simple command line tool that runs upon any GitHub hosted project manually or automated by continuous integration. It works with a donation pool containing cryptocurrency in a wallet. With each run a small amount is taken from the donation pool and is distributed to the project's contributors and dependencies. The project owner has the freedom to customize the distribution but it is done openly in-front of the community.
@@ -64,12 +69,6 @@ LibreSelery ...
 7. distributes the funding between the contributors based on the selected split behavior.
 8. pays out cryptocurrency to the selected contributor's email addresses via the Coinbase API. Contributors without a Coinbase account will receive an email to claim the donation.
 9. automatically generates a donation and transaction visualization website in your GitHub wiki.
-
-
-<a href="https://asciinema.org/a/X0eONfhRtPAevNLPueyZ5Tamq" target="_blank">
-<p align="center">
-  <img src="https://asciinema.org/a/X0eONfhRtPAevNLPueyZ5Tamq.svg" width="500">
-</p></a>
 
 ## Features
 
