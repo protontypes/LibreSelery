@@ -25,7 +25,7 @@ setup(
     install_requires=[
         "pygithub",
         "dnspython==2.0.0",
-        "pyyaml==5.3.1",
+        "pyyaml==5.4",
         "coinbase",
         "idna==2.7",
         "gitpython==3.1.7",
